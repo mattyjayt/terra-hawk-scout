@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "TerraHawk Scout — ROS 2 graph and Pi 5 / ESP32 split",
+    "subtitle": "Target design: 2D LiDAR and encoder motors not yet bought",
+    "output": "diagrams/scout-ros2-graph/scout-ros2-graph.html",
+    "locale": "en",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "camera",
+      "type": "frontend",
+      "label": "camera_ros",
+      "sublabel": "Pi Camera Module 3",
+      "pos": [
+        40,
+        60
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "mission",
+      "type": "backend",
+      "label": "mission node",
+      "sublabel": "patrol · deliver · dock",
+      "pos": [
+        300,
+        60
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "lidar",
+      "type": "frontend",
+      "label": "LiDAR driver",
+      "sublabel": "2D LiDAR · /scan",
+      "pos": [
+        560,
+        60
+      ],
+      "size": [
+        160,
+        64
+      ],
+      "tag": "not bought"
+    },
+    {
+      "id": "perception",
+      "type": "backend",
+      "label": "perception node",
+      "sublabel": "C++ · YOLO",
+      "pos": [
+        40,
+        230
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "nav2",
+      "type": "backend",
+      "label": "Nav2",
+      "sublabel": "planner · controller · BT",
+      "pos": [
+        300,
+        230
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "slam",
+      "type": "database",
+      "label": "slam_toolbox",
+      "sublabel": "builds /map",
+      "pos": [
+        560,
+        230
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "devmac",
+      "type": "external",
+      "label": "Dev Mac",
+      "sublabel": "RViz · Foxglove",
+      "pos": [
+        880,
+        230
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "rc",
+      "type": "backend",
+      "label": "ros2_control",
+      "sublabel": "diff_drive_controller",
+      "pos": [
+        300,
+        400
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "ekf",
+      "type": "backend",
+      "label": "robot_localization",
+      "sublabel": "EKF · wheel odom + IMU",
+      "pos": [
+        560,
+        400
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "hcsr04",
+      "type": "external",
+      "label": "HC-SR04",
+      "sublabel": "ultrasonic backup",
+      "pos": [
+        40,
+        570
+      ],
+      "size": [
+        160,
+        64
+      ]
+    },
+    {
+      "id": "esp32",
+      "type": "messagebus",
+      "label": "ESP32 WROOM-32",
+      "sublabel": "micro-ROS · TB6612 · MPU-6050",
+      "pos": [
+        295,
+        570
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "tag": "encoder motors not bought"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Raspberry Pi 5 (8 GB) · ROS 2 Jazzy",
+      "wraps": [
+        "camera",
+        "mission",
+        "lidar",
+        "perception",
+        "nav2",
+        "slam",
+        "rc",
+        "ekf"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "ESP32 MCU · real-time I/O",
+      "wraps": [
+        "hcsr04",
+        "esp32"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "image-stream",
+      "from": "camera",
+      "to": "perception",
+      "label": "/image_raw"
+    },
+    {
+      "id": "detections",
+      "from": "perception",
+      "to": "nav2",
+      "label": "/detections"
+    },
+    {
+      "id": "mission-goals",
+      "from": "mission",
+      "to": "nav2",
+      "label": "nav goals"
+    },
+    {
+      "id": "scan",
+      "from": "lidar",
+      "to": "slam",
+      "label": "/scan",
+      "variant": "emphasis"
+    },
+    {
+      "id": "map",
+      "from": "slam",
+      "to": "nav2",
+      "label": "/map",
+      "variant": "emphasis"
+    },
+    {
+      "id": "cmd-vel",
+      "from": "nav2",
+      "to": "rc",
+      "label": "/cmd_vel",
+      "variant": "emphasis"
+    },
+    {
+      "id": "wheel-odom",
+      "from": "rc",
+      "to": "ekf",
+      "label": "/odom"
+    },
+    {
+      "id": "filtered-odom",
+      "from": "ekf",
+      "to": "slam",
+      "label": "/odometry/filtered",
+      "variant": "emphasis"
+    },
+    {
+      "id": "ticks-up",
+      "from": "esp32",
+      "to": "rc",
+      "label": "wheel ticks"
+    },
+    {
+      "id": "pwm-down",
+      "from": "rc",
+      "to": "esp32",
+      "label": "wheel cmd → PWM"
+    },
+    {
+      "id": "imu",
+      "from": "esp32",
+      "to": "ekf",
+      "label": "/imu (USB serial)",
+      "fromSide": "right",
+      "toSide": "bottom"
+    },
+    {
+      "id": "range",
+      "from": "hcsr04",
+      "to": "esp32",
+      "label": "echo pulse"
+    },
+    {
+      "id": "dds-viz",
+      "from": "slam",
+      "to": "devmac",
+      "label": "DDS over Wi-Fi",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Status: target design",
+      "items": [
+        "2D LiDAR and encoder motors are not yet bought",
+        "Graph follows System Architecture §3; nothing here is measured"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Pi 5 / ESP32 boundary",
+      "items": [
+        "ESP32 runs micro-ROS over USB serial; a micro-ROS agent on the Pi bridges it to DDS",
+        "ESP32 owns encoder ticks, MPU-6050 /imu and TB6612 motor PWM",
+        "HC-SR04 is a near-field backup read by the ESP32"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Localization and navigation",
+      "items": [
+        "EKF fuses wheel /odom with /imu into /odometry/filtered for slam_toolbox",
+        "Nav2 plans on /map and /detections and publishes /cmd_vel",
+        "mission node sends patrol, deliver and dock goals to Nav2"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "Dev Mac",
+      "items": [
+        "RViz / Foxglove subscribe to /map, /scan, /tf and other topics over Wi-Fi DDS"
+      ]
+    }
+  ]
+}

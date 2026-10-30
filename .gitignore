@@ -1,0 +1,17 @@
+# ROS 2 / colcon
+ros2_ws/build/
+ros2_ws/install/
+ros2_ws/log/
+# Python
+__pycache__/
+*.pyc
+.venv/
+# PlatformIO
+.pio/
+firmware/**/include/secrets.h
+# CAD (large / regenerable)
+cad/**/STEP/
+cad/**/vendor/
+# OS / editors
+.DS_Store
+.vscode/

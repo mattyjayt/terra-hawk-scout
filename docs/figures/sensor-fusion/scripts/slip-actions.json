@@ -1,0 +1,1 @@
+[["wait", 1200], ["eval", "window.__fusion.hold(true)"], ["wait", 2500], ["shot", "shots/slip-held.png"], ["lines", "shots/lines-slip.png"], ["eval", "window.__fusion.hold(false)"], ["wait", 4000], ["shot", "shots/after-slip.png"], ["lines", "shots/lines-after.png"], ["eval", "JSON.stringify(window.__fusion.state.out)"]]
