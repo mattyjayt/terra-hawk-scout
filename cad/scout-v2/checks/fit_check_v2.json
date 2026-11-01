@@ -1,0 +1,868 @@
+[
+ {
+  "model": "scout_v2",
+  "id": "17cd52e7-2b9f-5940-a2e1-acb5cba3e340",
+  "variant": {
+   "lidar": "ld19",
+   "motor": "hiwonder",
+   "payload": true,
+   "driver": "mdd3a"
+  },
+  "parts": 90,
+  "lidar": "LDROBOT LD19",
+  "decks_mm": {
+   "bottom_plate_top": 18.3,
+   "top_plate_top": 62.5,
+   "motor_raise": 3.0
+  },
+  "overlaps_unintended": [
+   {
+    "a": "motor_bracket_fl",
+    "b": "motor_fl",
+    "volume_mm3": 34.13
+   },
+   {
+    "a": "motor_bracket_fr",
+    "b": "motor_fr",
+    "volume_mm3": 34.13
+   },
+   {
+    "a": "motor_bracket_rl",
+    "b": "motor_rl",
+    "volume_mm3": 34.13
+   },
+   {
+    "a": "motor_bracket_rr",
+    "b": "motor_rr",
+    "volume_mm3": 34.13
+   }
+  ],
+  "overlaps_intended": [
+   {
+    "a": "pi5",
+    "b": "pi5_cooler",
+    "volume_mm3": 1659.62,
+    "reason": "cooler is a solid envelope; the real heatsink has cut-outs over the board's tall parts"
+   }
+  ],
+  "contacts_count": 79,
+  "tightest_gaps_mm": [
+   {
+    "a": "bottom_plate",
+    "b": "buck_5v",
+    "gap_mm": 1.1
+   },
+   {
+    "a": "bottom_plate",
+    "b": "buck_motor",
+    "gap_mm": 1.1
+   },
+   {
+    "a": "bottom_plate",
+    "b": "esp32",
+    "gap_mm": 1.1
+   },
+   {
+    "a": "bottom_plate",
+    "b": "wheel_fl",
+    "gap_mm": 1.57
+   },
+   {
+    "a": "bottom_plate",
+    "b": "wheel_rl",
+    "gap_mm": 1.58
+   },
+   {
+    "a": "top_plate",
+    "b": "wheel_fl",
+    "gap_mm": 1.58
+   },
+   {
+    "a": "top_plate",
+    "b": "wheel_rl",
+    "gap_mm": 1.58
+   },
+   {
+    "a": "pi5_cooler",
+    "b": "pi_standoff_1",
+    "gap_mm": 1.59
+   },
+   {
+    "a": "pi5_cooler",
+    "b": "pi_standoff_2",
+    "gap_mm": 1.59
+   },
+   {
+    "a": "pi5_cooler",
+    "b": "pi_standoff_3",
+    "gap_mm": 1.59
+   },
+   {
+    "a": "pi5_cooler",
+    "b": "pi_standoff_4",
+    "gap_mm": 1.59
+   },
+   {
+    "a": "bottom_plate",
+    "b": "motor_fl",
+    "gap_mm": 1.6
+   },
+   {
+    "a": "bottom_plate",
+    "b": "motor_fr",
+    "gap_mm": 1.6
+   },
+   {
+    "a": "bottom_plate",
+    "b": "motor_rl",
+    "gap_mm": 1.6
+   },
+   {
+    "a": "bottom_plate",
+    "b": "motor_rr",
+    "gap_mm": 1.6
+   }
+  ],
+  "required_clearances": {
+   "power_parts": [
+    {
+     "a": "bottom_plate",
+     "b": "buck_5v",
+     "gap_mm": 1.1
+    },
+    {
+     "a": "bottom_plate",
+     "b": "buck_motor",
+     "gap_mm": 1.1
+    },
+    {
+     "a": "bottom_plate",
+     "b": "esp32",
+     "gap_mm": 1.1
+    },
+    {
+     "a": "battery",
+     "b": "motor_fl",
+     "gap_mm": 2.2
+    },
+    {
+     "a": "battery",
+     "b": "motor_fr",
+     "gap_mm": 2.2
+    },
+    {
+     "a": "battery",
+     "b": "motor_rl",
+     "gap_mm": 2.2
+    },
+    {
+     "a": "battery",
+     "b": "motor_rr",
+     "gap_mm": 2.2
+    },
+    {
+     "a": "motor_fl",
+     "b": "switch",
+     "gap_mm": 2.91
+    }
+   ],
+   "lidar_tower": [
+    {
+     "a": "lidar_board_screw_1",
+     "b": "lidar_leg_1",
+     "gap_mm": 1.6
+    },
+    {
+     "a": "lidar_board_screw_2",
+     "b": "lidar_leg_2",
+     "gap_mm": 1.6
+    },
+    {
+     "a": "lidar_board_screw_3",
+     "b": "lidar_leg_3",
+     "gap_mm": 1.6
+    },
+    {
+     "a": "lidar_board_screw_4",
+     "b": "lidar_leg_4",
+     "gap_mm": 1.6
+    }
+   ],
+   "power_min_gap_mm": 1.1,
+   "lidar_tower_min_gap_mm": 1.6,
+   "pass": false
+  },
+  "lidar_check": {
+   "scan_plane_z_mm": 151.1,
+   "lidar_centre_xy_mm": [
+    35.0,
+    0.0
+   ],
+   "tower_leg_length_mm": 60,
+   "tower_leg_stack_mm": [
+    40,
+    20
+   ],
+   "highest_other_part": "payload",
+   "highest_other_z_mm": 142.5,
+   "margin_mm": 8.6,
+   "required_margin_mm": 5.0,
+   "margin_over_payload_keepout_mm": 8.6,
+   "blind_sectors_deg": [],
+   "dip_tolerance_deg": [
+    {
+     "part": "payload",
+     "deg": 6.87,
+     "horizontal_distance_mm": 71.4
+    },
+    {
+     "part": "lidar_leg_1",
+     "deg": 24.26,
+     "horizontal_distance_mm": 63.5
+    },
+    {
+     "part": "lidar_leg_2",
+     "deg": 24.26,
+     "horizontal_distance_mm": 63.5
+    },
+    {
+     "part": "lidar_leg_3",
+     "deg": 24.26,
+     "horizontal_distance_mm": 63.5
+    },
+    {
+     "part": "lidar_leg_4",
+     "deg": 24.26,
+     "horizontal_distance_mm": 63.5
+    }
+   ],
+   "c1_scan_flatness_spec_deg": 1.5,
+   "sectors_blocked_at_1p5deg_dip": [],
+   "note": "scan plane above every robot part -> no self-occlusion sectors; the only near-plane object is the payload keep-out (worst case \u00d875 x 80 cup) which a dip of the listed angle would graze"
+  },
+  "camera_check": {
+   "lens_centre_mm": [
+    110.47,
+    0.0,
+    79.61
+   ],
+   "pitch_down_deg": 15.0,
+   "fov_deg_h_v": [
+    66.0,
+    41.0
+   ],
+   "lower_edge_below_horizon_deg": 35.5,
+   "upper_edge_deg": 5.5,
+   "nearest_visible_floor_from_lens_mm": 111.6,
+   "nearest_visible_floor_x_mm": 222.1,
+   "nearest_visible_floor_ahead_of_robot_front_mm": 104.7,
+   "robot_front_x_mm": 117.4,
+   "requirement": "floor visible <= 150 mm ahead of the robot front (BRIEF: sees the floor >= 15 cm ahead)",
+   "pass": true,
+   "lower_fov_edge_hits_parts_aabb": [],
+   "lower_edge_clearance_over_mount_base_mm": 9.4
+  },
+  "ground_check": {
+   "lowest_non_wheel_part": "bottom_plate",
+   "ground_clearance_mm": 13.8,
+   "threshold_mm": 10.0,
+   "margin_mm": 3.8,
+   "pitch_with_front_wheels_on_10mm_step_deg": 7.18,
+   "rear_overhang_tail_clearance_on_step_mm": 4.63,
+   "front_overhang_approach_clearance_mm": 3.8,
+   "belly_clearance_over_step_edge_mm": 10.87,
+   "wheel_contact_to_edge_at_first_touch_mm": 23.5,
+   "front_overhang_mm": 77.4,
+   "rear_overhang_mm": 73.4,
+   "motor_raise_spacer_mm": 3.0,
+   "pass": true,
+   "note": "geometric only (wheel R 32.5 >> 10 mm step); traction/torque is the physics engineer's"
+  },
+  "motor_fit": {
+   "motor": "hiwonder",
+   "name": "Hiwonder TT Hall-encoder motor 1:42 (plastic shaft)",
+   "source": "https://www.hiwonder.com/products/tt-motor-plastic",
+   "mass_g": 34.0,
+   "fits": false,
+   "overlaps": [
+    {
+     "a": "motor_bracket_fl",
+     "b": "motor_fl",
+     "volume_mm3": 34.13
+    },
+    {
+     "a": "motor_bracket_fr",
+     "b": "motor_fr",
+     "volume_mm3": 34.13
+    },
+    {
+     "a": "motor_bracket_rl",
+     "b": "motor_rl",
+     "volume_mm3": 34.13
+    },
+    {
+     "a": "motor_bracket_rr",
+     "b": "motor_rr",
+     "volume_mm3": 34.13
+    }
+   ],
+   "unexpected_contacts": [],
+   "motor_to_bottom_plate_mm": 1.6,
+   "motor_to_top_plate_mm": 12.9,
+   "tightest_to_non_mount_parts": [
+    {
+     "a": "bottom_plate",
+     "b": "motor_fl",
+     "gap_mm": 1.6
+    },
+    {
+     "a": "bottom_plate",
+     "b": "motor_fr",
+     "gap_mm": 1.6
+    },
+    {
+     "a": "bottom_plate",
+     "b": "motor_rl",
+     "gap_mm": 1.6
+    },
+    {
+     "a": "bottom_plate",
+     "b": "motor_rr",
+     "gap_mm": 1.6
+    }
+   ],
+   "tightest_to_wheels": [],
+   "raise_spacer_mm": 3.0,
+   "cable_exit": "6-pin connector on the encoder cap, facing outboard (wheel side) at the can end",
+   "motor_envelope_x_mm": [
+    -105.9,
+    105.9
+   ],
+   "motor_envelope_y_abs_mm": [
+    25.4,
+    54.2
+   ]
+  },
+  "mass_empty_kg": 0.9245,
+  "com_empty_mm": [
+   10.9,
+   0.3,
+   49.9
+  ],
+  "inertia_empty_about_com_kg_m2": [
+   [
+    0.0021786,
+    -1.98e-05,
+    -0.0003579
+   ],
+   [
+    -1.98e-05,
+    0.0040699,
+    -1.1e-06
+   ],
+   [
+    -0.0003579,
+    -1.1e-06,
+    0.004078
+   ]
+  ],
+  "wheel_loads_empty": {
+   "front_share": 0.636,
+   "rear_share": 0.364,
+   "left_share": 0.502,
+   "right_share": 0.498,
+   "per_wheel_N": {
+    "fl": 2.9,
+    "fr": 2.87,
+    "rl": 1.66,
+    "rr": 1.64
+   }
+  },
+  "mass_with_payload_kg": 1.2245,
+  "com_with_payload_mm": [
+   -9.9,
+   0.2,
+   62.8
+  ],
+  "inertia_with_payload_about_com_kg_m2": [
+   [
+    0.0030716,
+    -2.51e-05,
+    0.0006527
+   ],
+   [
+    -2.51e-05,
+    0.0065905,
+    2.2e-06
+   ],
+   [
+    0.0006527,
+    2.2e-06,
+    0.0059166
+   ]
+  ],
+  "wheel_loads_with_payload": {
+   "front_share": 0.376,
+   "rear_share": 0.624,
+   "left_share": 0.502,
+   "right_share": 0.498,
+   "per_wheel_N": {
+    "fl": 2.27,
+    "fr": 2.25,
+    "rl": 3.76,
+    "rr": 3.73
+   }
+  },
+  "mass_breakdown_g": {
+   "battery": 110.0,
+   "bottom_plate": 114.5,
+   "buck_5v": 7.0,
+   "buck_motor": 3.0,
+   "cable_batt_xt30": 0.2,
+   "cable_buck5_pi": 0.9,
+   "cable_buckm_driver": 0.6,
+   "cable_camera_ffc": 0.4,
+   "cable_driver_esp32": 0.1,
+   "cable_driver_motor_fl": 0.6,
+   "cable_driver_motor_fr": 0.6,
+   "cable_driver_motor_rl": 0.6,
+   "cable_driver_motor_rr": 0.6,
+   "cable_enc_fl": 0.7,
+   "cable_enc_fr": 0.7,
+   "cable_enc_rl": 0.2,
+   "cable_enc_rr": 0.2,
+   "cable_esp32_pi": 0.9,
+   "cable_fuse_switch": 2.4,
+   "cable_imu_esp32": 0.3,
+   "cable_lidar_pi": 1.8,
+   "cable_switch_buck5": 0.7,
+   "cable_switch_buckm": 0.5,
+   "cable_us_esp32": 0.7,
+   "cable_xt30_fuse": 1.1,
+   "camera": 4.0,
+   "camera_mount": 4.9,
+   "deck_pillar_1": 8.0,
+   "deck_pillar_2": 8.0,
+   "deck_pillar_3": 8.0,
+   "deck_pillar_4": 8.0,
+   "deck_pillar_5": 8.0,
+   "deck_pillar_6": 8.0,
+   "esp32": 10.0,
+   "fuse_holder": 5.0,
+   "imu": 2.0,
+   "imu_standoff_1": 0.2,
+   "imu_standoff_2": 0.2,
+   "lidar": 47.0,
+   "lidar_adapter": 5.0,
+   "lidar_board": 28.4,
+   "lidar_board_screw_1": 0.5,
+   "lidar_board_screw_2": 0.5,
+   "lidar_board_screw_3": 0.5,
+   "lidar_board_screw_4": 0.5,
+   "lidar_leg_1": 12.1,
+   "lidar_leg_2": 12.1,
+   "lidar_leg_3": 12.1,
+   "lidar_leg_4": 12.1,
+   "lidar_leg_screw_1": 0.5,
+   "lidar_leg_screw_2": 0.5,
+   "lidar_leg_screw_3": 0.5,
+   "lidar_leg_screw_4": 0.5,
+   "mdd3a": 14.5,
+   "mdd3a_standoff_1": 0.1,
+   "mdd3a_standoff_2": 0.1,
+   "mdd3a_standoff_3": 0.1,
+   "mdd3a_standoff_4": 0.1,
+   "motor_bracket_fl": 1.6,
+   "motor_bracket_fr": 1.6,
+   "motor_bracket_rl": 1.6,
+   "motor_bracket_rr": 1.6,
+   "motor_fl": 34.0,
+   "motor_fr": 34.0,
+   "motor_rl": 34.0,
+   "motor_rr": 34.0,
+   "motor_spacer_fl": 0.2,
+   "motor_spacer_fr": 0.2,
+   "motor_spacer_rl": 0.2,
+   "motor_spacer_rr": 0.2,
+   "payload": 300.0,
+   "pi5": 46.0,
+   "pi5_cooler": 25.0,
+   "pi_screw_1": 0.2,
+   "pi_screw_2": 0.2,
+   "pi_screw_3": 0.2,
+   "pi_screw_4": 0.2,
+   "pi_standoff_1": 1.0,
+   "pi_standoff_2": 1.0,
+   "pi_standoff_3": 1.0,
+   "pi_standoff_4": 1.0,
+   "switch": 6.0,
+   "top_plate": 113.0,
+   "ultrasonic": 8.5,
+   "ultrasonic_bracket": 3.7,
+   "wheel_fl": 25.0,
+   "wheel_fr": 25.0,
+   "wheel_rl": 25.0,
+   "wheel_rr": 25.0,
+   "xt30": 3.0
+  },
+  "cables": [
+   {
+    "route": "cable_batt_xt30",
+    "kind": "18awg",
+    "path_mm": 14.8,
+    "with_15pct_slack_mm": 17.0,
+    "from": [
+     -10,
+     25.6,
+     28.3
+    ],
+    "to": [
+     -15,
+     36,
+     20.9
+    ],
+    "cable": "battery pack lead (as supplied) + XT30 male, 18 AWG silicone"
+   },
+   {
+    "route": "cable_xt30_fuse",
+    "kind": "18awg",
+    "path_mm": 94.0,
+    "with_15pct_slack_mm": 108.1,
+    "from": [
+     13.5,
+     36,
+     20.9
+    ],
+    "to": [
+     18.5,
+     -37.5,
+     23.3
+    ],
+    "cable": "18 AWG silicone wire, XT30 female pigtail"
+   },
+   {
+    "route": "cable_fuse_switch",
+    "kind": "18awg",
+    "path_mm": 201.2,
+    "with_15pct_slack_mm": 231.3,
+    "from": [
+     -18.5,
+     -37.5,
+     23.3
+    ],
+    "to": [
+     105.0,
+     32.0,
+     48.0
+    ],
+    "cable": "18 AWG silicone wire"
+   },
+   {
+    "route": "cable_switch_buck5",
+    "kind": "18awg",
+    "path_mm": 59.6,
+    "with_15pct_slack_mm": 68.5,
+    "from": [
+     105.0,
+     30.0,
+     48.0
+    ],
+    "to": [
+     63.9,
+     8,
+     24.3
+    ],
+    "cable": "18 AWG silicone wire (split after the switch with a WAGO 221-413 or solder splice)"
+   },
+   {
+    "route": "cable_switch_buckm",
+    "kind": "18awg",
+    "path_mm": 39.0,
+    "with_15pct_slack_mm": 44.8,
+    "from": [
+     105.0,
+     30.0,
+     48.0
+    ],
+    "to": [
+     88.8,
+     4,
+     24.3
+    ],
+    "cable": "18 AWG silicone wire"
+   },
+   {
+    "route": "cable_buck5_pi",
+    "kind": "20awg",
+    "path_mm": 113.2,
+    "with_15pct_slack_mm": 130.2,
+    "from": [
+     50.7,
+     13.2,
+     24.3
+    ],
+    "to": [
+     68.7,
+     -24.5,
+     77.4
+    ],
+    "cable": "20 AWG pair, 2.54 mm Dupont housings on GPIO pins 2/4 (+5 V) and 6/14 (GND)"
+   },
+   {
+    "route": "cable_buckm_driver",
+    "kind": "20awg",
+    "path_mm": 74.3,
+    "with_15pct_slack_mm": 85.5,
+    "from": [
+     78.2,
+     -9.4,
+     24.3
+    ],
+    "to": [
+     13.1,
+     -14,
+     49.0
+    ],
+    "cable": "20 AWG pair into the MDD3A power terminal"
+   },
+   {
+    "route": "cable_driver_esp32",
+    "kind": "signal",
+    "path_mm": 23.6,
+    "with_15pct_slack_mm": 27.2,
+    "from": [
+     -38.1,
+     0,
+     49.0
+    ],
+    "to": [
+     -55,
+     0,
+     33.9
+    ],
+    "cable": "4 x F-F Dupont jumpers (M1A/M1B/M2A/M2B) + GND"
+   },
+   {
+    "route": "cable_imu_esp32",
+    "kind": "signal",
+    "path_mm": 83.6,
+    "with_15pct_slack_mm": 96.2,
+    "from": [
+     25,
+     9,
+     45.0
+    ],
+    "to": [
+     -55,
+     10,
+     33.9
+    ],
+    "cable": "4 x F-F Dupont jumpers (VCC, GND, SDA, SCL)"
+   },
+   {
+    "route": "cable_us_esp32",
+    "kind": "signal",
+    "path_mm": 174.8,
+    "with_15pct_slack_mm": 201.0,
+    "from": [
+     103,
+     -15,
+     43.0
+    ],
+    "to": [
+     -65,
+     -12,
+     33.9
+    ],
+    "cable": "4 x F-F Dupont jumpers 20-30 cm (VCC, TRIG, ECHO via divider, GND)"
+   },
+   {
+    "route": "cable_esp32_pi",
+    "kind": "signal",
+    "path_mm": 218.4,
+    "with_15pct_slack_mm": 251.2,
+    "from": [
+     -50,
+     -10,
+     33.9
+    ],
+    "to": [
+     73.8,
+     -24.5,
+     77.4
+    ],
+    "cable": "3 x F-F Dupont jumpers 30 cm (TX, RX, GND) to Pi GPIO 14/15; or a USB-C cable from the rear"
+   },
+   {
+    "route": "cable_lidar_pi",
+    "kind": "usb",
+    "path_mm": 88.0,
+    "with_15pct_slack_mm": 101.2,
+    "from": [
+     -25.0,
+     0,
+     128.1
+    ],
+    "to": [
+     1.0,
+     -19,
+     76.4
+    ],
+    "cable": "LiDAR kit USB adapter + short USB-A cable (LD19 kit: ZH1.5-4P to adapter)"
+   },
+   {
+    "route": "cable_camera_ffc",
+    "kind": "ffc",
+    "path_mm": 121.0,
+    "with_15pct_slack_mm": 139.2,
+    "from": [
+     102.0,
+     0,
+     68.2
+    ],
+    "to": [
+     25.6,
+     20.0,
+     72.4
+    ],
+    "cable": "Raspberry Pi 5 camera cable, 22-pin 'standard-mini' (official 200 mm / 300 mm / 500 mm)"
+   },
+   {
+    "route": "cable_driver_motor_fl",
+    "kind": "22awg",
+    "path_mm": 113.4,
+    "with_15pct_slack_mm": 130.4,
+    "from": [
+     3.1,
+     22.5,
+     49.0
+    ],
+    "to": [
+     99.6,
+     52.0,
+     41.5
+    ],
+    "cable": "22 AWG pair from the MDD3A outputs to each motor (encoder motors: the motor pins of the 6-pin lead)"
+   },
+   {
+    "route": "cable_enc_fl",
+    "kind": "signal",
+    "path_mm": 174.7,
+    "with_15pct_slack_mm": 200.9,
+    "from": [
+     99.6,
+     52.0,
+     43.5
+    ],
+    "to": [
+     -45,
+     11,
+     33.9
+    ],
+    "cable": "motor's own 6-pin lead (PH2.0 / XH) + Dupont breakout to the ESP32 (A, B, VCC 3.3 V, GND)"
+   },
+   {
+    "route": "cable_driver_motor_fr",
+    "kind": "22awg",
+    "path_mm": 113.4,
+    "with_15pct_slack_mm": 130.4,
+    "from": [
+     3.1,
+     -22.5,
+     49.0
+    ],
+    "to": [
+     99.6,
+     -52.0,
+     41.5
+    ],
+    "cable": "22 AWG pair from the MDD3A outputs to each motor (encoder motors: the motor pins of the 6-pin lead)"
+   },
+   {
+    "route": "cable_enc_fr",
+    "kind": "signal",
+    "path_mm": 174.7,
+    "with_15pct_slack_mm": 200.9,
+    "from": [
+     99.6,
+     -52.0,
+     43.5
+    ],
+    "to": [
+     -45,
+     -11,
+     33.9
+    ],
+    "cable": "motor's own 6-pin lead (PH2.0 / XH) + Dupont breakout to the ESP32 (A, B, VCC 3.3 V, GND)"
+   },
+   {
+    "route": "cable_driver_motor_rl",
+    "kind": "22awg",
+    "path_mm": 105.6,
+    "with_15pct_slack_mm": 121.5,
+    "from": [
+     -29.1,
+     22.5,
+     49.0
+    ],
+    "to": [
+     -99.6,
+     52.0,
+     41.5
+    ],
+    "cable": "22 AWG pair from the MDD3A outputs to each motor (encoder motors: the motor pins of the 6-pin lead)"
+   },
+   {
+    "route": "cable_enc_rl",
+    "kind": "signal",
+    "path_mm": 60.7,
+    "with_15pct_slack_mm": 69.8,
+    "from": [
+     -99.6,
+     52.0,
+     43.5
+    ],
+    "to": [
+     -75,
+     11,
+     33.9
+    ],
+    "cable": "motor's own 6-pin lead (PH2.0 / XH) + Dupont breakout to the ESP32 (A, B, VCC 3.3 V, GND)"
+   },
+   {
+    "route": "cable_driver_motor_rr",
+    "kind": "22awg",
+    "path_mm": 105.6,
+    "with_15pct_slack_mm": 121.5,
+    "from": [
+     -29.1,
+     -22.5,
+     49.0
+    ],
+    "to": [
+     -99.6,
+     -52.0,
+     41.5
+    ],
+    "cable": "22 AWG pair from the MDD3A outputs to each motor (encoder motors: the motor pins of the 6-pin lead)"
+   },
+   {
+    "route": "cable_enc_rr",
+    "kind": "signal",
+    "path_mm": 60.7,
+    "with_15pct_slack_mm": 69.8,
+    "from": [
+     -99.6,
+     -52.0,
+     43.5
+    ],
+    "to": [
+     -75,
+     -11,
+     33.9
+    ],
+    "cable": "motor's own 6-pin lead (PH2.0 / XH) + Dupont breakout to the ESP32 (A, B, VCC 3.3 V, GND)"
+   }
+  ]
+ }
+]

@@ -1,0 +1,36 @@
+{
+ "_doc": "Per-wheel gear motor profiles at rated voltage (wheel-side numbers). Linear DC motor model: tau = Ts*(u*V/Vr) - (Ts/w0)*omega, current I = I0 + tau/Kt with Kt = Ts/(Istall-I0). armature = reflected rotor inertia (assumed). frictionloss = Ts*I0/Istall (no-load current share of stall torque, derived).",
+ "tt_1_48_6v": {
+  "label": "Stock TT 1:48 gear motor (Elegoo kit / Adafruit 3777 class), no encoder",
+  "rated_voltage": 6.0,
+  "stall_torque": 0.0785,
+  "no_load_speed": 20.94,
+  "stall_current": 1.5,
+  "no_load_current": 0.16,
+  "gear_ratio": 48,
+  "encoder_cpr_wheel": null,
+  "armature": 0.00014,
+  "sources": {
+   "stall_torque": "datasheet: Adafruit 3777 'Stall Torque (6V): 0.8kg.cm' = 0.0785 N m, https://www.adafruit.com/product/3777",
+   "no_load_speed": "datasheet: Adafruit 3777 'Min. Operating Speed (6V): 200 +/-10% RPM' = 20.94 rad/s (Adafruit measured 250 RPM no-load at 6 V; 200 used as conservative)",
+   "stall_current": "datasheet: Adafruit 3777 measured 1.5 A stalled at 6 V",
+   "no_load_current": "datasheet: Adafruit 3777 measured 160 mA no-load at 6 V",
+   "armature": "assumed: 130-size rotor ~6e-8 kg m2 x 48^2"
+  }
+ },
+ "dfrobot_fit0450_6v": {
+  "label": "DFRobot FIT0450 TT motor with quadrature hall encoder, 120:1, 6 V 160 RPM (encoder TT candidate)",
+  "rated_voltage": 6.0,
+  "stall_torque": 0.0785,
+  "no_load_speed": 16.76,
+  "stall_current": 2.8,
+  "no_load_current": 0.17,
+  "gear_ratio": 120,
+  "encoder_cpr_wheel": 1920,
+  "armature": 0.00086,
+  "sources": {
+   "all": "datasheet: DFRobot wiki FIT0450, https://wiki.dfrobot.com/fit0450/ : no-load 160 rpm @6V, no-load current 0.17 A @6V, max stall current 2.8 A, max stall torque 0.8 kgf.cm, rated torque 0.2 kgf.cm, 16 pulses/motor rev x 120 = 1920 per wheel rev",
+   "armature": "assumed: 130-size rotor ~6e-8 kg m2 x 120^2"
+  }
+ }
+}

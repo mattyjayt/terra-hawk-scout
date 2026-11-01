@@ -1,0 +1,19 @@
+{
+ "_doc": "MuJoCo friction = [sliding mu, torsional (m), rolling (m)]. Rolling = Crr x wheel radius (0.0325). Torsional ~ mu x 5 mm effective contact-patch radius (assumed). All values are ASSUMED engineering estimates, not measurements of Jaime's floors; run sensitivity sweeps (scenarios.py does mu 0.4-1.0 for the spin test). Measure with a tilt test: tan(slip angle) of a wheel-loaded sled on each floor.",
+ "hard_floor": {
+  "friction": [0.8, 0.004, 0.0005],
+  "sources": {
+   "sliding": "assumed: rubber on dry hard surface 0.6-0.85 (Engineering ToolBox, rubber/concrete dry, https://www.engineeringtoolbox.com/friction-coefficients-d_778.html); 0.8 for clean laminate/vinyl/tile",
+   "rolling": "assumed: Crr ~0.015 rubber on hard floor (robot drive sizing guides, e.g. https://toolsphere.in/blog/robot-drive-motor-torque-sizing) x r"
+  },
+  "rgba": [0.62, 0.52, 0.40, 1]
+ },
+ "carpet": {
+  "friction": [0.6, 0.003, 0.0016],
+  "sources": {
+   "sliding": "assumed: low-pile carpet tile vs rubber tyre 0.5-0.7 (no primary source found; MEASURE)",
+   "rolling": "assumed: Crr ~0.05 on carpet (same sizing guide) x r"
+  },
+  "rgba": [0.35, 0.38, 0.45, 1]
+ }
+}
