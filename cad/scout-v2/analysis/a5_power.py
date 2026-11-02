@@ -4,7 +4,7 @@ fuse / wire / switch, low-voltage cutoff, peak current and brown-out, power-dist
 
 Mass/CoM: CAD fit check (checks/fit_check_v2.json, C1 + 300 g payload = worst), not the round-1 a1 layout.
 Source tags: D datasheet (URL in SRC), M measured, A assumed (reason), C computed.
-The unfinished round-1 version is kept in round1_unfinished/a5_power_r1.py.
+Round 4: mass/CoM from the CAD v2-r3 fit check (C1 + Hiwonder + MDD3A, cup at x = -50 mm).
 """
 import json
 

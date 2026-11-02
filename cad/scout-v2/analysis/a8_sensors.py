@@ -10,7 +10,12 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from common import HERE, SRC, fit_check_raw, r3, save_section
+from common import HERE, PARAMS_JSON, SRC, fit_check_raw, payload_x, r3, save_section
+
+_P = json.loads(PARAMS_JSON.read_text())
+LIDAR_X, SCAN_Z = _P["sensors"]["laser"]["pos"][0], _P["lidar_scan_plane_z"]
+FRONT_X = max(p[0] for p in _P["footprint"])
+STOP_RANGE = FRONT_X - LIDAR_X + 0.15         # 15 cm ahead of the bumper, measured from the LiDAR axis
 
 LIDARS = {
     "ld19": {"mass_g": 47, "size_mm": "38.6 x 38.6 x 33.5 body (54 x 46.3 x 34.8 with ears)", "range_m": (0.02, 12),
@@ -42,8 +47,8 @@ def main():
         d["max_range_2_beams_per_5cm_cell_m"] = MAP_RES / 2 / math.radians(l["ang_res_deg"])
         d["max_range_1_beam_per_5cm_cell_m"] = MAP_RES / math.radians(l["ang_res_deg"])
         d["range_err_vs_5cm_cell"] = l["acc_mm"] / 50
-        d["stop_zone_range_m"] = 0.222
-        d["stop_zone_spec_ok"] = l["range_m"][0] <= 0.222 and (k == "c1")
+        d["stop_zone_range_m"] = STOP_RANGE
+        d["stop_zone_spec_ok"] = l["range_m"][0] <= STOP_RANGE and (k == "c1")
         d["mass_on_tower_g"] = l["mass_g"]
         cmp[k] = d
     res["lidar_vs_req"] = cmp
@@ -60,40 +65,42 @@ def main():
     }
     # ---- scan plane (CAD fit check)
     scan = {}
-    for mdl in ("scout_v2", "scout_v2_c1", "scout_v2_no_payload"):
+    for mdl in ("scout_v2", "scout_v2__c1_hiwonder_nopay"):
         if mdl not in fc:
             continue
         lc = fc[mdl]["lidar_check"]
         scan[mdl] = {"scan_z_mm": lc["scan_plane_z_mm"], "margin_mm": lc["margin_mm"],
                      "highest_other": lc["highest_other_part"], "dip_tolerance": lc["dip_tolerance_deg"][:2],
+                     "margin_over_payload_keepout_mm": lc.get("margin_over_payload_keepout_mm"),
                      "unintended_overlaps": fc[mdl]["overlaps_unintended"]}
     res["scan_plane_cad"] = scan
     # payload / plant shadow: cup d 75 at 81.4 mm horizontal from the LiDAR axis
-    d_cup, r_cup = 0.0814, 0.0375
+    d_cup, r_cup = LIDAR_X - payload_x(), 0.0375
     res["payload_shadow"] = {
         "sector_deg_if_anything_rises_above_scan": 2 * math.degrees(math.asin(r_cup / d_cup)),
-        "plant_height_allowed_above_cup_rim_mm": scan.get("scout_v2_c1", {}).get("margin_mm", 5.2),
-        "verdict": "a seedling in the cup that grows > 5 mm above the 80 mm rim blinds a ~55 deg rear sector; "
+        "plant_height_allowed_above_cup_rim_mm": scan.get("scout_v2", {}).get("margin_over_payload_keepout_mm"),
+        "verdict": f"a seedling in the cup that grows > {scan.get('scout_v2', {}).get('margin_over_payload_keepout_mm')} mm above the 80 mm rim blinds a "
+                   f"~{2 * math.degrees(math.asin(r_cup / d_cup)):.0f} deg rear sector; "
                    "either cap the payload envelope at 80 mm total height (REQ) or accept and filter a documented "
                    "rear blind sector (laser angular-bounds filter) -- and never reverse blind",
     }
     # pitch -> floor hits
     pitch = {}
     for th in (1.5, 3.0, 5.0, 7.18):
-        z = 0.151
+        z = SCAN_Z
         pitch[f"{th}deg"] = {"floor_hit_range_m": z / math.tan(math.radians(th))}
     res["pitch_floor_hits"] = {"cases": pitch, "verdict": "climbing the threshold pitches the robot 7.2 deg: the scan "
                                "plane hits the floor 1.2 m away -> phantom obstacles / map corruption. Gate scans when "
                                "|IMU pitch| > 1.5 deg (filter node) and set slam_toolbox minimum_travel to skip them."}
     # ---- camera
-    cam = fc.get("scout_v2_c1", {}).get("camera_check", {})
+    cam = fc.get("scout_v2", {}).get("camera_check", {})
     res["camera"] = {
         "cad": cam,
-        "floor_requirement": "floor visible <= 150 mm ahead of the front: CAD gives 109 mm -> PASS (41 mm margin)",
+        "floor_requirement": f"floor visible <= 150 mm ahead of the front: CAD r3 gives {cam.get('nearest_visible_floor_ahead_of_robot_front_mm')} mm -> "
+                             f"{'PASS' if cam.get('pass') else 'FAIL'}",
         "occlusion": "lower FOV edge clears the camera mount by 9.4 mm and does not hit the HC-SR04 (it hangs under the "
                      "top plate, below the lens line); check the real holder's front lip",
-        "urdf": "URDF r1 camera_joint has rpy 0 0 0 (v1); CAD pitches the camera 15 deg down -> camera_joint rpy must be "
-                "(0, +0.2618, 0) and xyz from CAD lens centre (0.1105, 0, 0.0828) or detections are projected 15 deg off",
+        "urdf": "round 4: urdf/scout.urdf camera_joint = robot_params sensors.camera (rpy 0 +0.2618 0, xyz 0.1105 0 0.0796); verified",
         "fps": {"yolo26n_ncnn_640_ms": 67.0, "fps_640_inference_only": 1000 / 67.0,
                 "ultralytics_quoted_fps_640": 7.79,
                 "fps_320_estimate": "~4x fewer FLOPs -> 25-40 FPS inference-only (A: scaling, not measured)",
@@ -117,7 +124,7 @@ def main():
     obst = {"chair leg": (0.0, 0.45), "chair rung": (0.15, 0.18), "shoe": (0.0, 0.10), "door stop": (0.0, 0.05),
             "cable on floor": (0.0, 0.01), "small plant pot": (0.0, 0.12), "sofa front rail (gap 8-15 cm)": (0.10, 0.40),
             "kick-plate gap": (0.12, 0.30)}
-    sz = 0.151
+    sz = SCAN_Z
     top = sz + 0.012
     cls = {}
     for k, (b, t) in obst.items():
@@ -143,7 +150,7 @@ def main():
     for i, (k, v) in enumerate(cls.items()):
         col = "g" if v["class"] == "LiDAR" else "r" if "OVERHANG" in v["class"] else "orange"
         b.plot([i, i], [v["bottom"] * 100, v["top"] * 100], lw=8, color=col, solid_capstyle="butt")
-    b.axhline(sz * 100, color="b", ls="--", label="scan plane 15.1 cm (CAD r1)")
+    b.axhline(sz * 100, color="b", ls="--", label=f"scan plane {SCAN_Z*100:.1f} cm (CAD r3)")
     b.axhspan(2.9, 6.9, color="purple", alpha=.15, label="HC-SR04 cone at 15 cm")
     b.set_xticks(range(len(cls))); b.set_xticklabels(list(cls), rotation=35, ha="right", fontsize=7)
     b.set_ylim(0, 50); b.set_ylabel("height [cm]"); b.legend(fontsize=7); b.set_title("Obstacles vs sensor heights")

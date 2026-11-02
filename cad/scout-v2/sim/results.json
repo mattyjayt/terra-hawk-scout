@@ -1,27 +1,27 @@
 {
  "_meta": {
-  "params": "sim/params_v1_fallback.json",
-  "params_version": "v1-fallback",
-  "motor": "tt_1_48_6v",
+  "params": "out/robot_params.json",
+  "params_version": "v2-r3",
+  "total_mass_with_payload_kg": 1.298108,
+  "motor": "hiwonder_1_42_8v4",
   "motor_profile": {
-   "label": "Stock TT 1:48 gear motor (Elegoo kit / Adafruit 3777 class), no encoder",
-   "rated_voltage": 6.0,
-   "stall_torque": 0.0785,
-   "no_load_speed": 20.94,
-   "stall_current": 1.5,
-   "no_load_current": 0.16,
-   "gear_ratio": 48,
-   "encoder_cpr_wheel": null,
-   "armature": 0.00014,
+   "label": "Hiwonder TT Hall-encoder gear motor 1:42 (SKU 21100132) at the 8.4 V PWM average-voltage cap (MDD3A on the 3S pack)",
+   "rated_voltage": 8.4,
+   "stall_torque": 0.1648,
+   "no_load_speed": 22.56,
+   "stall_current": 1.68,
+   "no_load_current": 0.1,
+   "gear_ratio": 42,
+   "encoder_cpr_wheel": 1008,
+   "armature": 0.000106,
    "sources": {
-    "stall_torque": "datasheet: Adafruit 3777 'Stall Torque (6V): 0.8kg.cm' = 0.0785 N m, https://www.adafruit.com/product/3777",
-    "no_load_speed": "datasheet: Adafruit 3777 'Min. Operating Speed (6V): 200 +/-10% RPM' = 20.94 rad/s (Adafruit measured 250 RPM no-load at 6 V; 200 used as conservative)",
-    "stall_current": "datasheet: Adafruit 3777 measured 1.5 A stalled at 6 V",
-    "no_load_current": "datasheet: Adafruit 3777 measured 160 mA no-load at 6 V",
-    "armature": "assumed: 130-size rotor ~6e-8 kg m2 x 48^2"
+    "listing": "datasheet (listing only): https://www.hiwonder.com/products/tt-motor-plastic 'Working voltage DC 3-12V, no-load speed 150 RPM, ratio 1:42, torque 1.2 kg.cm' -- no reference voltage published",
+    "interpretation": "same as analysis/common.py MOTORS['hiwonder'] (physics r2): 150 rpm, 0.10 A no-load and 1.2 kgf.cm = 0.1177 N m stall, 1.2 A stall, all at 6 V (A); linear DC model scaled to 8.4 V: Ts = 0.1177*8.4/6 = 0.1648 N m, Istall = 1.68 A (R 5 ohm), w0 = (8.4 - 0.1*5)/Ke = 22.56 rad/s (Ke 0.350 V s/rad)",
+    "conservative_bounds": "if 150 rpm / 1.2 kgf.cm were quoted at 7.4 V: Ts(8.4) = 0.1336; if 1.2 kgf.cm is the stall AT 8.4 V: 0.1177 -> scenarios.py d_threshold.stall_torque_sweep covers both",
+    "armature": "assumed: 130-size rotor ~6e-8 kg m2 x 42^2"
    }
   },
-  "total_mass_kg": 0.8039999999999999,
+  "total_mass_kg": 0.998108,
   "track_m": 0.124,
   "wheelbase_m": 0.08,
   "wheel_radius_m": 0.0325,
@@ -62,83 +62,83 @@
    }
   },
   "mujoco": "3.17.0",
-  "generated": "2026-11-01 10:09"
+  "generated": "2026-11-02 07:49"
  },
  "a_straight": {
   "carpet": {
    "target_mps": 0.3,
    "achieved_mps": 0.3,
-   "t_reach_90pct_s": 0.075,
-   "peak_wheel_torque_Nm": 0.0785,
-   "steady_wheel_torque_Nm": 0.0115,
-   "steady_torque_pct_stall": 14.7,
-   "steady_current_A_per_motor": 0.357,
-   "peak_current_A_per_motor": 1.5,
-   "peak_pitch_deg": 0.017,
-   "min_wheel_normal_N_20ms": 1.548,
-   "min_front_wheel_normal_N_20ms": 1.548,
-   "peak_accel_mps2_20ms": 4.4,
+   "t_reach_90pct_s": 0.049,
+   "peak_wheel_torque_Nm": 0.1648,
+   "steady_wheel_torque_Nm": 0.0137,
+   "steady_torque_pct_stall": 8.3,
+   "steady_current_A_per_motor": 0.232,
+   "peak_current_A_per_motor": 1.68,
+   "peak_pitch_deg": 0.027,
+   "min_wheel_normal_N_20ms": 1.512,
+   "min_front_wheel_normal_N_20ms": 2.725,
+   "peak_accel_mps2_20ms": 6.83,
    "pass": true
   },
   "carpet_payload": {
    "target_mps": 0.3,
    "achieved_mps": 0.3,
-   "t_reach_90pct_s": 0.121,
-   "peak_wheel_torque_Nm": 0.0785,
-   "steady_wheel_torque_Nm": 0.0127,
-   "steady_torque_pct_stall": 16.2,
-   "steady_current_A_per_motor": 0.377,
-   "peak_current_A_per_motor": 1.5,
-   "peak_pitch_deg": 0.185,
+   "t_reach_90pct_s": 0.061,
+   "peak_wheel_torque_Nm": 0.1648,
+   "steady_wheel_torque_Nm": 0.0157,
+   "steady_torque_pct_stall": 9.5,
+   "steady_current_A_per_motor": 0.251,
+   "peak_current_A_per_motor": 1.68,
+   "peak_pitch_deg": 0.101,
    "min_wheel_normal_N_20ms": 0.0,
    "min_front_wheel_normal_N_20ms": 0.0,
-   "peak_accel_mps2_20ms": 2.92,
+   "peak_accel_mps2_20ms": 5.23,
    "pass": true
   },
   "hard_floor": {
    "target_mps": 0.3,
    "achieved_mps": 0.3,
-   "t_reach_90pct_s": 0.067,
-   "peak_wheel_torque_Nm": 0.0785,
-   "steady_wheel_torque_Nm": 0.0094,
-   "steady_torque_pct_stall": 11.9,
-   "steady_current_A_per_motor": 0.32,
-   "peak_current_A_per_motor": 1.5,
-   "peak_pitch_deg": 0.027,
-   "min_wheel_normal_N_20ms": 1.419,
-   "min_front_wheel_normal_N_20ms": 1.419,
-   "peak_accel_mps2_20ms": 4.77,
+   "t_reach_90pct_s": 0.043,
+   "peak_wheel_torque_Nm": 0.1648,
+   "steady_wheel_torque_Nm": 0.0156,
+   "steady_torque_pct_stall": 9.5,
+   "steady_current_A_per_motor": 0.25,
+   "peak_current_A_per_motor": 1.68,
+   "peak_pitch_deg": 0.053,
+   "min_wheel_normal_N_20ms": 1.502,
+   "min_front_wheel_normal_N_20ms": 2.609,
+   "peak_accel_mps2_20ms": 7.25,
    "pass": true
   },
   "hard_floor_payload": {
    "target_mps": 0.3,
    "achieved_mps": 0.3,
-   "t_reach_90pct_s": 0.113,
-   "peak_wheel_torque_Nm": 0.0785,
-   "steady_wheel_torque_Nm": 0.0098,
-   "steady_torque_pct_stall": 12.4,
-   "steady_current_A_per_motor": 0.327,
-   "peak_current_A_per_motor": 1.5,
-   "peak_pitch_deg": 0.13,
+   "t_reach_90pct_s": 0.059,
+   "peak_wheel_torque_Nm": 0.1648,
+   "steady_wheel_torque_Nm": 0.0169,
+   "steady_torque_pct_stall": 10.2,
+   "steady_current_A_per_motor": 0.262,
+   "peak_current_A_per_motor": 1.68,
+   "peak_pitch_deg": 0.128,
    "min_wheel_normal_N_20ms": 0.0,
    "min_front_wheel_normal_N_20ms": 0.0,
-   "peak_accel_mps2_20ms": 2.86,
+   "peak_accel_mps2_20ms": 5.49,
    "pass": true
   },
   "full_duty_step_payload_hard_floor": {
-   "peak_accel_mps2_20ms": 3.63,
-   "min_pitch_deg": -0.44,
-   "max_nose_up_deg": 0.44,
+   "peak_accel_mps2_20ms": 5.68,
+   "min_pitch_deg": -0.16,
+   "max_nose_up_deg": 0.16,
    "front_wheel_lift_20ms": true,
-   "max_front_z_rise_mm": 0.6,
+   "max_front_z_rise_mm": 0.22,
    "pass": false
   },
   "full_duty_step_payload_carpet": {
-   "peak_accel_mps2_20ms": 3.5,
-   "min_pitch_deg": -0.54,
-   "max_nose_up_deg": 0.54,
+   "peak_accel_mps2_20ms": 5.78,
+   "min_pitch_deg": -0.18,
+   "max_nose_up_deg": 0.18,
    "front_wheel_lift_20ms": true,
-   "max_front_z_rise_mm": 0.75,
+   "max_front_z_rise_mm": 0.24,
    "pass": false
   }
  },
@@ -148,35 +148,34 @@
     "floor": "carpet",
     "mu": 0.6,
     "commanded_yaw_rate": 1.0,
-    "achieved_yaw_rate": 0.5859,
-    "wheel_speed_rad_s": 1.904,
-    "wheel_surface_speed_mps": 0.0619,
-    "kinematic_slip": 0.413,
-    "effective_track_m": 0.2113,
-    "effective_track_ratio": 1.704,
-    "mean_wheel_torque_Nm": 0.032,
-    "max_wheel_torque_Nm": 0.0437,
-    "torque_pct_stall": 40.8,
-    "current_A_per_motor": 0.707,
-    "centre_drift_m": 0.001,
-    "pass": false,
-    "video": "sim/videos/spin_in_place_carpet.mp4"
+    "achieved_yaw_rate": 0.7007,
+    "wheel_speed_rad_s": 1.919,
+    "wheel_surface_speed_mps": 0.0624,
+    "kinematic_slip": 0.303,
+    "effective_track_m": 0.178,
+    "effective_track_ratio": 1.436,
+    "mean_wheel_torque_Nm": 0.0354,
+    "max_wheel_torque_Nm": 0.0731,
+    "torque_pct_stall": 21.5,
+    "current_A_per_motor": 0.439,
+    "centre_drift_m": 0.0556,
+    "pass": false
    },
    "hard_floor": {
     "floor": "hard_floor",
     "mu": 0.8,
     "commanded_yaw_rate": 1.0,
-    "achieved_yaw_rate": 0.5104,
-    "wheel_speed_rad_s": 1.906,
-    "wheel_surface_speed_mps": 0.062,
-    "kinematic_slip": 0.489,
-    "effective_track_m": 0.2428,
-    "effective_track_ratio": 1.958,
-    "mean_wheel_torque_Nm": 0.0361,
-    "max_wheel_torque_Nm": 0.0478,
-    "torque_pct_stall": 46.0,
-    "current_A_per_motor": 0.777,
-    "centre_drift_m": 0.0017,
+    "achieved_yaw_rate": 0.5885,
+    "wheel_speed_rad_s": 1.91,
+    "wheel_surface_speed_mps": 0.0621,
+    "kinematic_slip": 0.412,
+    "effective_track_m": 0.2109,
+    "effective_track_ratio": 1.701,
+    "mean_wheel_torque_Nm": 0.0391,
+    "max_wheel_torque_Nm": 0.0752,
+    "torque_pct_stall": 23.7,
+    "current_A_per_motor": 0.475,
+    "centre_drift_m": 0.0474,
     "pass": false
    }
   },
@@ -185,147 +184,154 @@
     "floor": "carpet",
     "mu": 0.6,
     "commanded_yaw_rate": 1.0,
-    "achieved_yaw_rate": 0.9994,
-    "wheel_speed_rad_s": 3.237,
-    "wheel_surface_speed_mps": 0.1052,
-    "kinematic_slip": 0.411,
-    "effective_track_m": 0.2105,
-    "effective_track_ratio": 1.698,
-    "mean_wheel_torque_Nm": 0.0329,
-    "max_wheel_torque_Nm": 0.0497,
-    "torque_pct_stall": 41.9,
-    "current_A_per_motor": 0.722,
-    "centre_drift_m": 0.0025,
-    "pass": true
+    "achieved_yaw_rate": 0.9985,
+    "wheel_speed_rad_s": 2.727,
+    "wheel_surface_speed_mps": 0.0886,
+    "kinematic_slip": 0.301,
+    "effective_track_m": 0.1775,
+    "effective_track_ratio": 1.432,
+    "mean_wheel_torque_Nm": 0.0359,
+    "max_wheel_torque_Nm": 0.0732,
+    "torque_pct_stall": 21.8,
+    "current_A_per_motor": 0.445,
+    "centre_drift_m": 0.011,
+    "pass": true,
+    "video": "sim/videos/spin_in_place_carpet.mp4"
    },
    "hard_floor": {
     "floor": "hard_floor",
     "mu": 0.8,
     "commanded_yaw_rate": 1.0,
-    "achieved_yaw_rate": 0.999,
-    "wheel_speed_rad_s": 3.677,
-    "wheel_surface_speed_mps": 0.1195,
-    "kinematic_slip": 0.482,
-    "effective_track_m": 0.2393,
-    "effective_track_ratio": 1.93,
-    "mean_wheel_torque_Nm": 0.0373,
-    "max_wheel_torque_Nm": 0.057,
-    "torque_pct_stall": 47.5,
-    "current_A_per_motor": 0.797,
-    "centre_drift_m": 0.0019,
+    "achieved_yaw_rate": 0.9989,
+    "wheel_speed_rad_s": 3.31,
+    "wheel_surface_speed_mps": 0.1076,
+    "kinematic_slip": 0.424,
+    "effective_track_m": 0.2154,
+    "effective_track_ratio": 1.737,
+    "mean_wheel_torque_Nm": 0.0402,
+    "max_wheel_torque_Nm": 0.0886,
+    "torque_pct_stall": 24.4,
+    "current_A_per_motor": 0.486,
+    "centre_drift_m": 0.0352,
     "pass": true
    }
   },
   "mu_sweep_carpet_open_loop": [
    {
     "mu": 0.4,
-    "achieved_yaw_rate": 0.6534,
-    "effective_track_ratio": 1.537,
-    "mean_wheel_torque_Nm": 0.0275,
-    "torque_pct_stall": 35.0
+    "achieved_yaw_rate": 0.7793,
+    "effective_track_ratio": 1.288,
+    "mean_wheel_torque_Nm": 0.0297,
+    "torque_pct_stall": 18.0
    },
    {
     "mu": 0.6,
-    "achieved_yaw_rate": 0.5803,
-    "effective_track_ratio": 1.73,
-    "mean_wheel_torque_Nm": 0.0322,
-    "torque_pct_stall": 41.0
+    "achieved_yaw_rate": 0.6962,
+    "effective_track_ratio": 1.44,
+    "mean_wheel_torque_Nm": 0.0351,
+    "torque_pct_stall": 21.3
    },
    {
     "mu": 0.8,
-    "achieved_yaw_rate": 0.5215,
-    "effective_track_ratio": 1.905,
-    "mean_wheel_torque_Nm": 0.0386,
-    "torque_pct_stall": 49.2
+    "achieved_yaw_rate": 0.5757,
+    "effective_track_ratio": 1.715,
+    "mean_wheel_torque_Nm": 0.0413,
+    "torque_pct_stall": 25.0
    },
    {
     "mu": 1.0,
-    "achieved_yaw_rate": 0.4455,
-    "effective_track_ratio": 2.252,
-    "mean_wheel_torque_Nm": 0.0448,
-    "torque_pct_stall": 57.1
+    "achieved_yaw_rate": 0.4876,
+    "effective_track_ratio": 2.079,
+    "mean_wheel_torque_Nm": 0.0481,
+    "torque_pct_stall": 29.2
    }
   ]
  },
  "c_estop_payload": {
   "hard_floor_active": {
    "v0_mps": 0.3,
-   "stop_time_s": 0.071,
-   "stop_distance_m": 0.0109,
-   "max_pitch_deg": 0.006,
-   "min_rear_wheel_normal_N_20ms": 2.357,
-   "min_front_wheel_normal_N": 0.994,
-   "static_rear_wheel_normal_N": 4.225,
-   "peak_decel_mps2_20ms": 5.9,
+   "stop_time_s": 0.063,
+   "stop_distance_m": 0.0093,
+   "max_pitch_deg": 0.626,
+   "min_rear_wheel_normal_N_20ms": 0.0,
+   "min_front_wheel_normal_N": 0.0,
+   "static_rear_wheel_normal_N": 3.256,
+   "peak_decel_mps2_20ms": 7.31,
+   "wheel_lift_20ms": true,
+   "pass_300ms": true
+  },
+  "hard_floor_brake": {
+   "v0_mps": 0.3,
+   "stop_time_s": 0.127,
+   "stop_distance_m": 0.0143,
+   "max_pitch_deg": 0.011,
+   "min_rear_wheel_normal_N_20ms": 2.053,
+   "min_front_wheel_normal_N": 3.111,
+   "static_rear_wheel_normal_N": 3.256,
+   "peak_decel_mps2_20ms": 4.12,
    "wheel_lift_20ms": false,
    "pass_300ms": true,
    "video": "sim/videos/emergency_stop_payload.mp4"
   },
-  "hard_floor_brake": {
-   "v0_mps": 0.3,
-   "stop_time_s": 0.187,
-   "stop_distance_m": 0.022,
-   "max_pitch_deg": 0.004,
-   "min_rear_wheel_normal_N_20ms": 3.136,
-   "min_front_wheel_normal_N": 1.185,
-   "static_rear_wheel_normal_N": 4.225,
-   "peak_decel_mps2_20ms": 2.77,
-   "wheel_lift_20ms": false,
-   "pass_300ms": true
-  },
   "hard_floor_coast": {
    "v0_mps": 0.3,
-   "stop_time_s": 0.419,
-   "stop_distance_m": 0.0635,
-   "max_pitch_deg": 0.004,
-   "min_rear_wheel_normal_N_20ms": 3.925,
-   "min_front_wheel_normal_N": 1.185,
-   "static_rear_wheel_normal_N": 4.225,
-   "peak_decel_mps2_20ms": 0.71,
+   "stop_time_s": 0.373,
+   "stop_distance_m": 0.0562,
+   "max_pitch_deg": 0.001,
+   "min_rear_wheel_normal_N_20ms": 2.818,
+   "min_front_wheel_normal_N": 3.111,
+   "static_rear_wheel_normal_N": 3.256,
+   "peak_decel_mps2_20ms": 0.8,
    "wheel_lift_20ms": false,
    "pass_300ms": false
   },
   "carpet_active": {
    "v0_mps": 0.3,
-   "stop_time_s": 0.073,
-   "stop_distance_m": 0.0111,
-   "max_pitch_deg": 0.007,
-   "min_rear_wheel_normal_N_20ms": 2.869,
-   "min_front_wheel_normal_N": 1.051,
-   "static_rear_wheel_normal_N": 4.225,
-   "peak_decel_mps2_20ms": 5.81,
-   "wheel_lift_20ms": false,
+   "stop_time_s": 0.067,
+   "stop_distance_m": 0.0105,
+   "max_pitch_deg": 0.207,
+   "min_rear_wheel_normal_N_20ms": 0.0,
+   "min_front_wheel_normal_N": 0.0,
+   "static_rear_wheel_normal_N": 3.256,
+   "peak_decel_mps2_20ms": 6.21,
+   "wheel_lift_20ms": true,
    "pass_300ms": true
   },
   "carpet_brake": {
    "v0_mps": 0.3,
-   "stop_time_s": 0.163,
-   "stop_distance_m": 0.0197,
-   "max_pitch_deg": 0.004,
-   "min_rear_wheel_normal_N_20ms": 3.057,
-   "min_front_wheel_normal_N": 1.185,
-   "static_rear_wheel_normal_N": 4.225,
-   "peak_decel_mps2_20ms": 2.97,
+   "stop_time_s": 0.119,
+   "stop_distance_m": 0.0139,
+   "max_pitch_deg": 0.016,
+   "min_rear_wheel_normal_N_20ms": 2.119,
+   "min_front_wheel_normal_N": 2.999,
+   "static_rear_wheel_normal_N": 3.256,
+   "peak_decel_mps2_20ms": 3.98,
    "wheel_lift_20ms": false,
    "pass_300ms": true
   },
   "carpet_coast": {
    "v0_mps": 0.3,
-   "stop_time_s": 0.323,
-   "stop_distance_m": 0.0486,
-   "max_pitch_deg": 0.004,
-   "min_rear_wheel_normal_N_20ms": 3.833,
-   "min_front_wheel_normal_N": 1.185,
-   "static_rear_wheel_normal_N": 4.225,
-   "peak_decel_mps2_20ms": 0.93,
+   "stop_time_s": 0.289,
+   "stop_distance_m": 0.0431,
+   "max_pitch_deg": 0.001,
+   "min_rear_wheel_normal_N_20ms": 2.684,
+   "min_front_wheel_normal_N": 3.111,
+   "static_rear_wheel_normal_N": 3.256,
+   "peak_decel_mps2_20ms": 1.05,
    "wheel_lift_20ms": false,
-   "pass_300ms": false
+   "pass_300ms": true
+  },
+  "_watchdog_budget": {
+   "req_s": 0.3,
+   "worst_brake_LL_stop_s": 0.127,
+   "max_watchdog_timeout_s": 0.173,
+   "note": "REQ-SCOUT-002 counts from the last /cmd_vel: watchdog timeout + braking <= 300 ms. Brake = MDD3A M1A=M1B=LOW (short brake)."
   },
   "_analytic_with_payload": {
-   "com_x_m": -0.0225,
-   "com_z_m": 0.0596,
-   "front_wheel_lift_forward_accel_mps2": 2.89,
-   "rear_wheel_lift_forward_decel_mps2": 10.28,
+   "com_x_m": -0.0009,
+   "com_z_m": 0.066,
+   "front_wheel_lift_forward_accel_mps2": 5.81,
+   "rear_wheel_lift_forward_decel_mps2": 6.09,
    "note": "rigid-body quasi-static: front axle unloads when forward accel (or braking while reversing) > g*(cx-x_rear)/h; rear axle unloads when forward decel > g*(x_front-cx)/h. Friction caps |a| at mu*g (7.8 m/s2 hard floor) and motor stall caps 4*Ts/r/m."
   }
  },
@@ -334,11 +340,11 @@
    "speed_mps": 0.05,
    "payload": false,
    "success": true,
-   "peak_wheel_torque_Nm": 0.0425,
-   "peak_front_wheel_torque_Nm": 0.0321,
-   "peak_torque_pct_stall": 54.2,
+   "peak_wheel_torque_Nm": 0.0492,
+   "peak_front_wheel_torque_Nm": 0.0473,
+   "peak_torque_pct_stall": 29.8,
    "fraction_of_climb_saturated": 0.0,
-   "min_speed_during_climb_mps": 0.001,
+   "min_speed_during_climb_mps": 0.003,
    "max_pitch_deg": 7.18,
    "chassis_touched_threshold": false,
    "pass": true
@@ -346,26 +352,27 @@
   "v0.05_payload": {
    "speed_mps": 0.05,
    "payload": true,
-   "success": false,
-   "peak_wheel_torque_Nm": 0.0785,
-   "peak_front_wheel_torque_Nm": 0.0307,
-   "peak_torque_pct_stall": 100.0,
-   "fraction_of_climb_saturated": 0.795,
-   "min_speed_during_climb_mps": -0.029,
-   "max_pitch_deg": 7.19,
+   "success": true,
+   "peak_wheel_torque_Nm": 0.0557,
+   "peak_front_wheel_torque_Nm": 0.045,
+   "peak_torque_pct_stall": 33.8,
+   "fraction_of_climb_saturated": 0.0,
+   "min_speed_during_climb_mps": 0.005,
+   "max_pitch_deg": 7.18,
    "chassis_touched_threshold": false,
-   "pass": false
+   "pass": true,
+   "video": "sim/videos/threshold_climb_crawl_payload.mp4"
   },
   "v0.15": {
    "speed_mps": 0.15,
    "payload": false,
    "success": true,
-   "peak_wheel_torque_Nm": 0.0528,
-   "peak_front_wheel_torque_Nm": 0.0528,
-   "peak_torque_pct_stall": 67.3,
+   "peak_wheel_torque_Nm": 0.1024,
+   "peak_front_wheel_torque_Nm": 0.1024,
+   "peak_torque_pct_stall": 62.1,
    "fraction_of_climb_saturated": 0.0,
-   "min_speed_during_climb_mps": 0.066,
-   "max_pitch_deg": 7.18,
+   "min_speed_during_climb_mps": 0.031,
+   "max_pitch_deg": 8.42,
    "chassis_touched_threshold": false,
    "pass": true
   },
@@ -373,12 +380,12 @@
    "speed_mps": 0.15,
    "payload": true,
    "success": true,
-   "peak_wheel_torque_Nm": 0.0716,
-   "peak_front_wheel_torque_Nm": 0.0528,
-   "peak_torque_pct_stall": 91.3,
+   "peak_wheel_torque_Nm": 0.1024,
+   "peak_front_wheel_torque_Nm": 0.1024,
+   "peak_torque_pct_stall": 62.1,
    "fraction_of_climb_saturated": 0.0,
-   "min_speed_during_climb_mps": 0.059,
-   "max_pitch_deg": 7.19,
+   "min_speed_during_climb_mps": 0.034,
+   "max_pitch_deg": 7.18,
    "chassis_touched_threshold": false,
    "pass": true
   },
@@ -386,12 +393,12 @@
    "speed_mps": 0.3,
    "payload": false,
    "success": true,
-   "peak_wheel_torque_Nm": 0.0785,
-   "peak_front_wheel_torque_Nm": 0.0785,
+   "peak_wheel_torque_Nm": 0.1648,
+   "peak_front_wheel_torque_Nm": 0.1648,
    "peak_torque_pct_stall": 100.0,
    "fraction_of_climb_saturated": 0.0,
-   "min_speed_during_climb_mps": 0.144,
-   "max_pitch_deg": 7.19,
+   "min_speed_during_climb_mps": 0.13,
+   "max_pitch_deg": 9.17,
    "chassis_touched_threshold": false,
    "pass": true
   },
@@ -399,118 +406,462 @@
    "speed_mps": 0.3,
    "payload": true,
    "success": true,
-   "peak_wheel_torque_Nm": 0.0785,
-   "peak_front_wheel_torque_Nm": 0.0785,
+   "peak_wheel_torque_Nm": 0.1648,
+   "peak_front_wheel_torque_Nm": 0.1648,
    "peak_torque_pct_stall": 100.0,
    "fraction_of_climb_saturated": 0.0,
-   "min_speed_during_climb_mps": 0.14,
-   "max_pitch_deg": 13.8,
+   "min_speed_during_climb_mps": 0.132,
+   "max_pitch_deg": 8.45,
    "chassis_touched_threshold": false,
    "pass": true,
    "video": "sim/videos/threshold_climb_0p3_payload.mp4"
   },
-  "slow_payload_voltage_sweep": [
+  "stall_torque_sweep_crawl_payload": [
    {
-    "supply_V": 6.0,
     "stall_torque_Nm": 0.0785,
-    "success": false,
-    "peak_wheel_torque_Nm": 0.0785
+    "equiv_supply_V": 4.0,
+    "success": true,
+    "peak_wheel_torque_Nm": 0.0559
    },
    {
-    "supply_V": 7.4,
     "stall_torque_Nm": 0.0968,
-    "success": false,
-    "peak_wheel_torque_Nm": 0.0968
+    "equiv_supply_V": 4.93,
+    "success": true,
+    "peak_wheel_torque_Nm": 0.058
    },
    {
-    "supply_V": 8.4,
     "stall_torque_Nm": 0.1099,
+    "equiv_supply_V": 5.6,
+    "success": true,
+    "peak_wheel_torque_Nm": 0.0583
+   },
+   {
+    "stall_torque_Nm": 0.1177,
+    "equiv_supply_V": 6.0,
+    "success": true,
+    "peak_wheel_torque_Nm": 0.0581
+   },
+   {
+    "stall_torque_Nm": 0.1336,
+    "equiv_supply_V": 6.81,
+    "success": true,
+    "peak_wheel_torque_Nm": 0.0567
+   },
+   {
+    "stall_torque_Nm": 0.1648,
+    "equiv_supply_V": 8.4,
+    "success": true,
+    "peak_wheel_torque_Nm": 0.0557
+   }
+  ],
+  "mu_sweep_crawl_payload": [
+   {
+    "mu_floor_and_edge": 0.3,
     "success": false,
-    "peak_wheel_torque_Nm": 0.1096
+    "peak_wheel_torque_Nm": 0.056,
+    "saturated": false
+   },
+   {
+    "mu_floor_and_edge": 0.4,
+    "success": true,
+    "peak_wheel_torque_Nm": 0.0558,
+    "saturated": false
+   },
+   {
+    "mu_floor_and_edge": 0.5,
+    "success": true,
+    "peak_wheel_torque_Nm": 0.0553,
+    "saturated": false
+   },
+   {
+    "mu_floor_and_edge": 0.6,
+    "success": true,
+    "peak_wheel_torque_Nm": 0.0553,
+    "saturated": false
+   },
+   {
+    "mu_floor_and_edge": 0.7,
+    "success": true,
+    "peak_wheel_torque_Nm": 0.0556,
+    "saturated": false
+   }
+  ],
+  "mu_sweep_crawl_empty": [
+   {
+    "mu_floor_and_edge": 0.3,
+    "success": false,
+    "peak_wheel_torque_Nm": 0.0476,
+    "saturated": false
+   },
+   {
+    "mu_floor_and_edge": 0.4,
+    "success": false,
+    "peak_wheel_torque_Nm": 0.0551,
+    "saturated": false
+   },
+   {
+    "mu_floor_and_edge": 0.5,
+    "success": true,
+    "peak_wheel_torque_Nm": 0.0491,
+    "saturated": false
+   },
+   {
+    "mu_floor_and_edge": 0.6,
+    "success": true,
+    "peak_wheel_torque_Nm": 0.0491,
+    "saturated": false
+   },
+   {
+    "mu_floor_and_edge": 0.7,
+    "success": true,
+    "peak_wheel_torque_Nm": 0.0492,
+    "saturated": false
    }
   ]
+ },
+ "f_payload_retention": {
+  "_setup": {
+   "cup": "\u00d875 x 80 mm, 300 g, uniform (robot_params payload)",
+   "fence": "4 x M3 x 20 brass posts at 45 deg, 2 mm play",
+   "mu_cup_deck": "assumed 0.3-0.5 (plastic on acrylic), no measurement"
+  },
+  "fence_mu0.3_estop_active": {
+   "max_slide_mm": 1.43,
+   "final_slide_mm": 1.23,
+   "max_tilt_deg": 0.24,
+   "cup_lost_or_slid_gt_10mm": false,
+   "pass": true
+  },
+  "fence_mu0.3_estop_brake_LL": {
+   "max_slide_mm": 1.33,
+   "final_slide_mm": 0.96,
+   "max_tilt_deg": 0.05,
+   "cup_lost_or_slid_gt_10mm": false,
+   "pass": true
+  },
+  "fence_mu0.3_full_duty_start": {
+   "max_slide_mm": 1.34,
+   "final_slide_mm": 1.23,
+   "max_tilt_deg": 0.05,
+   "cup_lost_or_slid_gt_10mm": false,
+   "pass": true
+  },
+  "fence_mu0.5_estop_active": {
+   "max_slide_mm": 1.32,
+   "final_slide_mm": 1.23,
+   "max_tilt_deg": 0.07,
+   "cup_lost_or_slid_gt_10mm": false,
+   "pass": true
+  },
+  "fence_mu0.5_estop_brake_LL": {
+   "max_slide_mm": 0.66,
+   "final_slide_mm": 0.62,
+   "max_tilt_deg": 0.02,
+   "cup_lost_or_slid_gt_10mm": false,
+   "pass": true
+  },
+  "fence_mu0.5_full_duty_start": {
+   "max_slide_mm": 1.25,
+   "final_slide_mm": 1.23,
+   "max_tilt_deg": 0.08,
+   "cup_lost_or_slid_gt_10mm": false,
+   "pass": true
+  },
+  "no_fence_mu0.3_estop_active": {
+   "max_slide_mm": 5.18,
+   "final_slide_mm": 1.7,
+   "max_tilt_deg": 0.24,
+   "cup_lost_or_slid_gt_10mm": false,
+   "pass": true
+  },
+  "no_fence_mu0.3_estop_brake_LL": {
+   "max_slide_mm": 5.18,
+   "final_slide_mm": 2.75,
+   "max_tilt_deg": 0.24,
+   "cup_lost_or_slid_gt_10mm": false,
+   "pass": true
+  },
+  "no_fence_mu0.3_full_duty_start": {
+   "max_slide_mm": 5.41,
+   "final_slide_mm": 5.0,
+   "max_tilt_deg": 0.69,
+   "cup_lost_or_slid_gt_10mm": false,
+   "pass": true
+  },
+  "no_fence_mu0.5_estop_active": {
+   "max_slide_mm": 1.76,
+   "final_slide_mm": 1.7,
+   "max_tilt_deg": 0.04,
+   "cup_lost_or_slid_gt_10mm": false,
+   "pass": true
+  },
+  "no_fence_mu0.5_estop_brake_LL": {
+   "max_slide_mm": 0.66,
+   "final_slide_mm": 0.62,
+   "max_tilt_deg": 0.02,
+   "cup_lost_or_slid_gt_10mm": false,
+   "pass": true
+  },
+  "no_fence_mu0.5_full_duty_start": {
+   "max_slide_mm": 1.38,
+   "final_slide_mm": 1.37,
+   "max_tilt_deg": 0.08,
+   "cup_lost_or_slid_gt_10mm": false,
+   "pass": true
+  }
  },
  "e_odometry_square": {
   "wheel_odom_nominal_track": {
    "completed": true,
    "true_end": [
-    0.745,
-    4.203,
-    -147.42
+    -0.045,
+    3.312,
+    -115.25
    ],
    "estimated_end": [
-    0.001,
-    -0.004,
-    359.54
+    0.0,
+    -0.01,
+    359.72
    ],
-   "path_length_m": 8.003,
-   "heading_error_deg": 146.96,
-   "position_error_m": 4.272,
-   "heading_drift_deg_per_10m": 183.62,
-   "closure_error_true_m": 4.268,
+   "path_length_m": 8.098,
+   "heading_error_deg": 114.97,
+   "position_error_m": 3.322,
+   "heading_drift_deg_per_10m": 141.97,
+   "closure_error_true_m": 3.313,
    "pass_req006_5deg_per_10m": false
   },
   "wheel_odom_calibrated_track": {
    "completed": true,
    "true_end": [
-    0.053,
-    -0.035,
-    2.11
+    -0.127,
+    0.117,
+    -7.5
    ],
    "estimated_end": [
-    -0.004,
-    0.001,
-    359.62
+    0.003,
+    -0.005,
+    359.52
    ],
-   "path_length_m": 8.014,
-   "heading_error_deg": -2.49,
-   "position_error_m": 0.067,
-   "heading_drift_deg_per_10m": 3.11,
-   "closure_error_true_m": 0.063,
-   "pass_req006_5deg_per_10m": true
+   "path_length_m": 8.15,
+   "heading_error_deg": 7.01,
+   "position_error_m": 0.178,
+   "heading_drift_deg_per_10m": 8.61,
+   "closure_error_true_m": 0.172,
+   "pass_req006_5deg_per_10m": false
   },
   "wheel_odom_carpet_calibration_on_hard_floor": {
    "completed": true,
    "true_end": [
-    -0.561,
-    1.039,
-    -44.73
+    -0.571,
+    1.595,
+    -61.9
    ],
    "estimated_end": [
+    0.006,
     -0.0,
-    0.003,
     359.62
    ],
-   "path_length_m": 8.017,
-   "heading_error_deg": 44.35,
-   "position_error_m": 1.178,
-   "heading_drift_deg_per_10m": 55.32,
-   "closure_error_true_m": 1.181,
+   "path_length_m": 8.123,
+   "heading_error_deg": 61.53,
+   "position_error_m": 1.696,
+   "heading_drift_deg_per_10m": 75.74,
+   "closure_error_true_m": 1.694,
    "pass_req006_5deg_per_10m": false
   },
   "wheel_distance_plus_gyro_yaw": {
    "completed": true,
    "true_end": [
-    -0.04,
-    0.042,
-    -2.66
+    -0.039,
+    0.044,
+    -2.63
    ],
    "estimated_end": [
-    -0.001,
-    0.006,
-    359.51
+    0.001,
+    0.001,
+    359.69
    ],
-   "path_length_m": 8.013,
-   "heading_error_deg": 2.17,
-   "position_error_m": 0.052,
-   "heading_drift_deg_per_10m": 2.71,
-   "closure_error_true_m": 0.058,
+   "path_length_m": 8.151,
+   "heading_error_deg": 2.32,
+   "position_error_m": 0.058,
+   "heading_drift_deg_per_10m": 2.84,
+   "closure_error_true_m": 0.059,
    "pass_req006_5deg_per_10m": true
   },
   "_noise_model": {
-   "gyro_noise_density": "0.005 deg/s/sqrt(Hz) (MPU-6050 datasheet PS-MPU-6000A rate noise spectral density)",
+   "gyro_noise_density": "0.005 deg/s/sqrt(Hz) (MPU-6050 datasheet PS-MPU-6000A rate noise spectral density), integrated at 1 kHz",
    "gyro_bias_deg_s": "0.05 residual after still calibration (assumed)",
-   "calibrated_track_ratio": 1.704
+   "calibrated_track_ratio": 1.436
   }
+ },
+ "comparison": {
+  "columns": {
+   "r1_v1fallback_tt6v": "sim r1 (fc9355d:cad/scout-v2/sim/results.json): v1 fallback 0.80 kg, payload box at x=-83 mm, TT 1:48 @ 6 V",
+   "r4_r3params_tt6v": "round 4: out/robot_params.json v2-r3 (0.998 kg, cup at x=-50 mm), TT 1:48 @ 6 V",
+   "r4_r3params_hiwonder8v4": "round 4: v2-r3, Hiwonder 1:42 @ 8.4 V PWM cap (design)"
+  },
+  "rows": [
+   {
+    "metric": "straight 0.3 m/s carpet + payload: achieved m/s",
+    "r1_v1fallback_tt6v": 0.3,
+    "r4_r3params_tt6v": 0.3,
+    "r4_r3params_hiwonder8v4": 0.3
+   },
+   {
+    "metric": "straight carpet + payload: steady torque % stall",
+    "r1_v1fallback_tt6v": 16.2,
+    "r4_r3params_tt6v": 17.2,
+    "r4_r3params_hiwonder8v4": 9.5
+   },
+   {
+    "metric": "straight carpet + payload: steady A/motor",
+    "r1_v1fallback_tt6v": 0.377,
+    "r4_r3params_tt6v": 0.39,
+    "r4_r3params_hiwonder8v4": 0.251
+   },
+   {
+    "metric": "full-duty start + payload (hard): front wheel lift",
+    "r1_v1fallback_tt6v": true,
+    "r4_r3params_tt6v": false,
+    "r4_r3params_hiwonder8v4": true
+   },
+   {
+    "metric": "spin open loop carpet: rad/s",
+    "r1_v1fallback_tt6v": 0.5859,
+    "r4_r3params_tt6v": 0.7228,
+    "r4_r3params_hiwonder8v4": 0.7007
+   },
+   {
+    "metric": "spin open loop hard: rad/s",
+    "r1_v1fallback_tt6v": 0.5104,
+    "r4_r3params_tt6v": 0.6132,
+    "r4_r3params_hiwonder8v4": 0.5885
+   },
+   {
+    "metric": "spin gyro loop carpet: rad/s",
+    "r1_v1fallback_tt6v": 0.9994,
+    "r4_r3params_tt6v": 0.9973,
+    "r4_r3params_hiwonder8v4": 0.9985
+   },
+   {
+    "metric": "spin gyro loop carpet: torque % stall",
+    "r1_v1fallback_tt6v": 41.9,
+    "r4_r3params_tt6v": 45.3,
+    "r4_r3params_hiwonder8v4": 21.8
+   },
+   {
+    "metric": "spin effective track ratio carpet / hard",
+    "r1_v1fallback_tt6v": [
+     1.698,
+     1.93
+    ],
+    "r4_r3params_tt6v": [
+     1.38,
+     1.587
+    ],
+    "r4_r3params_hiwonder8v4": [
+     1.432,
+     1.737
+    ]
+   },
+   {
+    "metric": "e-stop brake LL, hard + payload: s",
+    "r1_v1fallback_tt6v": 0.187,
+    "r4_r3params_tt6v": 0.205,
+    "r4_r3params_hiwonder8v4": 0.127
+   },
+   {
+    "metric": "e-stop brake LL, carpet + payload: s",
+    "r1_v1fallback_tt6v": 0.163,
+    "r4_r3params_tt6v": 0.177,
+    "r4_r3params_hiwonder8v4": 0.119
+   },
+   {
+    "metric": "e-stop brake LL, hard: mm",
+    "r1_v1fallback_tt6v": 22.0,
+    "r4_r3params_tt6v": 24.3,
+    "r4_r3params_hiwonder8v4": 14.3
+   },
+   {
+    "metric": "e-stop coast, hard: s",
+    "r1_v1fallback_tt6v": 0.419,
+    "r4_r3params_tt6v": 0.455,
+    "r4_r3params_hiwonder8v4": 0.373
+   },
+   {
+    "metric": "e-stop active (PI to 0), hard: wheel lift",
+    "r1_v1fallback_tt6v": false,
+    "r4_r3params_tt6v": false,
+    "r4_r3params_hiwonder8v4": true
+   },
+   {
+    "metric": "threshold 10 mm crawl 0.05 + payload: climbs",
+    "r1_v1fallback_tt6v": false,
+    "r4_r3params_tt6v": true,
+    "r4_r3params_hiwonder8v4": true
+   },
+   {
+    "metric": "threshold crawl + payload: peak N m",
+    "r1_v1fallback_tt6v": 0.0785,
+    "r4_r3params_tt6v": 0.058,
+    "r4_r3params_hiwonder8v4": 0.0557
+   },
+   {
+    "metric": "threshold 0.15 + payload: climbs",
+    "r1_v1fallback_tt6v": true,
+    "r4_r3params_tt6v": true,
+    "r4_r3params_hiwonder8v4": true
+   },
+   {
+    "metric": "threshold 0.3 + payload: climbs / max pitch deg",
+    "r1_v1fallback_tt6v": [
+     true,
+     13.8
+    ],
+    "r4_r3params_tt6v": [
+     true,
+     7.34
+    ],
+    "r4_r3params_hiwonder8v4": [
+     true,
+     8.45
+    ]
+   },
+   {
+    "metric": "odometry 2 m square: wheel+gyro deg/10 m",
+    "r1_v1fallback_tt6v": 2.71,
+    "r4_r3params_tt6v": 2.83,
+    "r4_r3params_hiwonder8v4": 2.84
+   },
+   {
+    "metric": "odometry: calibrated wheel-only deg/10 m",
+    "r1_v1fallback_tt6v": 3.11,
+    "r4_r3params_tt6v": 6.27,
+    "r4_r3params_hiwonder8v4": 8.61
+   },
+   {
+    "metric": "payload retention, fence, mu 0.3: max slide mm",
+    "r1_v1fallback_tt6v": null,
+    "r4_r3params_tt6v": 1.33,
+    "r4_r3params_hiwonder8v4": 1.43
+   },
+   {
+    "metric": "crawl + payload: min stall torque that climbs (sweep) N m",
+    "r1_v1fallback_tt6v": "none of 0.0785/0.0968/0.1099 climbed",
+    "r4_r3params_tt6v": 0.0785,
+    "r4_r3params_hiwonder8v4": 0.0785
+   },
+   {
+    "metric": "crawl + payload: lowest mu (floor and edge) that climbs",
+    "r1_v1fallback_tt6v": "not run",
+    "r4_r3params_tt6v": 0.4,
+    "r4_r3params_hiwonder8v4": 0.4
+   },
+   {
+    "metric": "crawl EMPTY: lowest mu (floor and edge) that climbs",
+    "r1_v1fallback_tt6v": "not run",
+    "r4_r3params_tt6v": 0.5,
+    "r4_r3params_hiwonder8v4": 0.5
+   }
+  ]
  }
 }

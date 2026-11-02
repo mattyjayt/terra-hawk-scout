@@ -21,3 +21,4 @@ cad/**/vendor/
 **/vendor/
 __pycache__/
 *.pyc
+guide/vendor/glb/

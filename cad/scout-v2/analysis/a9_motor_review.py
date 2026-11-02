@@ -1,4 +1,4 @@
-"""9. Round-2 drivetrain review against the round-1 CAD mass cases (checks/fit_check_v2.json).
+"""9. Drivetrain review against the CAD mass cases (round 4: CAD v2-r3, see common.cad_cases).
 
   a) Datasheet self-consistency of each TT-class motor: the stall torque a linear DC motor
      must produce given its own no-load speed, no-load current and stall current
@@ -16,7 +16,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from common import ENV, G, HERE, MOTORS, ROOT, cad_cases, r3, save_section
+from common import ENV, G, HERE, MOTORS, ROOT, cad_cases, payload_x, r3, save_section
 from loads import AX_F, AX_R, B, L, R, axle_loads, skid_side_forces, step_climb, step_torque_required, w_from_v
 
 SIM = json.loads((ROOT / "sim" / "results.json").read_text()) if (ROOT / "sim" / "results.json").exists() else {}
@@ -75,17 +75,20 @@ def main():
                     "in_rated_voltage": mot.v_range[0] <= v <= mot.v_range[1]}
     res["climb_motor_SF_design_case_cad_c1_pay300_mu0.6"] = {"T_need_rear_Nm": need, "motors": avail}
     res["sim_disagreement"] = {
-        "sim_slow_payload_climb": SIM.get("d_threshold", {}).get("slow_payload_voltage_sweep"),
-        "sim_mass_kg": SIM.get("_meta", {}).get("total_mass_kg"),
-        "note": "sim (v1 fallback, 0.80 kg + 0.3 kg) stalls at 0.11 Nm/wheel; quasi-static model needs 0.057-0.066 Nm "
-                "with the heavier CAD mass. Factor ~1.7-2 unexplained (MuJoCo soft contact / rolling-friction "
-                "torque / velocity-PID saturation). Resolve with the free bench test T1 before buying motors.",
+        "sim_crawl_payload_stall_torque_sweep": SIM.get("d_threshold", {}).get("stall_torque_sweep_crawl_payload"),
+        "sim_crawl_payload_mu_sweep": SIM.get("d_threshold", {}).get("mu_sweep_crawl_payload"),
+        "sim_mass_kg": SIM.get("_meta", {}).get("total_mass_with_payload_kg"),
+        "note": "round 4 (CAD r3 params, cup at x = -50): the sim crawl climb now needs only ~0.056-0.058 N m peak and succeeds "
+                "from 0.0785 N m stall and mu 0.4 up, i.e. it agrees with the quasi-static TORQUE (0.05-0.06 N m) but is MORE "
+                "optimistic on traction (quasi-static square edge: mu >= ~0.55). The r1 'stall at 0.11' came from the v1 "
+                "fallback params (rear payload x = -83 mm). The sim threshold has a 1.5 mm edge radius (A); measure the real "
+                "threshold profile and mu (M3, M4).",
     }
 
     # c) payload x sweep on the CAD C1 case
     base = cases["cad_c1_pay300"]
     m = base["mass_kg"]
-    x0 = -0.0739
+    x0 = payload_x()
     sweep = []
     for xp in np.arange(-0.08, 0.081, 0.01):
         cx = base["com_m"][0] + 0.3 * (xp - x0) / m
@@ -107,7 +110,9 @@ def main():
 
     # d) spin in place
     spin = {}
-    sim_ratio = {"carpet": 1.70, "hard": 1.93}     # sim/results.json effective track ratio, closed-loop gyro
+    _cl = SIM.get("b_spin", {}).get("closed_loop_gyro", {})
+    sim_ratio = {"carpet": _cl.get("carpet", {}).get("effective_track_ratio", 1.70),
+                 "hard": _cl.get("hard_floor", {}).get("effective_track_ratio", 1.93)}   # sim/results.json, gyro loop
     for cn in ("cad_c1_pay300", "cad_ld19_pay300", "cad_c1_pay0"):
         m, com = cases[cn]["mass_kg"], cases[cn]["com_m"]
         for surf in ("carpet", "hard"):
@@ -150,10 +155,10 @@ def main():
     a.plot(xs, [s["T_front"] or np.nan for s in sweep], "o-", label="front axle climbs")
     a.plot(xs, [s["T_rear"] or np.nan for s in sweep], "s-", label="rear axle climbs")
     a.axhline(0.0785, color="r", ls="--", label="printed stall 0.8 kgf.cm (TT, FIT0450)")
-    a.axvline(-73.9, color="k", ls=":", label="CAD r1 payload x = -73.9")
+    a.axvline(x0 * 1000, color="k", ls=":", label=f"CAD r3 payload x = {x0*1000:.0f}")
     a.axvline(best["payload_x_mm"], color="g", ls=":", label=f"best x = {best['payload_x_mm']:.0f} mm")
     a.set_xlabel("payload x [mm] (+ forward)"); a.set_ylabel("torque per wheel to climb 10 mm [N m]")
-    a.set_title("10 mm threshold, C1 build 1.33 kg, mu 0.6, quasi-static"); a.grid(alpha=.3); a.legend(fontsize=7)
+    a.set_title(f"10 mm threshold, C1 build {cases['cad_c1_pay300']['mass_kg']:.2f} kg, mu 0.6, quasi-static"); a.grid(alpha=.3); a.legend(fontsize=7)
     ks = list(MOTORS)
     pr = [MOTORS[k].t_stall for k in ks]
     lo = [res["datasheet_consistency"][k]["electrical_stall_Nm_range"][0] for k in ks]

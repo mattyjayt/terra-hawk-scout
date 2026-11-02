@@ -187,17 +187,23 @@ SRC.update({
 })
 
 
+def payload_x() -> float:
+    """CAD payload (cup keep-out) centre x [m] (v2-r3: -0.050)."""
+    return json.loads(PARAMS_JSON.read_text())["payload"]["com"][0]
+
+
 def cad_cases() -> dict:
-    """Mass/CoM/inertia cases from the CAD fit check (round-1 CAD, read-only for physics).
-    Uses out/robot_params.json first if the CAD engineer has written it."""
+    """Mass/CoM/inertia cases (round 4: CAD v2-r3). C1 default build from checks/fit_check_v2.json (written by the
+    CAD r3 fit check: scout_v2 = C1 + Hiwonder + MDD3A, cup at x = -50 mm); LD19 variant from
+    out/robot_params_ld19_hiwonder_pay.json. The no-payload variant has the same masses and is skipped."""
     out = {}
-    if PARAMS_JSON.exists():
-        p = json.loads(PARAMS_JSON.read_text())
-        out["robot_params"] = {"mass_kg": p["total_mass"], "com_m": p["com"], "source": f"robot_params.json {p.get('version')}"}
+    ld = ROOT / "out" / "robot_params_ld19_hiwonder_pay.json"
     if FIT_CHECK.exists():
-        names = {"scout_v2": "ld19", "scout_v2_c1": "c1", "scout_v2_no_payload": "ld19_lowtower"}
+        names = {"scout_v2": "c1"}
         for m in json.loads(FIT_CHECK.read_text()):
-            k = names.get(m["model"], m["model"])
+            if m["model"] not in names:
+                continue
+            k = names[m["model"]]
             out[f"cad_{k}_pay0"] = {"mass_kg": m["mass_empty_kg"], "com_m": [c / 1000 for c in m["com_empty_mm"]],
                                    "inertia": m.get("inertia_empty_about_com_kg_m2"),
                                    "scan_z_m": m["lidar_check"]["scan_plane_z_mm"] / 1000,
@@ -206,7 +212,14 @@ def cad_cases() -> dict:
                 out[f"cad_{k}_pay300"] = {"mass_kg": m["mass_with_payload_kg"], "com_m": [c / 1000 for c in m["com_with_payload_mm"]],
                                          "inertia": m.get("inertia_with_payload_about_com_kg_m2"),
                                          "scan_z_m": m["lidar_check"]["scan_plane_z_mm"] / 1000,
-                                         "source": f"checks/fit_check_v2.json {m['model']} (300 g payload at x=-73.9 mm)"}
+                                         "source": f"checks/fit_check_v2.json {m['model']} (300 g payload at x={payload_x()*1000:.0f} mm)"}
+    if ld.exists():
+        p = json.loads(ld.read_text())
+        out["cad_ld19_pay0"] = {"mass_kg": p["total_mass"], "com_m": p["com"], "inertia": p.get("inertia_about_com"),
+                                "scan_z_m": p["lidar_scan_plane_z"], "source": f"{ld.name} {p['version']} (empty)"}
+        w = p["with_payload"]
+        out["cad_ld19_pay300"] = {"mass_kg": w["total_mass"], "com_m": w["com"], "inertia": w.get("inertia_about_com"),
+                                  "scan_z_m": p["lidar_scan_plane_z"], "source": f"{ld.name} {p['version']} (300 g payload)"}
     return out
 
 

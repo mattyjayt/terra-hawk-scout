@@ -1,5 +1,5 @@
 {
- "_doc": "Per-wheel gear motor profiles at rated voltage (wheel-side numbers). Linear DC motor model: tau = Ts*(u*V/Vr) - (Ts/w0)*omega, current I = I0 + tau/Kt with Kt = Ts/(Istall-I0). armature = reflected rotor inertia (assumed). frictionloss = Ts*I0/Istall (no-load current share of stall torque, derived).",
+ "_doc": "Per-wheel gear motor profiles at rated voltage (wheel-side numbers). Linear DC motor model: tau = Ts*(u*V/Vr) - (Ts/w0)*omega, current I = I0 + tau/Kt with Kt = Ts/(Istall-I0). armature = reflected rotor inertia (assumed). frictionloss = Ts*I0/Istall (no-load current share of stall torque, derived). Profiles are given AT THE VOLTAGE THE FIRMWARE APPLIES (PWM average-voltage cap), so rated_voltage = cap.",
  "tt_1_48_6v": {
   "label": "Stock TT 1:48 gear motor (Elegoo kit / Adafruit 3777 class), no encoder",
   "rated_voltage": 6.0,
@@ -18,19 +18,21 @@
    "armature": "assumed: 130-size rotor ~6e-8 kg m2 x 48^2"
   }
  },
- "dfrobot_fit0450_6v": {
-  "label": "DFRobot FIT0450 TT motor with quadrature hall encoder, 120:1, 6 V 160 RPM (encoder TT candidate)",
-  "rated_voltage": 6.0,
-  "stall_torque": 0.0785,
-  "no_load_speed": 16.76,
-  "stall_current": 2.8,
-  "no_load_current": 0.17,
-  "gear_ratio": 120,
-  "encoder_cpr_wheel": 1920,
-  "armature": 0.00086,
+ "hiwonder_1_42_8v4": {
+  "label": "Hiwonder TT Hall-encoder gear motor 1:42 (SKU 21100132) at the 8.4 V PWM average-voltage cap (MDD3A on the 3S pack)",
+  "rated_voltage": 8.4,
+  "stall_torque": 0.1648,
+  "no_load_speed": 22.56,
+  "stall_current": 1.68,
+  "no_load_current": 0.1,
+  "gear_ratio": 42,
+  "encoder_cpr_wheel": 1008,
+  "armature": 0.000106,
   "sources": {
-   "all": "datasheet: DFRobot wiki FIT0450, https://wiki.dfrobot.com/fit0450/ : no-load 160 rpm @6V, no-load current 0.17 A @6V, max stall current 2.8 A, max stall torque 0.8 kgf.cm, rated torque 0.2 kgf.cm, 16 pulses/motor rev x 120 = 1920 per wheel rev",
-   "armature": "assumed: 130-size rotor ~6e-8 kg m2 x 120^2"
+   "listing": "datasheet (listing only): https://www.hiwonder.com/products/tt-motor-plastic 'Working voltage DC 3-12V, no-load speed 150 RPM, ratio 1:42, torque 1.2 kg.cm' -- no reference voltage published",
+   "interpretation": "same as analysis/common.py MOTORS['hiwonder'] (physics r2): 150 rpm, 0.10 A no-load and 1.2 kgf.cm = 0.1177 N m stall, 1.2 A stall, all at 6 V (A); linear DC model scaled to 8.4 V: Ts = 0.1177*8.4/6 = 0.1648 N m, Istall = 1.68 A (R 5 ohm), w0 = (8.4 - 0.1*5)/Ke = 22.56 rad/s (Ke 0.350 V s/rad)",
+   "conservative_bounds": "if 150 rpm / 1.2 kgf.cm were quoted at 7.4 V: Ts(8.4) = 0.1336; if 1.2 kgf.cm is the stall AT 8.4 V: 0.1177 -> scenarios.py d_threshold.stall_torque_sweep covers both",
+   "armature": "assumed: 130-size rotor ~6e-8 kg m2 x 42^2"
   }
  }
 }

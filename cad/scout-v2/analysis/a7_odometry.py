@@ -78,14 +78,11 @@ def main():
                          "calibration is for the wrong floor)")
     res["gyro"] = budget
     res["imu_placement"] = {
-        "cad_r1": "GY-521 hangs 10 mm under the top plate at x = 0, y = 0, chip facing DOWN",
-        "issues": ["URDF imu_joint has rpy 0 0 0 and z 0.059 (v1); CAD chip faces down at z ~0.050 -> URDF needs "
-                   "rpy (pi, 0, 0) [or the driver must flip axes] and the CAD z; a sign error in yaw rate is a classic "
-                   "EKF divergence",
-                   "Pi 5 board spans x = 2.5-87.5 mm on the top plate: the IMU sits under the Pi's rear edge -> "
-                   "temperature swings of a few C when the CPU load changes; at the datasheet-derived 0.32 dps/C "
-                   "worst coefficient 0.5 C of drift uses the whole bias budget -> ZUPT is mandatory, move IMU to "
-                   "x ~ -25 mm (still within 25 mm of the CoR), keep 10 mm air gap from the battery",
+        "cad_r3": "GY-521 hung chip-down on 2 x M3 x 10 nylon standoffs under the top plate, die at (-24, 0, 46) mm, "
+                  "24 mm from the CoR, rpy (pi, 0, 0); round-4 URDF imu_joint = robot_params sensors.imu (verified)",
+        "issues": ["CLOSED (r4): URDF imu_joint now carries roll pi and the CAD position; the driver must NOT flip axes again",
+                   "CLOSED (r3): IMU moved from under the Pi to x = -24 mm, away from the CPU heat; ZUPT still mandatory "
+                   "(0.32 dps/C worst coefficient)",
                    "LiDAR motor (C1 600 rpm = 10 Hz) and gear mesh vibration couple through the brass towers: set "
                    "MPU DLPF to 44 Hz, sample >= 200 Hz on the ESP32, average to 50-100 Hz; nylon standoffs "
                    "(already in CAD) help",

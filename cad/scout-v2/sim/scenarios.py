@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 """Scout physics scenarios in MuJoCo -> sim/results.json, sim/plots/*.png, sim/videos/*.mp4.
 
-Usage: python sim/scenarios.py [params.json] [--motor tt_1_48_6v] [--no-video] [--only a,b,c,d,e]
+Usage: python sim/scenarios.py [params.json] [--motor hiwonder_1_42_8v4] [--no-video] [--only a,b,c,d,e,f]
+         [--out sim/results.json]
+Round 4: params = out/robot_params.json (CAD v2-r3), default motor = Hiwonder 1:42 at the 8.4 V PWM cap.
+The stock TT comparison run is `--motor tt_1_48_6v --no-video --out sim/results_tt_1_48_6v.json`
+(plots go to sim/plots/tt_1_48_6v/); sim/compare.py folds it and the round-1 numbers into results.json.
 
 Drive model (per wheel): ESP32-style PI wheel-speed loop at 100 Hz -> PWM duty u in [-1, 1] ->
 linear DC motor at the wheel: tau = Ts*u - (Ts/w0)*omega, clipped to +-Ts (stall-current limit),
-plus joint frictionloss = gearbox drag. Short-brake (TB6612 both IN high) = u=0; coast = tau 0.
+plus joint frictionloss = gearbox drag. Brake = MDD3A both inputs LOW (motor terminals shorted, u = 0,
+back-EMF torque only); coast = tau 0 (not possible on the MDD3A, kept for reference).
 """
 import argparse
 import json
@@ -35,7 +40,7 @@ def quat_rpy(q):
 
 
 class Sim:
-    def __init__(self, P, motor="tt_1_48_6v", ctrl_hz=100, kp=0.08, ki=1.5, record=None, **build_kw):
+    def __init__(self, P, motor=gen_mjcf.DEFAULT_MOTOR, ctrl_hz=100, kp=0.08, ki=1.5, record=None, **build_kw):
         self.P = P
         xml, self.meta = gen_mjcf.build(P, motor=motor, **build_kw)
         self.m = mujoco.MjModel.from_xml_string(xml)
@@ -289,14 +294,14 @@ def scen_b(P, motor, plt, video):
     out = {"open_loop_nominal_kinematics": {}, "closed_loop_gyro": {}, "mu_sweep_carpet_open_loop": []}
     fig, ax = plt.subplots(1, 2, figsize=(11, 4))
     for floor in ("carpet", "hard_floor"):
-        rec = {"dist": 0.6, "az": 120, "el": -35} if (video and floor == "carpet") else None
-        s, L, r = spin_once(P, motor, floor, record=rec, seconds=6.0 if rec else 4.0)
-        if rec:
-            r["video"] = s.save_video("spin_in_place_carpet")
+        s, L, r = spin_once(P, motor, floor, seconds=4.0)
         out["open_loop_nominal_kinematics"][floor] = r
         ax[0].plot(L["t"], L["wz"], label=f"{floor} open-loop")
         ax[1].plot(L["t"], np.abs(L["tau_fl"]), label=f"{floor} open-loop")
-        s, L, r = spin_once(P, motor, floor, closed_loop=True, seconds=5.0)
+        rec = {"dist": 0.6, "az": 120, "el": -35} if (video and floor == "carpet") else None
+        s, L, r = spin_once(P, motor, floor, closed_loop=True, record=rec, seconds=6.0 if rec else 5.0)
+        if rec:
+            r["video"] = s.save_video("spin_in_place_carpet")
         out["closed_loop_gyro"][floor] = r
         ax[0].plot(L["t"], L["wz"], ls="--", label=f"{floor} gyro loop")
         ax[1].plot(L["t"], np.abs(L["tau_fl"]), ls="--", label=f"{floor} gyro loop")
@@ -304,7 +309,8 @@ def scen_b(P, motor, plt, video):
         _, _, r = spin_once(P, motor, "carpet", mu=mu, seconds=3.0)
         out["mu_sweep_carpet_open_loop"].append({k: r[k] for k in ("mu", "achieved_yaw_rate", "effective_track_ratio", "mean_wheel_torque_Nm", "torque_pct_stall")})
     ax[0].axhline(1.0, c="k", ls=":"); ax[0].set(xlabel="t [s]", ylabel="yaw rate [rad/s]", title="(b) spin in place, cmd 1 rad/s")
-    ax[1].axhline(gen_mjcf.MOTORS[motor]["stall_torque"], c="r", ls=":", label="stall"); ax[1].set(xlabel="t [s]", ylabel="|tau| wheel_fl [N m]")
+    ax[1].axhline(gen_mjcf.MOTORS[motor]["stall_torque"], c="r", ls=":", label="stall")
+    ax[0].set_title(f"(b) spin in place, cmd 1 rad/s ({motor})"); ax[1].set(xlabel="t [s]", ylabel="|tau| wheel_fl [N m]")
     for a in ax:
         a.legend(fontsize=7); a.grid(alpha=.3)
     fig.tight_layout(); fig.savefig(PLOTS / "b_spin.png", dpi=110); plt.close(fig)
@@ -317,7 +323,7 @@ def scen_c(P, motor, plt, video):
     t_stop = 2.0
     for floor in ("hard_floor", "carpet"):
         for mode in ("active", "brake", "coast"):
-            rec = {"dist": 0.6, "az": 70, "el": -12} if (video and floor == "hard_floor" and mode == "active") else None
+            rec = {"dist": 0.6, "az": 70, "el": -12} if (video and floor == "hard_floor" and mode == "brake") else None
             s = Sim(P, motor, floor=floor, payload=True, record=rec)
             s.set_twist(0.3, 0.0)
 
@@ -360,11 +366,15 @@ def scen_c(P, motor, plt, video):
     cz = (P.total_mass * P.raw["com"][2] + P.payload["mass"] * P.payload["com"][2]) / mt
     xr = P.wheels["rl"]["pos"][0]
     xf = P.wheels["fl"]["pos"][0]
+    tb = max(out[f"{f}_brake"]["stop_time_s"] or 9 for f in ("hard_floor", "carpet"))
+    out["_watchdog_budget"] = {"req_s": 0.3, "worst_brake_LL_stop_s": tb, "max_watchdog_timeout_s": round(0.3 - tb, 3),
+                               "note": "REQ-SCOUT-002 counts from the last /cmd_vel: watchdog timeout + braking <= 300 ms. "
+                                       "Brake = MDD3A M1A=M1B=LOW (short brake)."}
     out["_analytic_with_payload"] = {"com_x_m": round(cx, 4), "com_z_m": round(cz, 4),
                                      "front_wheel_lift_forward_accel_mps2": round(9.81 * (cx - xr) / cz, 2),
                                      "rear_wheel_lift_forward_decel_mps2": round(9.81 * (xf - cx) / cz, 2),
                                      "note": "rigid-body quasi-static: front axle unloads when forward accel (or braking while reversing) > g*(cx-x_rear)/h; rear axle unloads when forward decel > g*(x_front-cx)/h. Friction caps |a| at mu*g (7.8 m/s2 hard floor) and motor stall caps 4*Ts/r/m."}
-    ax[0].set(xlim=(-0.3, 1.5), xlabel="t - t_stop [s]", ylabel="vx [m/s]", title="(c) e-stop from 0.3 m/s, 300 g payload")
+    ax[0].set(xlim=(-0.3, 1.5), xlabel="t - t_stop [s]", ylabel="vx [m/s]", title=f"(c) e-stop from 0.3 m/s, 300 g payload ({motor})")
     ax[1].set(xlim=(-0.3, 1.5), xlabel="t - t_stop [s]", ylabel="pitch [deg] (+ = nose down)")
     ax[2].set(xlim=(-0.3, 1.5), xlabel="t - t_stop [s]", ylabel="min rear wheel normal [N]")
     for a in ax:
@@ -379,7 +389,7 @@ def scen_d(P, motor, plt, video):
     fig, ax = plt.subplots(1, 3, figsize=(14, 4))
     for v in (0.05, 0.15, 0.3):
         for payload in (False, True):
-            rec = {"dist": 0.55, "az": 70, "el": -10} if (video and v == 0.3 and payload) else None
+            rec = {"dist": 0.55, "az": 70, "el": -10} if (video and payload and v in (0.05, 0.3)) else None
             s = Sim(P, motor, floor="hard_floor", payload=payload, threshold_x=thr_x, record=rec)
             s.set_twist(v, 0.0)
             hits = []
@@ -405,21 +415,35 @@ def scen_d(P, motor, plt, video):
                         "max_pitch_deg": round(math.degrees(float(np.abs(L["pitch"]).max())), 2),
                         "chassis_touched_threshold": bool(any(hits)), "pass": ok}
             if rec:
-                out[key]["video"] = s.save_video("threshold_climb_0p3_payload")
+                out[key]["video"] = s.save_video("threshold_climb_0p3_payload" if v == 0.3 else "threshold_climb_crawl_payload")
             ax[0].plot(L["t"], L["z"] - L["z"][0], label=key)
             ax[1].plot(L["t"], allt, label=key)
             ax[2].plot(L["t"], L["vx"], label=key)
-    # slow crawl with payload stalls at 6 V: does a higher motor-rail voltage fix it? (TT rated 3-6 V; >6 V shortens life)
-    out["slow_payload_voltage_sweep"] = []
-    for V in (6.0, 7.4, 8.4):
-        s = Sim(P, motor, floor="hard_floor", payload=True, threshold_x=thr_x, supply_voltage=V)
+    # crawl (0.05 m/s) with payload: how much stall torque does it take? (covers the Hiwonder listing ambiguity:
+    # 0.1177 = 1.2 kgf.cm at 8.4 V, 0.1336 = quoted at 7.4 V, 0.1648 = quoted at 6 V; 0.0785 = stock TT @ 6 V)
+    M = gen_mjcf.MOTORS[motor]
+    def crawl(payload=True, **kw):
+        s = Sim(P, motor, floor="hard_floor", payload=payload, threshold_x=thr_x, **kw)
         s.set_twist(0.05, 0.0)
         L = run(s, 0.9 / 0.05 + 1.0)
         ok = bool(L["x"][-1] + P.wheels["rl"]["pos"][0] > thr_x + 0.06)
         allt = np.max(np.abs(np.stack([L[f"tau_{k}"] for k in WHEELS])), axis=0)
-        out["slow_payload_voltage_sweep"].append({"supply_V": V, "stall_torque_Nm": round(s.Ts, 4), "success": ok,
-                                                  "peak_wheel_torque_Nm": round(float(allt.max()), 4)})
-    ax[0].set(xlabel="t [s]", ylabel="base_link z rise [m]", title=f"(d) 10 mm threshold at x={thr_x} m (hard floor)")
+        return s, ok, allt
+    out["stall_torque_sweep_crawl_payload"] = []
+    for T in sorted({0.0785, 0.0968, 0.1099, 0.1177, 0.1336, round(M["stall_torque"], 4)}):
+        V = M["rated_voltage"] * T / M["stall_torque"]
+        s, ok, allt = crawl(supply_voltage=V)
+        out["stall_torque_sweep_crawl_payload"].append({"stall_torque_Nm": round(s.Ts, 4), "equiv_supply_V": round(V, 2),
+                                                         "success": ok, "peak_wheel_torque_Nm": round(float(allt.max()), 4)})
+    # traction: floor AND threshold mu (finding #2 says a square 10 mm edge needs mu >= 0.55-0.59)
+    for pay in (True, False):   # empty robot is 67 % front-loaded: quasi-static front-axle traction limit is worst there
+        key = "mu_sweep_crawl_payload" if pay else "mu_sweep_crawl_empty"
+        out[key] = []
+        for mu in (0.3, 0.4, 0.5, 0.6, 0.7):
+            s, ok, allt = crawl(payload=pay, mu=mu, threshold_mu=mu)
+            out[key].append({"mu_floor_and_edge": mu, "success": ok, "peak_wheel_torque_Nm": round(float(allt.max()), 4),
+                             "saturated": bool(allt.max() >= 0.98 * s.Ts)})
+    ax[0].set(xlabel="t [s]", ylabel="base_link z rise [m]", title=f"(d) 10 mm threshold at x={thr_x} m (hard floor, {motor})")
     ax[1].axhline(s.Ts, c="r", ls=":", label="stall"); ax[1].set(xlabel="t [s]", ylabel="max |wheel torque| [N m]")
     ax[2].set(xlabel="t [s]", ylabel="vx [m/s]")
     for a in ax:
@@ -435,7 +459,7 @@ def scen_e(P, motor, plt, eff_ratio):
                 "wheel_odom_calibrated_track": dict(track=P.track * eff_ratio, gyro=False, floor="carpet"),
                 "wheel_odom_carpet_calibration_on_hard_floor": dict(track=P.track * eff_ratio, gyro=False, floor="hard_floor"),
                 "wheel_distance_plus_gyro_yaw": dict(track=P.track, gyro=True, floor="carpet")}
-    gyro_noise = math.radians(0.005) / math.sqrt(1 / 100) * 1.0   # MPU-6050 0.005 deg/s/sqrt(Hz) at 100 Hz sampling
+    gyro_noise_1k = math.radians(0.005) * math.sqrt(1000 / 2)    # MPU-6050 0.005 deg/s/sqrt(Hz), 1 kHz samples (Nyquist 500 Hz)
     gyro_bias = math.radians(0.05)                                  # assumed residual bias after still-calibration
     out = {}
     fig, ax = plt.subplots(1, 1, figsize=(6, 6))
@@ -448,7 +472,12 @@ def scen_e(P, motor, plt, eff_ratio):
         st = {"seg": 0, "x0": 0.0, "y0": 0.0, "th_target": 0.0, "done": False, "dist": 0.0}
         path_est = []
 
+        gy = {"acc": 0.0}
+
         def hook(s):
+            # gyro integrated every physics step (1 kHz, as the firmware integrates a >= 200 Hz IMU with DLPF);
+            # bias + white noise at the MPU-6050 density
+            gy["acc"] += (s.yaw_rate() + gyro_bias + gyro_noise_1k * rng.standard_normal()) * s.m.opt.timestep
             if s.n % s.dec:
                 return
             dt = s.dec * s.m.opt.timestep
@@ -458,7 +487,7 @@ def scen_e(P, motor, plt, eff_ratio):
             est["q"] = q
             ds = (dl + dr) / 2
             if cfg["gyro"]:
-                dth = (s.yaw_rate() + gyro_bias + gyro_noise * rng.standard_normal()) * dt
+                dth, gy["acc"] = gy["acc"], 0.0
             else:
                 dth = (dr - dl) / cfg["track"]
             est["x"] += ds * math.cos(est["th"] + dth / 2)
@@ -504,37 +533,96 @@ def scen_e(P, motor, plt, eff_ratio):
         ax.plot(pe[:, 0], pe[:, 1], ls="--", lw=0.8, label=f"estimate: {name}")
     ax.set_aspect("equal"); ax.grid(alpha=.3); ax.legend(fontsize=6); ax.set(xlabel="x [m]", ylabel="y [m]", title="(e) 2 m square, robot drives on its own estimate")
     fig.tight_layout(); fig.savefig(PLOTS / "e_odometry.png", dpi=110); plt.close(fig)
-    out["_noise_model"] = {"gyro_noise_density": "0.005 deg/s/sqrt(Hz) (MPU-6050 datasheet PS-MPU-6000A rate noise spectral density)",
+    out["_noise_model"] = {"gyro_noise_density": "0.005 deg/s/sqrt(Hz) (MPU-6050 datasheet PS-MPU-6000A rate noise spectral density), integrated at 1 kHz",
                            "gyro_bias_deg_s": "0.05 residual after still calibration (assumed)", "calibrated_track_ratio": eff_ratio}
+    return out
+
+
+def scen_f(P, motor, plt):
+    """Payload retention: the 300 g cup as a FREE body on the top plate (friction only) inside the 4 x M3 x 20 fence
+    (2 mm radial play, CAD r3), vs no fence. Events with the welded-payload robot's worst accelerations."""
+    out = {"_setup": {"cup": "Ø75 x 80 mm, 300 g, uniform (robot_params payload)", "fence": "4 x M3 x 20 brass posts at 45 deg, 2 mm play",
+                      "mu_cup_deck": "assumed 0.3-0.5 (plastic on acrylic), no measurement"}}
+    fig, ax = plt.subplots(1, 2, figsize=(11, 4))
+    pid = None
+    for fence in (True, False):
+        for mu in (0.3, 0.5):
+            for ev in ("estop_active", "estop_brake_LL", "full_duty_start"):
+                s = Sim(P, motor, floor="hard_floor", payload="free", mu_cup=mu, fence=fence)
+                b = s.m.body("payload").id
+                qa = s.m.jnt_qposadr[s.m.body_jntadr[b]]
+                ch = s.m.body("chassis").id
+                def rel(s):
+                    R_ = s.d.xmat[ch].reshape(3, 3)
+                    return R_.T @ (s.d.xpos[b] - s.d.xpos[ch])
+                r0 = rel(s)
+                t0 = 1.5
+                if ev == "full_duty_start":
+                    s.set_lr(s.w0 * 2, s.w0 * 2)
+                else:
+                    s.set_twist(0.3, 0.0)
+                def hook(s, ev=ev):
+                    if ev != "full_duty_start" and s.d.time >= t0:
+                        if ev == "estop_active":
+                            s.set_twist(0.0, 0.0)
+                        else:
+                            s.mode = "brake"
+                rows = []
+                T = 1.0 if ev == "full_duty_start" else 3.0
+                for i in range(int(T / s.m.opt.timestep)):
+                    hook(s); s.step()
+                    if i % 5 == 0:
+                        d = rel(s) - r0
+                        q = s.d.xquat[b]; qc = s.d.xquat[ch]
+                        tilt = math.degrees(2 * math.acos(min(1.0, abs(float(np.dot(q, qc))))))
+                        rows.append((s.d.time, d[0], d[1], d[2], tilt))
+                A = np.array(rows)
+                slide = float(np.max(np.hypot(A[:, 1], A[:, 2])))
+                lost = bool(np.min(A[:, 3]) < -0.01 or slide > 0.010)
+                key = f"{'fence' if fence else 'no_fence'}_mu{mu}_{ev}"
+                out[key] = {"max_slide_mm": round(1000 * slide, 2), "final_slide_mm": round(1000 * float(np.hypot(A[-1, 1], A[-1, 2])), 2),
+                            "max_tilt_deg": round(float(A[:, 4].max()), 2), "cup_lost_or_slid_gt_10mm": lost,
+                            "pass": bool(not lost and A[:, 4].max() < 10)}
+                if ev == "estop_active" and mu == 0.3:
+                    ax[0].plot(A[:, 0], 1000 * A[:, 1], label=key)
+                if ev == "full_duty_start" and mu == 0.3:
+                    ax[1].plot(A[:, 0], 1000 * A[:, 1], label=key)
+    ax[0].set(xlabel="t [s]", ylabel="cup x rel. chassis [mm]", title="(f) cup slide, active e-stop, mu 0.3")
+    ax[1].set(xlabel="t [s]", ylabel="cup x rel. chassis [mm]", title="(f) cup slide, full-duty start, mu 0.3")
+    for a in ax:
+        a.legend(fontsize=7); a.grid(alpha=.3)
+    fig.tight_layout(); fig.savefig(PLOTS / "f_payload_retention.png", dpi=110); plt.close(fig)
     return out
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("params", nargs="?", default=None)
-    ap.add_argument("--motor", default="tt_1_48_6v")
+    ap.add_argument("--motor", default=gen_mjcf.DEFAULT_MOTOR)
     ap.add_argument("--no-video", action="store_true")
-    ap.add_argument("--only", default="a,b,c,d,e")
+    ap.add_argument("--only", default="a,b,c,d,e,f")
     ap.add_argument("--out", default=str(HERE / "results.json"))
     a = ap.parse_args()
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     global PLOTS
-    if a.motor != "tt_1_48_6v":
+    if a.motor != gen_mjcf.DEFAULT_MOTOR:
         PLOTS = PLOTS / a.motor
     PLOTS.mkdir(parents=True, exist_ok=True)
     P = Params(a.params or gen_mjcf.default_params())
     video = not a.no_video
     outp = Path(a.out)
     res = json.loads(outp.read_text()) if outp.exists() else {}
-    res["_meta"] = {"params": str(P.path), "params_version": P.version, "motor": a.motor, "motor_profile": gen_mjcf.MOTORS[a.motor],
+    res["_meta"] = {"params": str(P.path.resolve().relative_to(HERE.parent)), "params_version": P.version,
+                    "total_mass_with_payload_kg": P.total_mass + P.payload["mass"], "motor": a.motor, "motor_profile": gen_mjcf.MOTORS[a.motor],
                     "total_mass_kg": P.total_mass, "track_m": P.track, "wheelbase_m": P.wheelbase, "wheel_radius_m": P.wheel_radius,
                     "floors": {k: v for k, v in gen_mjcf.FLOORS.items() if not k.startswith("_")},
                     "mujoco": mujoco.__version__, "generated": time.strftime("%Y-%m-%d %H:%M")}
     todo = a.only.split(",")
     for key, fn in (("a_straight", lambda: scen_a(P, a.motor, plt)), ("b_spin", lambda: scen_b(P, a.motor, plt, video)),
-                    ("c_estop_payload", lambda: scen_c(P, a.motor, plt, video)), ("d_threshold", lambda: scen_d(P, a.motor, plt, video))):
+                    ("c_estop_payload", lambda: scen_c(P, a.motor, plt, video)), ("d_threshold", lambda: scen_d(P, a.motor, plt, video)),
+                    ("f_payload_retention", lambda: scen_f(P, a.motor, plt))):
         if key[0] in todo:
             t0 = time.time()
             res[key] = fn()

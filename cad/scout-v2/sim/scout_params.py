@@ -67,21 +67,23 @@ class Params:
         parts = [(v["mass"], _link_com(v), _link_inertia(v)) for v in self.chassis_links.values()]
         self.chassis_mass, self.chassis_com, self.chassis_I = lump(parts)
         self.sensors = p.get("sensors", {})
-        pl = p.get("payload") or p.get("links", {}).get("payload")
-        if pl is None:   # default: v1 payload bay
-            pl = {"mass": 0.3, "com": [-0.083, 0.0, 0.0957], "size": [0.06, 0.08, 0.06]}
+        pl = dict(p.get("payload") or p.get("links", {}).get("payload"))   # v2-r3: Ø75 x 80 keep-out at x = -50 mm
         if "size" not in pl and "bbox_min" in pl:
             pl["size"] = list(np.array(pl["bbox_max"]) - np.array(pl["bbox_min"]))
         if "com" not in pl and "bbox_min" in pl:
             pl["com"] = list(_link_com(pl))
+        pl["cylinder"] = "cylinder" in str(pl.get("shape", ""))
         self.payload = pl
+        self.with_payload = p.get("with_payload", {})
         self.total_mass = self.chassis_mass + sum(w["mass"] for w in self.wheels.values())
 
     def boxes(self):
-        """(name, centre, size) for every chassis link with a bbox — used for visuals/collision."""
+        """(name, centre, size) for every chassis link with a bbox — used for visuals/collision.
+        Cable routes (cable_*) keep their mass in the lumped inertia but get no geometry: their bboxes are
+        loose envelopes of bent tubes and would invent collisions (e.g. with the free payload cup)."""
         out = []
         for k, v in self.chassis_links.items():
-            if "bbox_min" in v:
+            if "bbox_min" in v and not k.startswith("cable_"):
                 lo, hi = np.array(v["bbox_min"]), np.array(v["bbox_max"])
                 out.append((k, (lo + hi) / 2, hi - lo))
         return out

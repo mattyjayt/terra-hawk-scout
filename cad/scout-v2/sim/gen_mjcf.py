@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """robot_params.json -> MuJoCo MJCF (sim/scout.xml and variants).
 
-Usage: python sim/gen_mjcf.py [params.json] [--floor carpet|hard_floor] [--motor tt_1_48_6v]
+Usage: python sim/gen_mjcf.py [params.json] [--floor carpet|hard_floor] [--motor hiwonder_1_42_8v4]
                               [--payload] [--threshold X] [--out sim/scout.xml]
+Params default to out/robot_params.json (CAD v2-r3; the payload block there is the Ø75 x 80 mm, 300 g cup
+keep-out at x = -50 mm). payload=True welds the cup to the chassis; payload="free" gives it its own freejoint
+resting on the top plate inside the 4-post fence (fence=False removes the posts' collision) for retention tests.
 
 Same params file and same lumping (sim/scout_params.py) as urdf/gen_description.py, so the
 URDF and the MJCF always agree on masses and frames. World frame = REP-103 at start: the
@@ -36,13 +39,15 @@ def v(x):
     return " ".join(f"{a:.6g}" for a in x)
 
 
+DEFAULT_MOTOR = "hiwonder_1_42_8v4"
+
+
 def default_params():
-    p = ROOT / "out" / "robot_params.json"
-    return p if p.exists() else HERE / "params_v1_fallback.json"
+    return ROOT / "out" / "robot_params.json"
 
 
-def build(params, floor="carpet", motor="tt_1_48_6v", payload=False, threshold_x=None,
-          threshold_floor="hard_floor", supply_voltage=None, mu=None):
+def build(params, floor="carpet", motor=DEFAULT_MOTOR, payload=False, threshold_x=None,
+          threshold_floor="hard_floor", supply_voltage=None, mu=None, threshold_mu=None, mu_cup=0.4, fence=True):
     P = params if isinstance(params, Params) else Params(params)
     M = MOTORS[motor]
     F = list(FLOORS[floor]["friction"])
@@ -68,7 +73,8 @@ def build(params, floor="carpet", motor="tt_1_48_6v", payload=False, threshold_x
             rgba = "0.12 0.44 0.26 1"
         elif "plate" not in name:
             rgba = "0.55 0.35 0.68 1"
-        boxes.append(f'      <geom name="{name}" type="box" pos="{v(cc)}" size="{v([x / 2 for x in s])}" rgba="{rgba}" class="chassis"/>')
+        nocol = ' contype="0" conaffinity="0"' if (name.startswith("fence_post") and not fence) else ""
+        boxes.append(f'      <geom name="{name}" type="box" pos="{v(cc)}" size="{v([x / 2 for x in s])}" rgba="{rgba}" class="chassis"{nocol}/>')
 
     wheels = []
     for k in WHEELS:
@@ -82,20 +88,30 @@ def build(params, floor="carpet", motor="tt_1_48_6v", payload=False, threshold_x
         <geom type="box" size="{w['radius'] * 0.7:.4g} {w['width'] / 2 + 0.0005:.4g} 0.004" rgba="0.9 0.9 0.9 1" contype="0" conaffinity="0" mass="0"/>
       </body>""")
 
-    pl = ""
+    pl, pl_free = "", ""
     if payload:
         p = P.payload
         pc = [p["com"][0], p["com"][1], p["com"][2] - bz]
-        pl = (f'      <body name="payload" pos="{v(pc)}">\n'
-              f'        <geom name="payload" type="box" size="{v([x / 2 for x in p["size"]])}" mass="{p["mass"]:.6g}" rgba="0.2 0.7 0.3 1" class="chassis"/>\n'
-              '      </body>')
+        shape = (f'type="cylinder" size="{p["size"][0] / 2:.6g} {p["size"][2] / 2:.6g}"' if p.get("cylinder")
+                 else f'type="box" size="{v([x / 2 for x in p["size"]])}"')
+        if payload == "free":   # own body on the world: rests on the top plate, held only by friction + fence posts
+            pw = [p["com"][0], p["com"][1], p["com"][2] + 0.0008]
+            pl_free = (f'    <body name="payload" pos="{v(pw)}">\n      <freejoint name="payload_free"/>\n'
+                       f'      <geom name="payload" {shape} mass="{p["mass"]:.6g}" rgba="0.2 0.7 0.3 1" condim="4" priority="2" '
+                       f'friction="{mu_cup:.4g} 0.002 0.0001" solref="0.004 1"/>\n    </body>')
+        else:
+            pl = (f'      <body name="payload" pos="{v(pc)}">\n'
+                  f'        <geom name="payload" {shape} mass="{p["mass"]:.6g}" rgba="0.2 0.7 0.3 1" class="chassis"/>\n'
+                  '      </body>')
 
     thr = ""
     if threshold_x is not None:
         # Rounded-rectangle profile: two boxes + two capsules (edge radius rc). A sharp box edge gives a
         # wrong (horizontal) contact normal in MuJoCo's cylinder-box collider -> no climb at all.
         T = THRESHOLD
-        TF = FLOORS[threshold_floor]["friction"]
+        TF = list(FLOORS[threshold_floor]["friction"])
+        if threshold_mu is not None:
+            TF[0] = threshold_mu
         h, dd, ww, rc = T["height"], T["depth"], T["width"], T["edge_radius"]
         att = f'priority="1" condim="4" friction="{v(TF)}" rgba="0.55 0.35 0.2 1" solref="0.004 1"'
         thr = "\n".join([
@@ -109,9 +125,11 @@ def build(params, floor="carpet", motor="tt_1_48_6v", payload=False, threshold_x
     sens = P.sensors.get("imu", {"pos": [0, 0, bz]})["pos"]
     imu = [sens[0], sens[1], sens[2] - bz]
     acts = "\n".join(f'    <motor name="m_{k}" joint="wheel_{k}_joint" gear="1" ctrllimited="true" ctrlrange="{-Ts:.6g} {Ts:.6g}"/>' for k in WHEELS)
-    meta = {"params": str(P.path), "floor": floor, "mu": F[0], "motor": motor, "payload": payload,
+    meta = {"params": str(P.path), "floor": floor, "mu": F[0], "motor": motor, "payload": payload, "mu_cup": mu_cup if payload == "free" else None,
+            "fence": fence, "threshold_mu": threshold_mu,
             "threshold_x": threshold_x, "stall_torque": Ts, "no_load_speed": M["no_load_speed"] * (supply_voltage or M["rated_voltage"]) / M["rated_voltage"],
-            "crr": FLOORS[floor]["friction"][2] / P.wheel_radius, "total_mass": P.total_mass + (P.payload["mass"] if payload else 0)}
+            "crr": FLOORS[floor]["friction"][2] / P.wheel_radius, "total_mass": P.total_mass + (P.payload["mass"] if payload else 0),
+            "supply_voltage": supply_voltage or M["rated_voltage"]}
     return f"""<mujoco model="scout">
   <!-- GENERATED by sim/gen_mjcf.py from {P.path.name} ({P.version}); do not hand-edit.
        meta: {json.dumps(meta)} -->
@@ -142,6 +160,7 @@ def build(params, floor="carpet", motor="tt_1_48_6v", payload=False, threshold_x
 {pl}
 {chr(10).join(wheels)}
     </body>
+{pl_free}
   </worldbody>
   <actuator>
 {acts}
@@ -158,7 +177,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("params", nargs="?", default=None)
     ap.add_argument("--floor", default="carpet", choices=list(FLOORS.keys() - {"_doc"}))
-    ap.add_argument("--motor", default="tt_1_48_6v", choices=[k for k in MOTORS if not k.startswith("_")])
+    ap.add_argument("--motor", default=DEFAULT_MOTOR, choices=[k for k in MOTORS if not k.startswith("_")])
     ap.add_argument("--payload", action="store_true")
     ap.add_argument("--threshold", type=float, default=None)
     ap.add_argument("--out", default=str(HERE / "scout.xml"))

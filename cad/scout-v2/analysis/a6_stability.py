@@ -1,4 +1,4 @@
-"""6. Stability (round 2, CAD mass cases from checks/fit_check_v2.json):
+"""6. Stability (round 4: CAD v2-r3 mass cases, see common.cad_cases):
 static tip angles, wheel-lift accelerations (accel / brake / lateral), the 10 mm threshold pitch,
 a 5 deg ramp, spin, payload retention (cup sliding / tipping on the deck), static CoM limits,
 and the stop budget vs REQ-SCOUT-002 / -009.
@@ -13,7 +13,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from common import ENV, G, HERE, MOTORS, ROOT, cad_cases, fit_check_raw, r3, save_section
+from common import ENV, G, HERE, MOTORS, PARAMS_JSON, ROOT, cad_cases, fit_check_raw, payload_x, r3, save_section
 from loads import AX_F, AX_R, R
 
 Y_W = 0.062                 # wheel centre plane = contact line (dims.WHEEL_Y; tyre outer edge 75 mm -> conservative)
@@ -44,7 +44,7 @@ def main():
                            "cup": {"r": CUP_R, "h": CUP_H, "mu_cup_deck": MU_CUP}},
            "cases": {}}
     hi = {c["model"]: c["ground_check"] for c in fit_check_raw()}
-    pitch_step = hi.get("scout_v2_c1", {}).get("pitch_with_front_wheels_on_10mm_step_deg", 7.18)
+    pitch_step = hi.get("scout_v2", {}).get("pitch_with_front_wheels_on_10mm_step_deg", 7.18)
     sim_pitch = SIM.get("d_threshold", {}).get("v0.3_payload", {}).get("max_pitch_deg")
     for cn, c in cases.items():
         x, y, z = c["com_m"]
@@ -72,13 +72,18 @@ def main():
     cup["tip_cup_m_s2"] = G * CUP_R / (CUP_H / 2)
     cup["sim_estop_active_peak_decel"] = SIM.get("c_estop_payload", {}).get("hard_floor_active", {}).get("peak_decel_mps2_20ms")
     cup["sim_full_duty_step_accel"] = SIM.get("a_straight", {}).get("full_duty_step_payload_hard_floor", {}).get("peak_accel_mps2_20ms")
-    cup["verdict"] = ("an unrestrained cup SLIDES at 2.9-4.9 m/s^2; the sim's active e-stop (5.9 m/s^2) and a full-duty "
-                      "start (3.6 m/s^2) exceed that -> the payload needs a retainer (4 standoffs as a fence or a hook-and-"
-                      "loop pad) and the firmware must cap |a| <= 1.5 m/s^2 except for a true e-stop")
+    cup["sim_brake_LL_peak_decel"] = SIM.get("c_estop_payload", {}).get("hard_floor_brake", {}).get("peak_decel_mps2_20ms")
+    fr = SIM.get("f_payload_retention", {})
+    cup["sim_free_cup_max_slide_mm"] = {"fence": max((v["max_slide_mm"] for k, v in fr.items() if k.startswith("fence_")), default=None),
+                                        "no_fence": max((v["max_slide_mm"] for k, v in fr.items() if k.startswith("no_fence_")), default=None)}
+    cup["verdict"] = ("an unrestrained cup slides above 2.9-4.9 m/s^2 (mu 0.3-0.5); sim peaks reach that (active stop, full-duty "
+                      "start). With the CAD r3 fence (4 x M3 x 20, 2 mm play) the free-cup sim moves <= "
+                      f"{cup['sim_free_cup_max_slide_mm']['fence']} mm (no fence: {cup['sim_free_cup_max_slide_mm']['no_fence']} mm per event, "
+                      "cumulative). Keep the fence; firmware |a| <= 1.5 m/s^2 except a true e-stop (brake LL).")
     res["payload_retention"] = cup
 
     # spin: yaw accel to 1 rad/s in 0.2 s; tangential accel on the payload at r = 74 mm (CAD payload x)
-    res["spin"] = {"yaw_accel_rad_s2": 5.0, "payload_tangential_m_s2": 5.0 * 0.0739,
+    res["spin"] = {"yaw_accel_rad_s2": 5.0, "payload_tangential_m_s2": 5.0 * abs(payload_x()),
                    "centripetal_on_com_1rad_s_m_s2": 1.0 ** 2 * 0.011, "verdict": "negligible for tip; payload ok"}
 
     # static CoM limits: keep front/rear lift >= 2 x decel cap (3 m/s^2) on flat and >= A_REQ on the 10 mm step
@@ -99,20 +104,25 @@ def main():
     lat = {"lidar_scan_worst_10Hz": 0.10, "ROS costmap/collision monitor": 0.05, "micro-ROS + ESP32 50 Hz loop": 0.02,
            "driver/motor current reversal": 0.005}
     t_lat = sum(lat.values())
+    lidar_x = json.loads(PARAMS_JSON.read_text())["sensors"]["laser"]["pos"][0]
+    front_x = max(p[0] for p in json.loads(PARAMS_JSON.read_text())["footprint"])
     stop = {}
     for a in (1.0, 1.5, 3.0):
         stop[f"decel_{a}"] = {"latency_m": v * t_lat, "braking_m": v * v / (2 * a), "total_m": v * t_lat + v * v / (2 * a)}
     res["stop"] = {
         "latency_s": lat, "t_latency_s": t_lat, "cases": stop,
-        "lidar_range_to_15cm_zone_m": 0.1174 - 0.045 + 0.15,
+        "lidar_range_to_15cm_zone_m": front_x - lidar_x + 0.15,
         "margin_C1_err30mm_m": 0.15 - stop["decel_1.5"]["total_m"] - 0.030,
         "margin_LD19_err45mm_m": 0.15 - stop["decel_1.5"]["total_m"] - 0.045,
-        "LD19_note": "LD19 datasheet gives NO accuracy below 300 mm; the 15 cm stop zone is 222 mm from the LiDAR",
+        "LD19_note": f"LD19 datasheet gives NO accuracy below 300 mm; the 15 cm stop zone is {1000*(front_x - lidar_x + 0.15):.0f} mm from the LiDAR",
         "sim_watchdog": {k: SIM.get("c_estop_payload", {}).get(k, {}).get("stop_distance_m")
                          for k in ("hard_floor_active", "hard_floor_brake", "hard_floor_coast", "carpet_coast")},
-        "verdict": "stop budget 83 mm from 0.3 m/s at 1.5 m/s^2 (175 ms latency) -> 37 mm (C1) / 22 mm (LD19, accuracy unspecified < 0.3 m) margin inside 15 cm. Watchdog "
-                   "must brake (MDD3A LL): coasting takes 49-64 mm and > 300 ms in the sim.",
+        "sim_brake_LL_stop_s": {k: SIM.get("c_estop_payload", {}).get(k, {}).get("stop_time_s") for k in ("hard_floor_brake", "carpet_brake")},
     }
+    sb = stop["decel_1.5"]["total_m"]
+    res["stop"]["verdict"] = (f"stop budget {sb*1000:.0f} mm from 0.3 m/s at 1.5 m/s^2 ({t_lat*1000:.0f} ms latency) -> "
+                              f"{res['stop']['margin_C1_err30mm_m']*1000:.0f} mm (C1) margin inside 15 cm. Watchdog must brake (MDD3A LL): "
+                              f"sim brake {res['stop']['sim_brake_LL_stop_s']} s vs coast > 0.3 s.")
     save_section("stability", r3(res, 3))
 
     # plot
@@ -128,7 +138,7 @@ def main():
     a.axhline(A_DECEL_CAP, color="orange", ls=":", label="decel cap 1.5")
     a.axhspan(MU_CUP[0] * G, MU_CUP[1] * G, color="r", alpha=.12, label="unrestrained cup slides")
     a.set_xticks(xs); a.set_xticklabels([n.replace("cad_", "") for n in names], rotation=15, fontsize=8)
-    a.set_ylabel("m/s^2"); a.legend(fontsize=7); a.set_title("Wheel-lift accelerations, CAD r1 mass cases")
+    a.set_ylabel("m/s^2"); a.legend(fontsize=7); a.set_title("Wheel-lift accelerations, CAD r3 mass cases")
     zz = np.array([float(k) for k in res["com_limits"]["x_min_mm_vs_z_mm"]])
     b.fill_betweenx(zz, list(res["com_limits"]["x_min_mm_vs_z_mm"].values()), list(res["com_limits"]["x_max_mm_vs_z_mm"].values()),
                     color="g", alpha=.15, label="allowed CoM region")

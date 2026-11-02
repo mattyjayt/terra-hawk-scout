@@ -20,7 +20,8 @@ from scout_params import WHEELS, Params  # noqa: E402
 
 COLORS = {"plate": "0.85 0.85 0.85 1", "motor": "0.89 0.75 0.27 1", "battery": "0.23 0.48 0.84 1",
           "lidar": "0.13 0.16 0.19 1", "pi5": "0.12 0.44 0.26 1", "default": "0.55 0.35 0.68 1"}
-MOTOR_DEFAULT = {"stall_torque": 0.0785, "no_load_speed": 20.94}   # TT 1:48 @6 V (Adafruit 3777), see sim/motor_profiles.json
+_MOT = json.loads((ROOT / "sim" / "motor_profiles.json").read_text())["hiwonder_1_42_8v4"]
+MOTOR_DEFAULT = {"stall_torque": _MOT["stall_torque"], "no_load_speed": _MOT["no_load_speed"]}   # Hiwonder 1:42 @ 8.4 V PWM cap
 
 
 def f(x):
@@ -61,13 +62,18 @@ def ledger(P, src):
     joint velocity rolls the robot forward on BOTH sides (no mirrored sign). Radius {f(P.wheel_radius)} m,
     width {f(P.wheel_width)} m, track {f(P.track)} m, wheelbase {f(P.wheelbase)} m.
     Wheel visual/collision cylinder is rotated rpy=(pi/2,0,0) so its axis lies along the joint axis.
-  - Limits: effort = TT stall torque {MOTOR_DEFAULT['stall_torque']} N m, velocity = no-load {MOTOR_DEFAULT['no_load_speed']} rad/s
-    (TT 1:48 @ 6 V, Adafruit 3777 datasheet) - replace when the encoder motor is chosen.
+  - Limits: effort = stall torque {MOTOR_DEFAULT['stall_torque']} N m, velocity = no-load {MOTOR_DEFAULT['no_load_speed']} rad/s:
+    Hiwonder TT Hall-encoder 1:42 at the 8.4 V PWM average-voltage cap (sim/motor_profiles.json hiwonder_1_42_8v4;
+    listing values, unverified - bench-test on arrival).
   - Sensors (fixed joints from base_link): laser_link at the scan plane (z={f(P.sensors['laser']['pos'][2])} above ground),
-    camera_link (X forward body convention) + camera_optical_link (REP-103 optical: z forward, x right,
-    y down; rpy = -pi/2 0 -pi/2), imu_link, ultrasonic_link (X = sensing direction).
-  - Collision: boxes from each params link bbox (plates, motors, boards, LiDAR), cylinders for wheels.
-  - Assumptions: see the params file's *_source fields. Fallback v1 numbers are marked there.
+    camera_link (X forward body convention, pitched 15 deg down = rpy 0 +0.2618 0) + camera_optical_link (REP-103
+    optical: z forward, x right, y down; rpy = -pi/2 0 -pi/2), imu_link (MPU-6050 die, GY-521 hung chip-down: roll pi),
+    ultrasonic_link (X = sensing direction). RPLIDAR C1 native angles are clockwise; sllidar_ros2 converts.
+  - Payload: the CAD keep-out cylinder (D75 x 80 mm, 300 g) at x = -50 mm; xacro arg payload:=true, and the expanded
+    scout_payload.urdf.
+  - Collision: boxes from each params link bbox (plates, motors, boards, LiDAR), cylinders for wheels. Cable routes
+    (cable_*) are in the inertial lump only.
+  - Assumptions: see the params file's mass_source fields (measured / datasheet / assumed / cad-volume x density).
 -->
 """
 
@@ -103,7 +109,7 @@ ROS2_CONTROL_SKETCH = """
            right_wheel_names: [wheel_fr_joint, wheel_rr_joint]
            wheel_separation: TRACK            # nominal; skid-steer needs wheel_separation_multiplier ~ sim/results.json spin.effective_track_ratio
            wheel_radius: RADIUS
-           wheel_separation_multiplier: 1.0   # calibrate (see docs/sim-round1.md)
+           wheel_separation_multiplier: 1.0   # calibrate on each floor (docs/sim-round4.md: 1.6-1.9 in sim)
            base_frame_id: base_footprint
            odom_frame_id: odom
            enable_odom_tf: false              # robot_localization EKF publishes odom->base_footprint
@@ -131,7 +137,7 @@ def ros2_control_xacro():
 """
 
 
-def build_urdf(P, src, xacro=False, mesh_dir=None):
+def build_urdf(P, src, xacro=False, mesh_dir=None, payload=False):
     bz = P.axle_z
     L = []
     if xacro:
@@ -212,19 +218,22 @@ def build_urdf(P, src, xacro=False, mesh_dir=None):
                      f'    <origin xyz="0 0 0" rpy="{f(-math.pi / 2)} 0 {f(-math.pi / 2)}"/>\n'
                      '    <parent link="camera_link"/>\n    <child link="camera_optical_link"/>\n  </joint>\n')
     pl = P.payload
-    pl_block = (f'  <link name="payload">\n' +
-                inertial(pl["mass"], [0, 0, 0], [pl["mass"] / 12 * (pl["size"][1]**2 + pl["size"][2]**2),
-                                                  pl["mass"] / 12 * (pl["size"][0]**2 + pl["size"][2]**2),
-                                                  pl["mass"] / 12 * (pl["size"][0]**2 + pl["size"][1]**2), 0, 0, 0]) +
-                f'    <visual>\n      <geometry><box size="{v3(pl["size"])}"/></geometry>\n      <material name="default"/>\n    </visual>\n  </link>\n'
+    pgeo = (f'<cylinder radius="{f(pl["size"][0] / 2)}" length="{f(pl["size"][2])}"/>' if pl.get("cylinder")
+            else f'<box size="{v3(pl["size"])}"/>')
+    pl_block = (f'  <link name="payload">\n' + inertial(pl["mass"], [0, 0, 0], pl["inertia"]) +
+                f'    <visual>\n      <geometry>{pgeo}</geometry>\n      <material name="default"/>\n    </visual>\n'
+                f'    <collision>\n      <geometry>{pgeo}</geometry>\n    </collision>\n  </link>\n'
                 f'  <joint name="payload_joint" type="fixed">\n    <origin xyz="{v3([pl["com"][0], pl["com"][1], pl["com"][2] - bz])}" rpy="0 0 0"/>\n'
                 '    <parent link="base_link"/>\n    <child link="payload"/>\n  </joint>\n')
     if xacro:
         L.append('  <xacro:if value="$(arg payload)">\n' + pl_block + '  </xacro:if>\n')
         L.append(ROS2_CONTROL_SKETCH.replace("TRACK", f(P.track)).replace("RADIUS", f(P.wheel_radius)))
         L.append(ros2_control_xacro())
+    elif payload:
+        L.append(pl_block)
+        L.append(ROS2_CONTROL_SKETCH.replace("TRACK", f(P.track)).replace("RADIUS", f(P.wheel_radius)))
     else:
-        L.append('  <!-- payload (300 g) omitted here; xacro arg payload:=true adds it -->\n')
+        L.append('  <!-- payload (300 g) omitted here; scout_payload.urdf or xacro arg payload:=true adds it -->\n')
         L.append(ROS2_CONTROL_SKETCH.replace("TRACK", f(P.track)).replace("RADIUS", f(P.wheel_radius)))
     L.append('</robot>\n')
     return "".join(L)
@@ -236,13 +245,12 @@ def main():
     ap.add_argument("--outdir", default=str(HERE))
     a = ap.parse_args()
     src = a.params or (ROOT / "out" / "robot_params.json")
-    if not Path(src).exists():
-        src = ROOT / "sim" / "params_v1_fallback.json"
     P = Params(src)
     out = Path(a.outdir)
     rel = Path(src).resolve().relative_to(ROOT) if str(Path(src).resolve()).startswith(str(ROOT)) else src
     (out / "scout.urdf.xacro").write_text(build_urdf(P, rel, xacro=True))
     (out / "scout.urdf").write_text(build_urdf(P, rel, xacro=False))
+    (out / "scout_payload.urdf").write_text(build_urdf(P, rel, xacro=False, payload=True))
     print(json.dumps({"params": str(rel), "total_mass": round(P.total_mass, 4), "chassis_mass": round(P.chassis_mass, 4),
                       "chassis_com": [round(x, 4) for x in P.chassis_com], "track": P.track, "wheelbase": P.wheelbase}))
 
