@@ -1,7 +1,7 @@
 """Write the shared interface file out/robot_params*.json (BRIEF §4) from the models as built.
 
 Run:  ~/.local/bin/cadgen +0.8.4 run checks/export_params.py [variant names...]
-  out/robot_params.json                 default model scout_v2 (LD19 + Hiwonder encoder TT + MDD3A, payload on)
+  out/robot_params.json                 default model scout_v2 (RPLIDAR C1 + Hiwonder encoder TT 1:42 + MDD3A, payload on)
   out/robot_params_<variant>.json       every variant in scout_v2.VARIANTS
 Units: metres, kg, kg.m^2; REP-103 base_footprint frame. Inertia is about each link's own CoM,
 expressed in base_footprint axes: [ixx, iyy, izz, ixy, ixz, iyz]. Links exclude the payload (see 'payload').
@@ -27,13 +27,14 @@ ROUND = 6
 SOURCE = [  # (label prefix, mass_source)
     ("bottom_plate", "cad-volume×density"), ("top_plate", "cad-volume×density"),
     ("motor_bracket_", "cad-volume×density"), ("motor_spacer_", "cad-volume×density"), ("motor_", "datasheet"),
-    ("wheel_", "assumed"), ("battery", "assumed"), ("buck_5v", "datasheet"), ("buck_motor", "assumed"),
+    ("wheel_", "assumed"), ("battery", "assumed"), ("buck_5v", "datasheet"), ("cap_buck", "assumed"),
+    ("cap_driver", "assumed"), ("fence_", "cad-volume×density"), ("front_screw_", "cad-volume×density"),
     ("mdd3a_standoff_", "cad-volume×density"), ("mdd3a", "datasheet"), ("tb6612", "assumed"), ("esp32", "assumed"),
     ("imu_standoff_", "cad-volume×density"), ("imu", "assumed"), ("ultrasonic_bracket", "cad-volume×density"),
     ("ultrasonic", "assumed"), ("camera_mount", "cad-volume×density"), ("camera", "assumed"),
     ("pi5_cooler", "assumed"), ("pi5", "datasheet"), ("lidar_board", "cad-volume×density"),
-    ("lidar_adapter", "assumed"), ("lidar_leg", "cad-volume×density"), ("lidar", "datasheet"),
-    ("payload", "assumed"), ("fuse_holder", "assumed"), ("xt30", "assumed"), ("switch", "assumed"),
+    ("lidar_leg", "cad-volume×density"), ("lidar_screw_", "cad-volume×density"), ("lidar", "datasheet"),
+    ("payload", "assumed"), ("fuse_holder", "assumed"), ("xt30", "assumed"), ("switch", "datasheet"),
     ("cable_", "assumed"),
 ]
 
@@ -127,7 +128,8 @@ def params(handle, spec, path):
     imu_lo, imu_hi = bbs["imu"]
     us_lo, us_hi = bbs["ultrasonic"]
     sensors = {
-        "laser": {"pos": [r(D.LIDAR_X * MM), 0.0, r(scan_z * MM)], "rpy": [0.0, 0.0, 0.0],
+        "laser": {"pos": [r((bbs["lidar"][0][0] + bbs["lidar"][1][0]) / 2 * MM), r((bbs["lidar"][0][1] + bbs["lidar"][1][1]) / 2 * MM),
+                          r(scan_z * MM)], "rpy": [0.0, 0.0, 0.0],
                   "note": f"{L['name']} rotation centre on the scan plane; the device's cable/ear 'front' faces +X. "
                           "Native angles are clockwise (left-handed): the ROS driver converts; check angle 0 on the bench."},
         "camera": {"pos": [r(v * MM) for v in cam], "rpy": [0.0, r(t), 0.0],
@@ -136,8 +138,11 @@ def params(handle, spec, path):
         "camera_optical": {"pos": [r(v * MM) for v in cam], "rpy": [r(v) for v in rot_to_rpy(R_opt)],
                            "note": "camera_optical_frame (z forward, x right, y down) = camera_link * rpy(-pi/2, 0, -pi/2), "
                                    "expressed here directly in base_footprint"},
-        "imu": {"pos": [r(D.IMU_XY[0] * MM), r(D.IMU_XY[1] * MM), r((imu_lo[2] + 0.45) * MM)], "rpy": [r(math.pi), 0.0, 0.0],
-                "note": "GY-521 hung chip-down under the top plate, board X silk arrow pointing forward -> rolled 180 deg"},
+        "imu": {"pos": [r((imu_lo[0] + imu_hi[0]) / 2 * MM), r((imu_lo[1] + imu_hi[1]) / 2 * MM), r((imu_lo[2] + 0.45) * MM)],
+                "rpy": [r(math.pi), 0.0, 0.0],
+                "note": "MPU-6050 die centre (mid-thickness of the 4 x 4 x 0.9 QFN). GY-521 hung chip-down on 2 x M3 x 10 nylon "
+                        "standoffs under the top plate, board +X silk arrow pointing forward -> roll pi (sensor +Y = robot -Y, "
+                        "+Z = robot -Z). 24 mm behind the CoR on the centreline."},
         "ultrasonic": {"pos": [r(us_hi[0] * MM), 0.0, r((us_lo[2] + us_hi[2]) / 2 * MM)], "rpy": [0.0, 0.0, 0.0],
                        "note": "HC-SR04 transducer front faces, between the two cans; beam ~ +-15 deg"},
     }
@@ -146,7 +151,7 @@ def params(handle, spec, path):
     mot = D.MOTORS[motor_key]
     tl, stack = tower_length(lidar_key)
     out = {
-        "version": "v2-r2", "frame": "REP-103 base_footprint, metres, kg",
+        "version": "v2-r3", "frame": "REP-103 base_footprint, metres, kg",
         "variant": {"lidar": lidar_key, "motor": motor_key, "battery": "blue_3s_70x50x15", "driver": driver,
                     "payload_keepout": with_payload, "motor_name": mot["name"], "model": handle.name, "cad_id": handle.id},
         "total_mass": r(m0), "com": [r(v * MM) for v in c0], "inertia_about_com": inertia6(I0),
@@ -159,7 +164,8 @@ def params(handle, spec, path):
         "encoder_source": mot["src"] + " (ratio/counts as used by analysis/results.json; verify on arrival)",
         "wheel_loads_empty": wheel_loads(m0, c0),
         "notes": "total_mass/com/links exclude the payload; see 'payload' and 'with_payload'. Cable tubes (links cable_*) "
-                 "are an approximate harness (assumed g/m). Masses tagged 'assumed' must be weighed (docs/cad-round2.md).",
+                 "are an approximate harness (assumed g/m). Masses tagged 'assumed' must be weighed (docs/cad-round3.md). "
+                 "laser frame = scan-plane centre; native LiDAR angle 0 points along the device's own front (check on the bench).",
     }
     if "payload" in g:
         m, c, I = part_props(g, "payload")

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "workflow",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-assembly-sequence/candidate.json",
+    "sha256": "2f9a7721e7a4dd11ec69436437f8c15f2b5088a8dfd0431ed0f865d2a12b436c",
+    "bytes": 5787
+  },
+  "artifact": {
+    "path": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-assembly-sequence/scout-assembly-sequence.html",
+    "sha256": "dabd4ca645932ae1118e61f9d53ab96da2844cbc6772e4629dd2799f4ca980e5",
+    "bytes": 841693
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-assembly-sequence/review-4/scout-assembly-sequence.finalize.json",
+    "summaryReceipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-assembly-sequence/review-4/scout-assembly-sequence.finalize-summary.json",
+    "browserCheckReceipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-assembly-sequence/review-4/scout-assembly-sequence.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-01T20:58:53.380Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 3581,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

@@ -1,4 +1,4 @@
-"""Scout v2 fit check (round 2): overlaps, clearances, LiDAR scan plane + blind sectors, camera floor view,
+"""Scout v2 fit check (round 3): overlaps, clearances, LiDAR scan plane + blind sectors, camera floor view,
 ground clearance on a 10 mm step, mass / CoM / inertia (empty + payload), static wheel loads, motor fit,
 cable lengths. Measures the models as built, for every variant.
 
@@ -19,7 +19,7 @@ from cadgen.geometry import closest_points, mass_properties, overlap_volume
 
 import dims as D
 from cables import CABLE_CHOICE
-from scout_v2 import DEFAULT, VARIANTS, Geo, lidar_leg_xy, scout_v2, tower_length
+from scout_v2 import DEFAULT, VARIANTS, Geo, drills, lidar_leg_xy, scout_v2, tower_length
 from variants import MODELS
 
 G = 9.81
@@ -29,7 +29,7 @@ INTENDED = {
     frozenset(("pi5", "pi5_cooler")): "cooler is a solid envelope; the real heatsink has cut-outs over the board's tall parts",
 }
 REFERENCE_ONLY = {"payload"}     # keep-out: weighed separately, not part of the empty robot
-POWER = ("battery", "buck_5v", "buck_motor", "mdd3a", "tb6612", "esp32", "fuse_holder", "xt30", "switch")
+POWER = ("battery", "buck_5v", "cap_buck", "mdd3a", "cap_driver", "tb6612", "esp32", "fuse_holder", "xt30", "switch")
 REQ_GAP = 2.0
 
 
@@ -129,7 +129,8 @@ def requirement_gaps(g, bbs, gaps, contacts):
     def stacked(a, b):     # coaxial fastener stacks through a plate/board (screw -> standoff), not a clearance
         ia, ib = re.findall(r"_(\d+)$", a), re.findall(r"_(\d+)$", b)
         tower = ("lidar_leg_", "lidar_board_screw_", "lidar_leg_screw_")
-        return ia and ia == ib and a.startswith(tower) and b.startswith(tower)
+        fence = ("fence_post_", "fence_nut_")
+        return ia and ia == ib and ((a.startswith(tower) and b.startswith(tower)) or (a.startswith(fence) and b.startswith(fence)))
     for r in gaps:
         a, b = r["a"], r["b"]
         if stacked(a, b):
@@ -370,6 +371,31 @@ def analyse(handle, spec):
         res.update({"mass_with_payload_kg": round(m1, 4), "com_with_payload_mm": [round(v, 1) for v in c1],
                     "inertia_with_payload_about_com_kg_m2": [[round(v * 1e-6, 7) for v in row] for row in I1],
                     "wheel_loads_with_payload": wheel_loads(m1, c1)})
+    else:   # no keep-out part in this variant: add the 300 g cup analytically at the keep-out centroid
+        mp, cp = D.PAYLOAD_MASS_G / 1000.0, (D.PAYLOAD_X, 0.0, geo.T1 + D.PAYLOAD_H / 2)
+        m1 = m0 + mp
+        c1 = tuple((m0 * a + mp * b) / m1 for a, b in zip(c0, cp))
+        res.update({"mass_with_payload_kg": round(m1, 4), "com_with_payload_mm": [round(v, 1) for v in c1],
+                    "with_payload_note": "300 g cup added analytically (point mass at the keep-out centroid)",
+                    "wheel_loads_with_payload": wheel_loads(m1, c1)})
+    ib = bbs["imu"]
+    res["imu_frame_mm"] = {"chip_centre": [round((ib[0][0] + ib[1][0]) / 2, 2), round((ib[0][1] + ib[1][1]) / 2, 2),
+                                           round(ib[0][2] + 0.45, 2)],
+                           "distance_from_cor_xy_mm": round(math.hypot((ib[0][0] + ib[1][0]) / 2, (ib[0][1] + ib[1][1]) / 2), 2),
+                           "rpy": [round(math.pi, 6), 0.0, 0.0], "note": "MPU-6050 chip facing down -> roll pi"}
+    res["drilling_table"] = [{"part": p, "purpose": w, "x_mm": round(x, 2), "y_mm": round(y, 2),
+                              "dia_mm": (list(d) if isinstance(d, tuple) else d)} for p, w, x, y, d in drills(lidar_key, driver)]
+    req = {"deck_gap_39.7": round(bbs["top_plate"][0][2] - bbs["bottom_plate"][1][2], 3),
+           "plate_t_4.5": round(bbs["top_plate"][1][2] - bbs["top_plate"][0][2], 3),
+           "wheel_d_65": round(bbs["wheel_fl"][1][2] - bbs["wheel_fl"][0][2], 3),
+           "battery_70x50x15": [round(bbs["battery"][1][i] - bbs["battery"][0][i], 3) for i in range(3)],
+           "payload_keepout_d75_h80": ([round(bbs["payload"][1][0] - bbs["payload"][0][0], 3),
+                                        round(bbs["payload"][1][2] - bbs["payload"][0][2], 3)] if "payload" in bbs else None),
+           "payload_centre_x_-50": (round((bbs["payload"][1][0] + bbs["payload"][0][0]) / 2, 3) if "payload" in bbs else None),
+           "board_minus_cooler_ge_3": round(bbs["lidar_board"][0][2] - bbs["pi5_cooler"][1][2], 2),
+           "board_rear_edge_minus_cup_ge_5": (round(bbs["lidar_board"][0][0] - bbs["payload"][1][0], 2) if "payload" in bbs else None),
+           "no_motor_buck_no_usb": not any(k in g for k in ("buck_motor", "lidar_adapter", "cable_lidar_pi"))}
+    res["jaime_numbers_on_geometry"] = req
     res["mass_breakdown_g"] = {k: round(part_props(g, k)[0] * 1000, 1) for k in sorted(g)}
     return res, g, bbs, scan_z
 
@@ -392,7 +418,7 @@ def cable_lengths(spec, bbs):
     bb = {k: _BB(*v) for k, v in bbs.items()}
     ctx = {"geo": geo, "motor": spec[1], "lidar": spec[0], "driver": spec[3], "bb": bb,
            "pi_vendor_to_world": lambda xv, zv, yv=0.0: S.pi_vendor_to_world(geo, xv, zv, yv),
-           "pi_pcb_top": S.pi_pcb_top(geo), "switch_xy": S.SWITCH_XY_FRONT}
+           "pi_pcb_top": S.pi_pcb_top(geo), "switch_xy": D.SWITCH_XY}
     out = []
     for label, kind, pts in cable_routes(ctx):
         L = sum(math.dist(a, b) for a, b in zip(pts[:-1], pts[1:]))
@@ -404,9 +430,11 @@ def cable_lengths(spec, bbs):
 
 def summary_line(r):
     lc, gc, rc = r["lidar_check"], r["ground_check"], r["required_clearances"]
-    return (f"{r['model']}: overlaps={len(r['overlaps_unintended'])} power_gap={rc['power_min_gap_mm']} "
+    return (f"{r['model']}: overlaps={len(r['overlaps_unintended'])} {r['overlaps_unintended'][:3]} power_gap={rc['power_min_gap_mm']} "
             f"tower_gap={rc['lidar_tower_min_gap_mm']} scan_margin={lc['margin_mm']} ground={gc['ground_clearance_mm']} "
-            f"motor_fits={r['motor_fit']['fits']} mass={r['mass_empty_kg']} com={r['com_empty_mm']}")
+            f"motor_fits={r['motor_fit']['fits']} mass={r['mass_empty_kg']} com={r['com_empty_mm']} "
+            f"pay={r.get('mass_with_payload_kg')} com_pay={r.get('com_with_payload_mm')} cam={r['camera_check']['nearest_visible_floor_ahead_of_robot_front_mm']} "
+            f"tight={r['tightest_gaps_mm'][:4]}")
 
 
 if __name__ == "__main__":

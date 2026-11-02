@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "7dd3b7c0-9001-427e-ade4-11bed6fde092",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-wiring/candidate.json",
+  "output": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-wiring/scout-wiring.html",
+  "specification": {
+    "sha256": "f358bf368074be757c1dca54257a6ba29b609b16de9c1c222454719aa63bd5f8",
+    "bytes": 6013
+  },
+  "artifact": {
+    "sha256": "4fedc22bbd23499ff486473830919b4e3e84b6f971feb819a510b15c08afa223",
+    "bytes": 851525
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "abb97b3d-def9-4ebc-88c0-70b6d2ecc6a8",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-assembly-sequence/candidate.json",
+  "output": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-assembly-sequence/scout-assembly-sequence.html",
+  "specification": {
+    "sha256": "2f9a7721e7a4dd11ec69436437f8c15f2b5088a8dfd0431ed0f865d2a12b436c",
+    "bytes": 5787
+  },
+  "artifact": {
+    "sha256": "dabd4ca645932ae1118e61f9d53ab96da2844cbc6772e4629dd2799f4ca980e5",
+    "bytes": 841693
+  }
+}

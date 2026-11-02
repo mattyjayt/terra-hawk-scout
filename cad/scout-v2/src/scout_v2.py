@@ -1,21 +1,22 @@
-"""TerraHawk Scout v2 (round 2): detailed assembly on the Elegoo Smart Robot Car V4.0 plates.
+"""TerraHawk Scout v2 (round 3): detailed assembly on the Elegoo Smart Robot Car V4.0 plates.
 
 REP-103 frame (see dims.py): origin on the ground at the centre of rotation, +X forward,
 +Y left, +Z up, mm. Every component is its own labelled part with a colour and a material
 whose density gives the part its datasheet / assumed mass.
 
-Round-2 layout (off-the-shelf parts only):
-  * motors: 4 TT-form-factor variants (stock, Hiwonder, DFRobot FIT0450 vendor STEP, Yahboom) in the
-    stock Elegoo brackets; encoder variants sit on M3 nylon spacers under the brackets so the encoder
-    clears the bottom plate (the whole chassis drops by that amount, wheels stay on the ground).
-  * lower deck: battery on the centre of rotation; buck_5v + buck_motor in the front bay; ESP32 in the rear
-    bay (USB-C at the rear end); XT30 (left) and fuse holder (right) beside the battery.
-  * under the top plate (bench pre-fit): Cytron MDD3A on M3 nylon standoffs above the battery, GY-521 IMU,
-    power switch (front-left), HC-SR04 bracket under the front edge.
-  * top deck: Pi 5 + Active Cooler; LiDAR tower = 4 stacked M3 brass standoffs on the TOP PLATE outside the
-    Pi footprint + an 80 x 120 FR4 prototyping board; LiDAR on the board. One tower height per LiDAR,
-    valid with and without the 300 g payload cup (keep-out Ø75 x 80 at the rear of the deck).
+Round-3 layout (physics review round 2 applied; off-the-shelf parts only, drilled Elegoo plates allowed):
+  * motors: Hiwonder TT Hall-encoder 1:42 (default) in the stock Elegoo brackets on 3 mm M3 nylon spacers;
+    the other TT variants stay available (variants.py).
+  * lower deck: battery on the centre of rotation; Pololu D36V50F5 (+100 uF) in the front bay; ESP32 in the
+    rear bay; XT30 (left) and the inline 7.5 A ATM fuse holder (right) beside the battery. NO motor buck.
+  * under the top plate (bench pre-fit): Cytron MDD3A on M3 nylon standoffs (straight on the pack via the
+    switch, 470 uF at VM), GY-521 IMU chip-down at x = -24 on nylon standoffs, KCD1-form-factor rocker through
+    the plate (rear-centre), HC-SR04 bracket + camera holder sharing 2 screws at the front edge.
+  * top deck: Pi 5 + Active Cooler; LiDAR tower = 4 M3 brass standoff legs on drilled holes + an 80 x 120 FR4
+    board (x -5..115); SLAMTEC RPLIDAR C1 (default) on the board, wired to Pi UART0 (no USB anywhere).
+  * payload keep-out Ø75 x 80 at x = -50 inside a fence of 4 M3 x 20 standoffs.
   * cables: approximate harness routes as thin swept tubes (labels cable_*), see cables.py.
+  * DRILLS: every hole drilled in a plate/board, asserted to lie inside it (docs/cad-round3.md drilling table).
 
 Models: scout_v2 (default) and one model per variant scout_v2__<lidar>_<motor>_<pay|nopay>, plus
 scout_v2_tb6612 (TB6612 carrier instead of the MDD3A).
@@ -30,7 +31,7 @@ from cables import cable_routes
 from plate_outline import ELEGOO_DIR, face_polygon, rings
 
 HERE = Path(__file__).resolve().parent
-DEFAULT = {"lidar": "ld19", "motor": "hiwonder", "payload": True, "driver": "mdd3a"}
+DEFAULT = {"lidar": "c1", "motor": "hiwonder", "payload": True, "driver": "mdd3a"}   # r3: C1 (finding 14)
 
 COL = {
     "plate": "#2b2f36", "wheel": "#1c1c1c", "motor": "#f2c230", "motor_dark": "#202326", "encoder": "#1f7a3a",
@@ -38,38 +39,33 @@ COL = {
     "tb6612": "#7a1fa2", "esp32": "#202020", "imu": "#1565c0", "hcsr04": "#1e88e5", "brass": "#c8a24a",
     "nylon": "#f1efe6", "fr4": "#2e7d32", "cooler": "#a7adb5", "camera": "#2e7d32", "cam_mount": "#e0e0e0",
     "lidar": "#151515", "fuse": "#d32f2f", "switch": "#9e9e9e", "xt30": "#f9a825", "screw": "#8a8f96",
-    "adapter": "#283593",
+    "adapter": "#283593", "cap": "#37474f", "cap_drv": "#263238",
     "cable_18awg": "#e53935", "cable_20awg": "#fb8c00", "cable_22awg": "#8e24aa", "cable_signal": "#00acc1",
-    "cable_ffc": "#fdd835", "cable_usb": "#424242",
+    "cable_ffc": "#fdd835",
 }
 
 # Assembly order for the guide (assembly/steps.json, assembly/step_NN.png) and the exploded view:
 # (step id, title, label prefixes). A label ending in "_" is a prefix; others match exactly.
 BUILD_STEPS = [
-    ("01", "Bottom plate, motor spacers + brackets, motors, wheels",
+    ("01", "Bottom plate: motor spacers + Elegoo brackets, Hiwonder encoder motors, wheels",
      ["bottom_plate", "motor_spacer_", "motor_bracket_", "motor_fl", "motor_fr", "motor_rl", "motor_rr", "wheel_"]),
-    ("02", "Lower-deck power: battery, XT30, fuse holder, 5 V buck, motor buck",
-     ["battery", "xt30", "fuse_holder", "buck_5v", "buck_motor",
-      "cable_batt_xt30", "cable_xt30_fuse", "cable_fuse_switch"]),
-    ("03", "ESP32 in the rear bay + encoder harness",
-     ["esp32", "cable_enc_"]),
-    ("04", "Deck pillars", ["deck_pillar_"]),
-    ("05", "Top plate pre-fit on the bench: MDD3A, IMU, power switch (underside)",
-     ["mdd3a_standoff_", "mdd3a", "tb6612", "imu_standoff_", "imu", "switch"]),
-    ("06", "Close the decks: top plate on the pillars, connect power + motor + signal wires",
-     ["top_plate", "cable_switch_", "cable_buckm_driver", "cable_driver_motor_", "cable_driver_esp32",
-      "cable_imu_esp32"]),
-    ("07", "Pi 5 on M2.5 standoffs + Active Cooler, 5 V feed to GPIO",
-     ["pi_screw_", "pi_standoff_", "pi5", "pi5_cooler", "cable_buck5_pi", "cable_esp32_pi"]),
-    ("08", "Camera Module 3 on its holder + 22-pin FFC to the Pi",
-     ["camera_mount", "camera", "cable_camera_ffc"]),
-    ("09", "HC-SR04 ultrasonic on its bracket under the front edge",
-     ["ultrasonic_bracket", "ultrasonic", "cable_us_esp32"]),
-    ("10", "LiDAR tower: 4 M3 standoff legs on the top plate + FR4 board",
-     ["lidar_leg_screw_", "lidar_leg_", "lidar_board", "lidar_board_screw_"]),
-    ("11", "LiDAR + USB adapter on the board, USB to the Pi",
-     ["lidar", "lidar_adapter", "cable_lidar_pi"]),
-    ("12", "Payload cup (keep-out Ø75 x 80, <= 300 g)", ["payload"]),
+    ("02", "Lower-deck power: battery, XT30, 7.5 A fuse holder, D36V50F5 5 V buck (+100 uF)",
+     ["battery", "xt30", "fuse_holder", "buck_5v", "cap_buck", "cable_batt_xt30", "cable_xt30_fuse"]),
+    ("03", "ESP32 in the rear bay + encoder and 5 V leads",
+     ["esp32", "cable_enc_", "cable_5v_esp32"]),
+    ("04", "Deck pillars (Elegoo M3 brass)", ["deck_pillar_"]),
+    ("05", "Top plate pre-fit on the bench: drill, MDD3A + 470 uF, IMU (chip down), rocker switch, HC-SR04 + camera holder",
+     ["top_plate", "mdd3a_standoff_", "mdd3a", "cap_driver", "tb6612", "imu_standoff_", "imu", "switch",
+      "ultrasonic_bracket", "ultrasonic", "camera_mount", "front_screw_"]),
+    ("06", "Close the decks: top plate on the pillars; fuse -> switch -> MDD3A / buck, motor and signal leads",
+     ["cable_fuse_switch", "cable_switch_", "cable_driver_", "cable_imu_esp32", "cable_us_esp32"]),
+    ("07", "Pi 5 on M2.5 standoffs + Active Cooler, 5 V to GPIO, ESP32 UART, Camera Module 3 + FFC",
+     ["pi_screw_", "pi_standoff_", "pi5", "pi5_cooler", "camera", "cable_buck5_pi", "cable_esp32_pi", "cable_camera_ffc"]),
+    ("08", "LiDAR tower: 4 M3 standoff legs + FR4 board, RPLIDAR C1, UART + 5 V leads",
+     ["lidar_leg_screw_", "lidar_leg_", "lidar_board", "lidar_board_screw_", "lidar_screw_", "lidar",
+      "cable_lidar_uart", "cable_buck5_lidar"]),
+    ("09", "Payload fence: 4 M3 x 20 standoffs around the Ø75 x 80 cup keep-out (<= 300 g)",
+     ["fence_post_", "fence_nut_", "payload"]),
 ]
 
 
@@ -142,6 +138,9 @@ def stack_for(need):
 
 
 # ------------------------------------------------------------------ chassis
+PLATE_POLY = {}     # label -> shapely polygon of the plate in v2 XY (outline + existing holes), for the drill asserts
+
+
 def plate_from_stl(name, z0, use_top_face, label):
     mesh = read_mesh(ELEGOO_DIR / name)
     zs = [v[2] for v in mesh.vertices]
@@ -150,6 +149,8 @@ def plate_from_stl(name, z0, use_top_face, label):
     for h in holes:
         face = face - bd.Polygon(*[D.stl_to_v2(*p) for p in h], align=None)
     body = bd.Pos(0, 0, z0) * bd.extrude(face, amount=D.PLATE_T, dir=(0, 0, 1))
+    from shapely.geometry import Polygon
+    PLATE_POLY[label] = Polygon([D.stl_to_v2(*p) for p in outer], [[D.stl_to_v2(*p) for p in h] for h in holes])
     bb = body.bounding_box()
     assert abs(bb.size.X - D.PLATE_X) < 0.2 and abs(bb.size.Y - D.PLATE_Y) < 0.2, bb.size
     return finish(body, label, COL["plate"], density=D.PLATE_DENSITY)
@@ -251,48 +252,71 @@ def lower_deck(geo):
     out = [finish(blk(bx, by, bz, *D.BATTERY_XY, z), "battery", COL["battery"], mass_g=D.BATTERY_MASS_G)]
     def padded(sx, sy, sz, x, y):          # board on a 3M VHB / foam pad (pad modelled as part of the board)
         return blk(sx, sy, sz, x, y, zp) + blk(sx - 2.0, sy - 2.0, D.PAD_T, x, y, z)
-    out.append(finish(padded(*D.BUCK_5V, 50.7, 0.0), "buck_5v", COL["buck5"], mass_g=D.BUCK_5V_MASS_G))
-    out.append(finish(padded(*D.BUCK_MOTOR, 78.2, 0.0), "buck_motor", COL["buckm"], mass_g=D.BUCK_MOTOR_MASS_G))
+    bxy = D.BUCK_5V_XY
+    out.append(finish(padded(*D.BUCK_5V, *bxy), "buck_5v", COL["buck5"], mass_g=D.BUCK_5V_MASS_G))
+    cd, cl = D.CAP_BUCK          # 100 uF on the VIN pins, lying along X beside the buck (between it and the gearbox)
+    yc = -(D.BUCK_5V[1] / 2 + (D.GEARBOX_Y_IN - D.BUCK_5V[1] / 2) / 2)
+    xc = bxy[0] - 5.7                                   # clear of the battery (x <= 35) and the FR bracket (x >= 55.6)
+    out.append(finish(xcyl(cd, xc - cl / 2, xc + cl / 2, yc, z + cd / 2),
+                      "cap_buck", COL["cap"], mass_g=D.CAP_BUCK_MASS_G))
     ex0, ex1 = D.ESP32_X
     out.append(finish(padded(ex1 - ex0, D.ESP32[1], D.ESP32[2], (ex0 + ex1) / 2, 0.0), "esp32", COL["esp32"],
                       mass_g=D.ESP32_MASS_G))
-    out.append(finish(blk(25.0, 10.0, 5.2, 0.0, 36.0, z), "xt30", COL["xt30"], mass_g=D.MASS_MISC["xt30"]))
-    out.append(finish(blk(*D.FUSE_HOLDER, 0.0, -37.5, z), "fuse_holder", COL["fuse"], mass_g=D.MASS_MISC["fuse_holder"]))
+    out.append(finish(blk(*D.XT30_PAIR, *D.XT30_XY, z), "xt30", COL["xt30"], mass_g=D.MASS_MISC["xt30"]))
+    out.append(finish(blk(*D.FUSE_HOLDER, *D.FUSE_XY, z), "fuse_holder", COL["fuse"], mass_g=D.MASS_MISC["fuse_holder"]))
     return out
 
 
+def mdd3a_holes():
+    hx, hy = D.MDD3A_HOLES
+    return [(D.MDD3A_X + sx * hx / 2, sy * hy / 2) for sx, sy in ((1, 1), (1, -1), (-1, 1), (-1, -1))]
+
+
+def imu_holes():
+    ix, iy = D.IMU_XY
+    dx, dy = D.IMU_HOLES
+    return [(ix + dx, iy + sy * dy) for sy in (1, -1)]
+
+
+def front_screw_xy():
+    """2 shared M3 screws: camera-holder base (top) + top plate + HC-SR04 bracket base (under the plate)."""
+    return [(CAM_X_UP + 13.0, sy * D.CAMERA_MOUNT_HOLES_Y) for sy in (1, -1)]
+
+
 def under_top_plate(geo, driver):
-    """Bench sub-assembly hung from the top plate's underside: motor driver, IMU, power switch."""
+    """Bench sub-assembly fitted to the top plate: motor driver + 470 uF, IMU, rocker switch."""
     zt = geo.T0
     out = []
     if driver == "mdd3a":
         L, W, t = D.MDD3A
-        hx, hy = D.MDD3A_HOLES
         zb = zt - D.MDD3A_STANDOFF                    # PCB solder side (faces up)
-        for i, (sx, sy) in enumerate(((1, 1), (1, -1), (-1, 1), (-1, -1))):
-            out.append(finish(zcyl(5.0, D.MDD3A_STANDOFF, D.MDD3A_X + sx * hx / 2, sy * hy / 2, zb),
+        for i, (x, y) in enumerate(mdd3a_holes()):
+            out.append(finish(zcyl(5.0, D.MDD3A_STANDOFF, x, y, zb),
                               f"mdd3a_standoff_{i + 1}", COL["nylon"], density=D.NYLON_DENSITY))
         pcb = blk(L, W, t, D.MDD3A_X, 0, zb - t)
         comp = blk(L - 6.0, W - 8.0, D.MDD3A_COMP_H, D.MDD3A_X, 0, zb - t - D.MDD3A_COMP_H)   # components hang down
         out.append(finish(pcb + comp, "mdd3a", COL["driver"], mass_g=D.MDD3A_MASS_G))
+        cd, cl = D.CAP_DRIVER                         # 470 uF on the VB terminal, lying along Y under the plate
+        out.append(finish(ycyl(cd, -cl / 2, cl / 2, D.CAP_DRIVER_X, zt - 3.0 - cd / 2), "cap_driver", COL["cap_drv"],
+                          mass_g=D.CAP_DRIVER_MASS_G))
     else:
         out.append(finish(blk(*D.TB6612, D.MDD3A_X, 0, zt - D.TB6612[2]), "tb6612", COL["tb6612"], mass_g=D.TB6612_MASS_G))
     px, py, pt = D.IMU_PCB
     ix, iy = D.IMU_XY
-    for i, sy in enumerate((1, -1)):
-        out.append(finish(zcyl(5.0, D.IMU_STANDOFF, ix + 7.6, iy + sy * 5.6, zt - D.IMU_STANDOFF),
+    for i, (x, y) in enumerate(imu_holes()):
+        out.append(finish(zcyl(5.0, D.IMU_STANDOFF, x, y, zt - D.IMU_STANDOFF),
                           f"imu_standoff_{i + 1}", COL["nylon"], density=D.NYLON_DENSITY))
     pcb = blk(px, py, pt, ix, iy, zt - D.IMU_STANDOFF - pt)
-    chip = blk(4.0, 4.0, 0.9, ix, iy, zt - D.IMU_STANDOFF - pt - 0.9)           # MPU-6050 QFN, facing down
+    chip = blk(4.0, 4.0, 0.9, ix, iy, zt - D.IMU_STANDOFF - pt - 0.9)           # MPU-6050 QFN 4 x 4 x 0.9, facing down
     out.append(finish(pcb + chip, "imu", COL["imu"], mass_g=D.IMU_MASS_G))
-    sx_, sy_, sz = D.SWITCH_BODY
-    x, y = SWITCH_XY_FRONT
-    sw = blk(sx_, sy_, sz, x, y, zt - sz) + zcyl(D.SWITCH_LEVER[0], D.SWITCH_LEVER[1], x, y, geo.T1)
-    out.append(finish(sw, "switch", COL["switch"], mass_g=D.MASS_MISC["switch"]))
+    # KCD1-form-factor rocker through the plate: body below, bezel + rocker above
+    x, y = D.SWITCH_XY
+    bx_, by_, bz_ = D.SWITCH_BODY
+    fx, fy, ft = D.SWITCH_FACE
+    sw = blk(bx_, by_, bz_, x, y, zt - bz_) + blk(bx_ - 0.2, by_ - 0.2, D.PLATE_T, x, y, zt) \
+        + blk(fx, fy, ft, x, y, geo.T1) + blk(fx - 4.0, fy - 5.0, D.SWITCH_ROCKER_H - ft, x, y, geo.T1 + ft)
+    out.append(finish(sw, "switch", COL["switch"], mass_g=D.SWITCH_MASS_G))
     return out
-
-
-SWITCH_XY_FRONT = (105.0, 32.0)    # design: top plate front-left, next to the bucks (short 18 AWG runs)
 
 
 # ------------------------------------------------------------------ upper deck
@@ -335,12 +359,15 @@ def pi_stack(geo):
 
 CAM_X_UP = 97.0      # design: camera holder upright X (round 1)
 US_X = 101.3         # design: HC-SR04 bracket wall X (round 1)
+US_DROP = 3.0        # design (r3): PCB top 3 mm below the bracket base (slotted bracket holes, assumed)
 
 
 def camera_parts(geo):
     zt = geo.T1
     bxl, byl, bt, uh = D.CAMERA_MOUNT
     mount = blk(bxl, byl, bt, CAM_X_UP + bxl / 2, 0, zt) + blk(3.0, byl, uh, CAM_X_UP + 1.5, 0, zt + bt)
+    for x, y in front_screw_xy():
+        mount = mount - zcyl(3.2, bt, x, y, zt)
     t, w, h = D.CAMERA_PCB
     zb = zt + bt + 2.0                                            # PCB lower edge
     lx, ly, lz = D.CAMERA_LENS_BLOCK
@@ -354,28 +381,44 @@ def ultrasonic_parts(geo):
     bx, by, bt2, wh = D.HCSR04_BRACKET
     zu = geo.T0
     br = blk(bx, by, bt2, US_X + bx / 2, 0, zu - bt2) + blk(2.0, by, wh, US_X + 1.0, 0, zu - bt2 - wh)
+    for x, y in front_screw_xy():
+        br = br - zcyl(3.2, bt2, x, y, zu - bt2)
     pt, pw, ph = D.HCSR04_PCB
-    zc = zu - bt2 - ph / 2
+    zc = zu - bt2 - US_DROP - ph / 2          # sensor hangs US_DROP below the base so the shared nuts clear the cans
     us = blk(pt, pw, ph, US_X + 2.0 + pt / 2, 0, zc - ph / 2)
     td, tl, tp = D.HCSR04_TRANSDUCER
     for sy in (1, -1):
         us = us + xcyl(td, US_X + 2.0 + pt, US_X + 2.0 + pt + tl, sy * tp / 2, zc)
-    return [finish(br, "ultrasonic_bracket", COL["bracket"], density=1.05),
-            finish(us, "ultrasonic", COL["hcsr04"], mass_g=D.HCSR04_MASS_G)]
+    out = [finish(br, "ultrasonic_bracket", COL["bracket"], density=1.05),
+           finish(us, "ultrasonic", COL["hcsr04"], mass_g=D.HCSR04_MASS_G)]
+    # shared M3 x 12 screws: head on the camera-holder base, nut under the HC-SR04 bracket base
+    zc_top = geo.T1 + D.CAMERA_MOUNT[2]
+    for i, (x, y) in enumerate(front_screw_xy()):
+        sc = zcyl(5.5, 1.7, x, y, zc_top) + zcyl(2.9, zc_top - (zu - bt2 - 2.4), x, y, zu - bt2 - 2.4) \
+            + zcyl(5.5, 2.4, x, y, zu - bt2 - 2.4)
+        out.append(finish(sc, f"front_screw_{i + 1}", COL["screw"], density=7.9))
+    return out
 
 
 def lidar_leg_xy():
-    bx, by, _ = D.LIDAR_BOARD
-    i = D.LIDAR_BOARD_HOLE_INSET
-    return [(D.LIDAR_X + sx * (bx / 2 - i), sy * (by / 2 - i)) for sx in (1, -1) for sy in (1, -1)]
+    return list(D.LIDAR_LEG_XY)
+
+
+def cooler_top_above_t1():
+    return D.PI_STANDOFF + (D.PI_PCB_VENDOR_Y[1] - D.PI_PCB_VENDOR_Y[0]) + D.COOLER[2]
+
+
+LIDAR_COOLER_CLEAR = 3.0     # finding 20: the LiDAR board must clear the Pi cooler by >= 3 mm
 
 
 def tower_length(lidar_key):
-    """Leg length (catalogue stack) so the scan plane is >= SCAN_MARGIN above the payload keep-out top,
-    measured from the top-plate top face. Independent of the payload option and of the motor variant."""
+    """Leg length (catalogue stack, from the top-plate top face) = the shortest stack that puts the scan plane
+    >= SCAN_MARGIN above the payload keep-out top AND keeps the board >= 3 mm above the Pi cooler (finding 20).
+    The payload term applies to every variant (the cup is a mission payload), so one tower fits all."""
     L = D.LIDARS[lidar_key]
-    need = D.PAYLOAD_H + D.SCAN_MARGIN - L["scan_above_base"] - D.LIDAR_BOARD[2]
-    a, b = stack_for(need)
+    need_scan = D.PAYLOAD_H + D.SCAN_MARGIN - L["scan_above_base"] - D.LIDAR_BOARD[2]
+    need_cooler = cooler_top_above_t1() + LIDAR_COOLER_CLEAR
+    a, b = stack_for(max(need_scan, need_cooler))
     return a + b, (a, b)
 
 
@@ -402,19 +445,39 @@ def lidar_tower(geo, lidar_key):
         out.append(finish(zcyl(5.5, 2.4, x, y, geo.T0 - 2.4), f"lidar_leg_screw_{i + 1}", COL["screw"], density=7.9))
     zb = geo.T1 + tl
     bx, by, bt = D.LIDAR_BOARD
-    out.append(finish(blk(bx, by, bt, D.LIDAR_X, 0, zb), "lidar_board", COL["fr4"], density=D.LIDAR_BOARD_DENSITY))
+    board = blk(bx, by, bt, D.LIDAR_X, 0, zb)
+    for x, y in lidar_leg_xy():
+        board = board - zcyl(3.2, bt, x, y, zb)
+    out.append(finish(board, "lidar_board", COL["fr4"], density=D.LIDAR_BOARD_DENSITY))
     for i, (x, y) in enumerate(lidar_leg_xy()):
         out.append(finish(zcyl(5.5, 2.4, x, y, zb + bt), f"lidar_board_screw_{i + 1}", COL["screw"], density=7.9))
     return out, zb + bt, tl, stack
 
 
 def lidar_parts(geo, lidar_key, base_z):
+    """LiDAR on the board + its M2.5 screws from below. No USB adapter (finding 8)."""
     L = D.LIDARS[lidar_key]
     lid = bd.Pos(D.LIDAR_X, 0, base_z) * lidar_body(lidar_key)
-    ax_, ay_, az_ = L["adapter"]
-    ad = blk(ax_, ay_, az_, D.LIDAR_X - 47.0, 0, base_z)
-    return [finish(lid, "lidar", COL["lidar"], mass_g=L["mass_g"]),
-            finish(ad, "lidar_adapter", COL["adapter"], mass_g=5.0)], base_z + L["scan_above_base"]
+    out = [finish(lid, "lidar", COL["lidar"], mass_g=L["mass_g"])]
+    zb = base_z - D.LIDAR_BOARD[2]
+    for i, (hx, hy) in enumerate(L["holes"]):
+        out.append(finish(zcyl(4.5, 1.7, D.LIDAR_X + hx, hy, zb - 1.7), f"lidar_screw_{i + 1}", COL["screw"], density=7.9))
+    return out, base_z + L["scan_above_base"]
+
+
+def fence_xy():
+    r = D.PAYLOAD_D / 2 + D.FENCE_PLAY + D.M3_STANDOFF_D / 2
+    c = r / 2 ** 0.5
+    return [(D.PAYLOAD_X + sx * c, sy * c) for sx in (1, -1) for sy in (1, -1)]
+
+
+def payload_fence(geo):
+    out = []
+    for i, (x, y) in enumerate(fence_xy()):
+        out.append(finish(zcyl(D.M3_STANDOFF_D, D.FENCE_H, x, y, geo.T1), f"fence_post_{i + 1}", COL["brass"],
+                          density=D.BRASS_DENSITY))
+        out.append(finish(zcyl(5.5, 2.4, x, y, geo.T0 - 2.4), f"fence_nut_{i + 1}", COL["screw"], density=7.9))
+    return out
 
 
 def payload(geo):
@@ -446,8 +509,61 @@ def cable_parts(ctx):
     return out
 
 
+# ------------------------------------------------------------------ drilling table
+def drills(lidar_key="c1", driver="mdd3a"):
+    """Every hole Jaime drills: (part, purpose, x, y, diameter or (w, h) cut-out). XY in REP-103 mm."""
+    out = []
+    for x, y in pi_holes():
+        out.append(("top_plate", "Pi 5 M2.5 standoff", x, y, 2.7))
+    if driver == "mdd3a":
+        for x, y in mdd3a_holes():
+            out.append(("top_plate", "MDD3A M3 nylon standoff", x, y, 3.2))
+    for x, y in imu_holes():
+        out.append(("top_plate", "IMU M3 nylon standoff", x, y, 3.2))
+    for x, y in lidar_leg_xy():
+        out.append(("top_plate", "LiDAR tower leg M3", x, y, 3.2))
+    for x, y in fence_xy():
+        out.append(("top_plate", "payload fence post M3", x, y, 3.2))
+    for x, y in front_screw_xy():
+        out.append(("top_plate", "camera holder + HC-SR04 bracket shared M3", x, y, 3.2))
+    out.append(("top_plate", "KCD1 rocker cut-out 13 (X) x 19 (Y): 2 x Ø12 + file", *D.SWITCH_XY, D.SWITCH_CUTOUT))
+    for x, y in lidar_leg_xy():
+        out.append(("lidar_board", "leg M3 through the FR4 board", x, y, 3.2))
+    for hx, hy in D.LIDARS[lidar_key]["holes"]:
+        out.append(("lidar_board", f"{D.LIDARS[lidar_key]['name']} M2.5 fixing", D.LIDAR_X + hx, hy, 2.7))
+    return out
+
+
+def _hole(x, y, d):
+    from shapely.geometry import Point, box
+    if isinstance(d, tuple):
+        return box(x - d[0] / 2, y - d[1] / 2, x + d[0] / 2, y + d[1] / 2)
+    return Point(x, y).buffer(d / 2, 32)
+
+
+def assert_drills(lidar_key, driver):
+    """Each drilled hole lies inside its plate with >= 3 mm of material to the edge, to every existing hole
+    and to the other drilled holes."""
+    from shapely.geometry import box
+    bx, by, _ = D.LIDAR_BOARD
+    polys = dict(PLATE_POLY)
+    polys["lidar_board"] = box(D.LIDAR_X - bx / 2, -by / 2, D.LIDAR_X + bx / 2, by / 2)
+    rows = drills(lidar_key, driver)
+    for part, why, x, y, d in rows:
+        hole = _hole(x, y, d)
+        poly = polys[part]
+        assert poly.contains(hole), (part, why, x, y)
+        web = min([poly.exterior.distance(hole)] + [r.distance(hole) for r in poly.interiors])
+        assert web >= 3.0 - 1e-6, (part, why, x, y, round(web, 2))
+    for i, a in enumerate(rows):
+        for b in rows[i + 1:]:
+            if a[0] == b[0]:
+                assert _hole(*a[2:]).distance(_hole(*b[2:])) >= 3.0, (a, b)
+    return rows
+
+
 # ------------------------------------------------------------------ assembly
-def scout_parts(lidar_key="ld19", motor_key="hiwonder", with_payload=True, driver="mdd3a"):
+def scout_parts(lidar_key="c1", motor_key="hiwonder", with_payload=True, driver="mdd3a"):
     """All parts of one variant (list of labelled shapes) + facts the checks need."""
     geo = Geo(motor_key)
     kids = [plate_from_stl("Bottom Plate.stl", geo.B0, False, "bottom_plate"),
@@ -458,17 +574,29 @@ def scout_parts(lidar_key="ld19", motor_key="hiwonder", with_payload=True, drive
     kids += tower
     lid, scan_z = lidar_parts(geo, lidar_key, base_z)
     kids += lid
+    kids += payload_fence(geo)
     if with_payload:
         kids.append(payload(geo))
     ctx = {"geo": geo, "motor": motor_key, "lidar": lidar_key, "driver": driver,
            "bb": {k.label: k.bounding_box() for k in kids}, "pi_vendor_to_world": lambda xv, zv, yv=0.0: pi_vendor_to_world(geo, xv, zv, yv),
-           "pi_pcb_top": pi_pcb_top(geo), "switch_xy": SWITCH_XY_FRONT}
+           "pi_pcb_top": pi_pcb_top(geo), "switch_xy": D.SWITCH_XY}
     kids += cable_parts(ctx)
-    info = {"geo": geo, "scan_z": scan_z, "tower_len": tl, "tower_stack": stack, "lidar_base_z": base_z}
+    rows = assert_drills(lidar_key, driver)
+    # drill the top plate (the guide shows every hole Jaime makes)
+    top = kids[1]
+    cut = None
+    for part, _, x, y, d in rows:
+        if part != "top_plate":
+            continue
+        tool = blk(d[0], d[1], D.PLATE_T, x, y, geo.T0) if isinstance(d, tuple) else zcyl(d, D.PLATE_T, x, y, geo.T0)
+        cut = tool if cut is None else cut + tool
+    kids[1] = finish(top - cut, "top_plate", COL["plate"], density=D.PLATE_DENSITY)
+    info = {"geo": geo, "scan_z": scan_z, "tower_len": tl, "tower_stack": stack, "lidar_base_z": base_z,
+            "drills": rows}
     return kids, info
 
 
-def scout(lidar_key="ld19", motor_key="hiwonder", with_payload=True, driver="mdd3a", label="scout_v2"):
+def scout(lidar_key="c1", motor_key="hiwonder", with_payload=True, driver="mdd3a", label="scout_v2"):
     kids, info = scout_parts(lidar_key, motor_key, with_payload, driver)
     labels = [k.label for k in kids]
     assert len(labels) == len(set(labels)), "duplicate labels"
@@ -479,6 +607,30 @@ def scout(lidar_key="ld19", motor_key="hiwonder", with_payload=True, driver="mdd
     assert info["scan_z"] - top_other >= D.SCAN_MARGIN - 1e-6, (info["scan_z"], top_other)
     wheels = [k for k in kids if k.label.startswith("wheel_")]
     assert all(abs(w.bounding_box().min.Z) < 1e-6 for w in wheels), "wheels must touch the ground z=0"
+    bb = {k.label: k.bounding_box() for k in kids}
+    geo = info["geo"]
+    # finding 20: LiDAR board >= 3 mm above the Pi cooler (measured on the built parts)
+    assert bb["lidar_board"].min.Z - bb["pi5_cooler"].max.Z >= LIDAR_COOLER_CLEAR - 1e-6, "board vs cooler"
+    # finding 18: IMU chip <= 25 mm from the centre of rotation (horizontal)
+    ic = bb["imu"].center()
+    assert (ic.X ** 2 + ic.Y ** 2) ** 0.5 <= 25.0 + 1e-6, ("imu", ic)
+    # finding 10: payload keep-out centred at x = -50 on the top plate, Ø75 x 80 (Jaime's cup)
+    if "payload" in bb:
+        p = bb["payload"]
+        assert abs(p.center().X - D.PAYLOAD_X) < 1e-6 and abs(p.size.X - D.PAYLOAD_D) < 1e-6 \
+            and abs(p.size.Z - D.PAYLOAD_H) < 1e-6 and abs(p.min.Z - geo.T1) < 1e-6, "payload keep-out"
+        assert bb["lidar_board"].min.X - p.max.X >= 5.0, "LiDAR board rear edge vs cup"
+    # finding 13: fence posts leave 2 mm radial play to the cup
+    for x, y in fence_xy():
+        assert abs(((x - D.PAYLOAD_X) ** 2 + y ** 2) ** 0.5 - D.M3_STANDOFF_D / 2 - D.PAYLOAD_D / 2 - D.FENCE_PLAY) < 1e-6
+    # Jaime's measured numbers: 39.7 mm between the decks, plates 4.5 thick, wheels Ø65, battery 70 x 50 x 15
+    assert abs(bb["top_plate"].min.Z - bb["bottom_plate"].max.Z - D.DECK_GAP) < 1e-6, "deck gap"
+    assert abs(bb["top_plate"].size.Z - D.PLATE_T) < 1e-6 and abs(bb["bottom_plate"].size.Z - D.PLATE_T) < 1e-6
+    assert all(abs(w.bounding_box().size.Z - D.WHEEL_D) < 1e-3 for w in wheels), "wheel Ø65"
+    bs = bb["battery"].size
+    assert max(abs(bs.X - 70), abs(bs.Y - 50), abs(bs.Z - 15)) < 1e-6, "battery 70 x 50 x 15"
+    # finding 6 / 8: no motor buck, no USB parts
+    assert not any(l in bb for l in ("buck_motor", "lidar_adapter")) and not any("usb" in l for l in bb)
     return asm
 
 
@@ -491,12 +643,12 @@ for _l in ("ld19", "c1"):
     for _m in ("tt_stock", "hiwonder", "fit0450", "yahboom"):
         for _p in (True, False):
             VARIANTS[variant_name(_l, _m, _p)] = (_l, _m, _p, "mdd3a")
-VARIANTS["scout_v2_tb6612"] = ("ld19", DEFAULT["motor"], True, "tb6612")
+VARIANTS["scout_v2_tb6612"] = (DEFAULT["lidar"], DEFAULT["motor"], True, "tb6612")
 
 
 @model
 def scout_v2():
-    """Default: LD19 + Hiwonder encoder TT motors + Cytron MDD3A, 300 g payload keep-out at the rear."""
+    """Default (r3): RPLIDAR C1 + Hiwonder encoder TT 1:42 + Cytron MDD3A on the pack, 300 g cup at x = -50."""
     return scout(DEFAULT["lidar"], DEFAULT["motor"], DEFAULT["payload"], DEFAULT["driver"], "scout_v2")
 
 
