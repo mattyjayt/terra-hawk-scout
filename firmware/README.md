@@ -1,9 +1,10 @@
 # Firmware
+The Scout has one microcontroller: an Arduino UNO R4 WiFi under the Elegoo V4 shield ([ADR-0006](../docs/adr/0006-scout-pi-r4-only.md)).
+
 | Folder | Board | Status |
 |---|---|---|
-| `r4_base/` | Arduino UNO R4 WiFi + Elegoo V4 shield | **in use**: motors, servo, MPU-6050, battery, watchdog; protocol [serial-r4-v1](../docs/specs/interfaces/serial-r4-v1.md); decision [ADR-0005](../docs/adr/0005-r4-usb-serial-base.md) |
+| `r4_base/` | Arduino UNO R4 WiFi + Elegoo V4 shield | **in use**: motors, servo, MPU-6050, battery, watchdog; protocol [serial-r4-v1](../docs/specs/interfaces/serial-r4-v1.md); decision [ADR-0005](../docs/adr/0005-r4-usb-serial-base.md). Refactor to modules + standard libraries: issue #16, [DD-SCOUT-FW](../docs/design/DD-SCOUT-FW.md) |
 | `r4_bench/` | same | learning steps: `Wheel_Test` (each side fwd/back), `IMU_Test` (raw I²C, yaw), `Turn90` (gyro-guided 90° turn) |
-| `esp32_base/` | classic ESP32 | deferred (ADR-0002): micro-ROS + encoders, after the motor upgrade |
 
 Build/upload: Arduino IDE, board *Arduino UNO R4 WiFi* (core `arduino:renesas_uno`), or
 `arduino-cli compile --fqbn arduino:renesas_uno:unor4wifi firmware/r4_base`.

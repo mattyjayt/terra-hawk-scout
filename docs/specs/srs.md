@@ -20,13 +20,13 @@ Priority: **M**ust · **S**hould · **C**ould (MoSCoW). Each requirement traces 
 | REQ-SCOUT-007 | SLAM | The robot shall build a 2D occupancy map with slam_toolbox from `/scan` at 5 cm resolution. | M | map of the living area saved | TC-SCOUT-007 |
 | REQ-SCOUT-008 | Nav | The robot shall navigate to a goal pose with Nav2, avoiding static and dynamic obstacles. | M | 9/10 runs arrive within 10 cm / 10° | TC-SCOUT-008 |
 | REQ-SCOUT-009 | Safety | An obstacle closer than 15 cm in front (LiDAR or ultrasonic) shall stop forward motion. | M | box test at 3 speeds | TC-SCOUT-009 |
-| REQ-SCOUT-010 | Perception | A C++ node shall run object detection on Camera Module 3 frames at ≥ 10 FPS on the Pi 5 and publish `vision_msgs/Detection2DArray` on `/detections`. | S | FPS + mAP on a test set | TC-SCOUT-010 |
+| REQ-SCOUT-010 | Perception | A Python node shall run object detection on Camera Module 3 frames at ≥ 10 FPS on the Pi 5 and publish `vision_msgs/Detection2DArray` on `/detections`. | S | FPS + mAP on a test set | TC-SCOUT-010 |
 | REQ-SCOUT-011 | Model | A URDF/xacro shall describe the robot with correct sensor frames (laser, camera, imu). | M | RViz overlay matches the CAD | TC-SCOUT-011 |
 | REQ-SCOUT-012 | Power | The Pi 5 shall be supplied 5.0–5.25 V at up to 5 A; no undervoltage events during a 30 min run. | M | `vcgencmd get_throttled` = 0x0 | TC-SCOUT-012 |
 | REQ-SCOUT-013 | Power | Battery voltage shall be measured and published; below a threshold the robot shall stop and report. | S | threshold test | TC-SCOUT-013 |
 | REQ-SCOUT-014 | Mission | A mission node shall run patrol and go-to-station missions via Nav2 actions. | S | patrol of 3 waypoints | TC-SCOUT-014 |
 | REQ-SCOUT-015 | Telemetry | Robot status (pose, battery, mission state) shall be bridged to MQTT `terrahawk/v1/scout-01/...`. | C | messages visible in HiveMQ / Supabase | TC-SCOUT-015 |
-| REQ-SCOUT-016 | Ops | The full stack shall start with one launch command and recover from a micro-ROS agent restart. | M | kill/restart agent test | TC-SCOUT-016 |
+| REQ-SCOUT-016 | Ops | The full stack shall start with one launch command and recover from a USB serial drop or R4 reset. | M | unplug/replug the R4 test | TC-SCOUT-016 |
 | REQ-SCOUT-017 | Ops | Rosbag recording of core topics shall be available for every test run. | S | bag replays in Foxglove | TC-SCOUT-017 |
 | REQ-SCOUT-018 | Perf | Command-to-motion latency shall be < 150 ms end to end. | S | scope/log measurement | TC-SCOUT-018 |
 | REQ-SCOUT-019 | Sim | A simulation (Gazebo or Isaac) shall run the same launch with a simulated base. | C | Nav2 goal in sim | TC-SCOUT-019 |
