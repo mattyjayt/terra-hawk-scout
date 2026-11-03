@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-p1-graph/candidate.json",
+    "sha256": "51aaf1479c4c35deef5719e5ebdfd9bdd3896f108171db1387d573da4ff97fcd",
+    "bytes": 6180
+  },
+  "artifact": {
+    "path": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-p1-graph/scout-p1-graph.html",
+    "sha256": "d21313d71988bd94cbcca65a53c051c67990fa918ae10a65725fb6baa17a3fab",
+    "bytes": 853029
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-p1-graph/scout-p1-graph.finalize.json",
+    "summaryReceipt": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-p1-graph/scout-p1-graph.finalize-summary.json",
+    "browserCheckReceipt": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-p1-graph/scout-p1-graph.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-03T10:43:35.043Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 7149,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

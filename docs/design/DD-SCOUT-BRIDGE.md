@@ -73,6 +73,8 @@ TT motors don't turn below a minimum PWM (`pwm_min`, measured). For each side:
 - otherwise PWM = sign(v) · round(pwm_min + (255 − pwm_min) · |v| / v_max), clamped to ±255.
 
 ### 5.4 Timing and safety layers
+Sequence diagram (archify): [`docs/diagrams/scout-cmd-safety/scout-cmd-safety.html`](../diagrams/scout-cmd-safety/scout-cmd-safety.html). How-it-works figure for §5.1–5.3 (anatomy, interactive, example values): [`docs/figures/twist-to-pwm/twist-to-pwm.html`](../figures/twist-to-pwm/twist-to-pwm.html).
+
 | Layer | Where | Rule |
 |---|---|---|
 | 1. Command timeout | bridge send timer | no `cmd_vel` for `cmd_timeout` (0.25 s) → send `S` once, then nothing until a new command |

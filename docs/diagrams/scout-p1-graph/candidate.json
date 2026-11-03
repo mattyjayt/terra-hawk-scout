@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "TerraHawk Scout \u2014 ROS 2 node graph, P1 base + P2 perception",
+    "output": "scout-p1-graph/scout-p1-graph.html",
+    "locale": "en",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "r4",
+      "type": "messagebus",
+      "label": "UNO R4",
+      "sublabel": "firmware r4_base",
+      "pos": [
+        470,
+        40
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "macapp",
+      "type": "external",
+      "label": "Foxglove app",
+      "sublabel": "on the Mac",
+      "pos": [
+        880,
+        40
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "teleop",
+      "type": "external",
+      "label": "teleop_twist_keyboard",
+      "sublabel": "keyboard teleop",
+      "pos": [
+        30,
+        240
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "tag": "P1"
+    },
+    {
+      "id": "bridge",
+      "type": "backend",
+      "label": "base_bridge",
+      "sublabel": "serial-r4-v1 client",
+      "pos": [
+        430,
+        240
+      ],
+      "size": [
+        260,
+        64
+      ],
+      "tag": "P1"
+    },
+    {
+      "id": "fox",
+      "type": "messagebus",
+      "label": "foxglove_bridge",
+      "sublabel": "ws://ghorman:8765",
+      "pos": [
+        880,
+        240
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "tag": "P1"
+    },
+    {
+      "id": "pan",
+      "type": "backend",
+      "label": "pan_tracker",
+      "sublabel": "detections \u2192 pan angle",
+      "pos": [
+        430,
+        460
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "tag": "P2 perception"
+    },
+    {
+      "id": "rsp",
+      "type": "backend",
+      "label": "robot_state_publisher",
+      "sublabel": "URDF scout_description",
+      "pos": [
+        700,
+        460
+      ],
+      "size": [
+        180,
+        64
+      ],
+      "tag": "P1"
+    },
+    {
+      "id": "cam",
+      "type": "frontend",
+      "label": "camera_ros",
+      "sublabel": "640 \u00d7 480 \u00b7 15\u201330 Hz",
+      "pos": [
+        30,
+        680
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "tag": "P2 perception"
+    },
+    {
+      "id": "det",
+      "type": "backend",
+      "label": "person_detector",
+      "sublabel": "person only \u00b7 score \u2265 0.5",
+      "pos": [
+        430,
+        680
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "tag": "P2 perception"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Raspberry Pi 5 \u00b7 ROS 2 Jazzy",
+      "wraps": [
+        "teleop",
+        "bridge",
+        "fox",
+        "pan",
+        "rsp",
+        "cam",
+        "det"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Arduino UNO R4 \u00b7 USB serial",
+      "wraps": [
+        "r4"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Mac",
+      "wraps": [
+        "macapp"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "cmdvel",
+      "from": "teleop",
+      "to": "bridge",
+      "label": "cmd_vel \u00b7 geometry_msgs/Twist",
+      "variant": "emphasis"
+    },
+    {
+      "id": "serdown",
+      "from": "bridge",
+      "to": "r4",
+      "label": "M l r \u00b7 S \u00b7 V  (serial-r4-v1)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "serup",
+      "from": "r4",
+      "to": "bridge",
+      "label": "I 20 Hz \u00b7 A ack \u00b7 W stop"
+    },
+    {
+      "id": "status",
+      "from": "bridge",
+      "to": "fox",
+      "label": "battery \u00b7 diagnostics"
+    },
+    {
+      "id": "foxcmd",
+      "from": "fox",
+      "to": "bridge",
+      "label": "cmd_vel (Foxglove Teleop)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "ws",
+      "from": "fox",
+      "to": "macapp",
+      "label": "WebSocket ws://ghorman:8765",
+      "variant": "dashed"
+    },
+    {
+      "id": "imu",
+      "from": "bridge",
+      "to": "pan",
+      "label": "imu/data_raw \u00b7 sensor_msgs/Imu 20 Hz + joint_states"
+    },
+    {
+      "id": "pancmd",
+      "from": "pan",
+      "to": "bridge",
+      "label": "pan/cmd \u00b7 std_msgs/Float64",
+      "variant": "emphasis"
+    },
+    {
+      "id": "js",
+      "from": "bridge",
+      "to": "rsp",
+      "label": "joint_states \u00b7 sensor_msgs/JointState 20 Hz"
+    },
+    {
+      "id": "tf",
+      "from": "rsp",
+      "to": "fox",
+      "label": "tf \u00b7 tf_static \u00b7 robot_description"
+    },
+    {
+      "id": "img",
+      "from": "cam",
+      "to": "det",
+      "label": "camera/image_raw \u00b7 sensor_msgs/Image"
+    },
+    {
+      "id": "det",
+      "from": "det",
+      "to": "pan",
+      "label": "detections \u00b7 vision_msgs/Detection2DArray"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Topics from base_bridge (P1)",
+      "items": [
+        "imu/data_raw \u00b7 sensor_msgs/Imu \u00b7 20 Hz (v1) \u00b7 SENSOR QoS",
+        "battery \u00b7 sensor_msgs/BatteryState \u00b7 1 Hz",
+        "diagnostics \u00b7 diagnostic_msgs/DiagnosticArray \u00b7 1 Hz",
+        "joint_states \u00b7 sensor_msgs/JointState \u00b7 20 Hz (pan_joint)",
+        "base/debug/yaw \u00b7 std_msgs/Float64 \u00b7 20 Hz (removed in serial v2)"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "P2 perception loop",
+      "items": [
+        "camera_ros \u2192 person_detector \u2192 pan_tracker \u2192 pan/cmd \u2192 base_bridge \u2192 servo (V)",
+        "detections also go to Foxglove; empty array = nobody there",
+        "pan/cmd: rad, clamped \u00b1\u03c0/2, servo command only on \u2265 1\u00b0 change, \u2264 20 Hz"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Safety layers",
+      "items": [
+        "bridge: no cmd_vel for cmd_timeout 0.25 s \u2192 S once",
+        "R4 watchdog: no M line for 300 ms \u2192 motors off, W stop",
+        "shutdown: S, then close the port"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "Foxglove",
+      "items": [
+        "foxglove_bridge subscribes to all topics above, incl. camera/image_raw/compressed",
+        "Foxglove Teleop panel publishes cmd_vel through foxglove_bridge"
+      ]
+    }
+  ]
+}

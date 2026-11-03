@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "bbb311d0-dacc-4413-9da4-56b6e3920c03",
+  "status": "current",
+  "command": "deliver",
+  "type": "sequence",
+  "input": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-cmd-safety/candidate.json",
+  "output": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-cmd-safety/scout-cmd-safety.html",
+  "specification": {
+    "sha256": "1db702e9a52a34a8bce90cc4bf67a15a4c828599a207117c58d24b69d9e7d4e1",
+    "bytes": 4867
+  },
+  "artifact": {
+    "sha256": "8aa51c95520a93fc637ed9cdb992824a5fce54126715ce27850f88d11b231d11",
+    "bytes": 841947
+  }
+}
