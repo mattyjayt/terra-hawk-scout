@@ -30,6 +30,10 @@ Priority: **M**ust · **S**hould · **C**ould (MoSCoW). Each requirement traces 
 | REQ-SCOUT-017 | Ops | Rosbag recording of core topics shall be available for every test run. | S | bag replays in Foxglove | TC-SCOUT-017 |
 | REQ-SCOUT-018 | Perf | Command-to-motion latency shall be < 150 ms end to end. | S | scope/log measurement | TC-SCOUT-018 |
 | REQ-SCOUT-019 | Sim | A simulation (Gazebo or Isaac) shall run the same launch with a simulated base. | C | Nav2 goal in sim | TC-SCOUT-019 |
+| REQ-SCOUT-021 | Pan | The base shall accept a pan angle (rad, + = left) on `pan/cmd` and report the commanded pan angle in `/joint_states` as `pan_joint`. | M | ±0.5 rad turns the camera left/right; joint state matches | TC-SCOUT-023 |
+| REQ-SCOUT-022 | Ops | The base bridge shall publish `/diagnostics` at 1 Hz with link state, line rate, parse errors, watchdog stops and frozen-IMU detection. | M | unplug / frozen-IMU tests raise ERROR within 1 s | TC-SCOUT-024 |
+| REQ-SCOUT-023 | Perception | The pan servo shall keep the most confident detected person within ±10 % of the image centre while the person walks slowly (≤ 0.5 m/s) across the view. | S | person centred in ≥ 80 % of frames over a 20 s walk | TC-SCOUT-025 |
+| REQ-SCOUT-024 | Quality | The base bridge shall exist in Python and C++ that pass the same contract tests (IF-ROS-TOPICS §10). | S | both pass TC-SCOUT-021…024 | TC-SCOUT-021…024 |
 | REQ-SCOUT-020 | Docs | Each milestone shall ship code, photos, a 30–60 s video and a README update. | M | release checklist | TC-SCOUT-020 |
 
 ## Open points (resolve before Approved)

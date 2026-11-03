@@ -22,3 +22,6 @@ cad/**/vendor/
 __pycache__/
 *.pyc
 guide/vendor/glb/
+
+# rosbags (evidence lives on Drive, not in git)
+bags/
