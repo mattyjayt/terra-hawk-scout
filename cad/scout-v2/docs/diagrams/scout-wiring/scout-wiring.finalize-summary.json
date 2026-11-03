@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-wiring/candidate.json",
+    "sha256": "f358bf368074be757c1dca54257a6ba29b609b16de9c1c222454719aa63bd5f8",
+    "bytes": 6013
+  },
+  "artifact": {
+    "path": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-wiring/scout-wiring.html",
+    "sha256": "4fedc22bbd23499ff486473830919b4e3e84b6f971feb819a510b15c08afa223",
+    "bytes": 851525
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-wiring/scout-wiring.finalize.json",
+    "summaryReceipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-wiring/scout-wiring.finalize-summary.json",
+    "browserCheckReceipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-wiring/scout-wiring.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-01T20:58:53.380Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 2829,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

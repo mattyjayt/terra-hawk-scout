@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "9fd9040f-a6ed-4e0f-a18f-6469a0228b2c",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-power-distribution/candidate.json",
+  "output": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/cad/scout-v2/docs/diagrams/scout-power-distribution/scout-power-distribution.html",
+  "specification": {
+    "sha256": "f0fb6e1a86cc12a4f1b92f451348aaf49d011bfeb8e9bab9cfe5899bad16077b",
+    "bytes": 7425
+  },
+  "artifact": {
+    "sha256": "6dcf9dbd84e1bd2cb62339c804384420cf44784b797a6839393328346bb620be",
+    "bytes": 859635
+  }
+}

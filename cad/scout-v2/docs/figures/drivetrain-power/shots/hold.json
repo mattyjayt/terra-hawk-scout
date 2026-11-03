@@ -1,0 +1,13 @@
+[["wait", 800],
+ ["eval", "window.__drive.hold(true); 'held'"],
+ ["wait", 150],
+ ["eval", "document.querySelector('[data-readout]').textContent"],
+ ["wait", 350],
+ ["eval", "document.querySelector('[data-readout]').textContent"],
+ ["wait", 400],
+ ["eval", "document.querySelector('[data-readout]').textContent"],
+ ["shot", "shots/held-stopped.png", ".iso-plate"],
+ ["eval", "window.__drive.hold(false); window.__drive.t = 5; 'released'"],
+ ["wait", 300],
+ ["eval", "document.querySelector('[data-readout]').textContent"],
+ ["shot", "shots/turn-phone.png", ".iso-plate"]]

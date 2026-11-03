@@ -63,3 +63,6 @@ GPIO 34–39 have no internal pull-ups, so the encoders need external pull-ups (
 
 ## 8. Verification
 TC-SCOUT-012 (no undervoltage), TC-SCOUT-002 (watchdog), TC-SCOUT-003/005 (sensor rates).
+
+## Detailed design v2 (2 Nov 2026)
+The detailed mechanical, electrical and physics design (CAD, fit checks, MuJoCo sim, final review and purchase list) lives in [`cad/scout-v2/`](../../cad/scout-v2/README.md). Where it differs from this outline, v2 wins: RPLIDAR C1 (not LD19), Hiwonder 1:42 encoder motors, Cytron MDD3A on the pack with an 8.4 V PWM cap (no motor buck), Pololu D36V50F5 for the Pi, LiDAR and ESP32 on Pi UARTs.

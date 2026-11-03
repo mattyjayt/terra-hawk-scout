@@ -1,0 +1,302 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Scout v2 — electrical interfaces and signals",
+    "output": "diagrams/scout-wiring/scout-wiring.html",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Compute"
+        },
+        "messagebus": {
+          "label": "Driver / power stage"
+        },
+        "frontend": {
+          "label": "Sensor"
+        },
+        "external": {
+          "label": "Actuator"
+        },
+        "security": {
+          "label": "Analog front end"
+        }
+      }
+    }
+  },
+  "components": [
+    {
+      "id": "camera",
+      "type": "frontend",
+      "label": "Camera Module 3",
+      "sublabel": "CSI · 3.3 V",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "pi",
+      "type": "backend",
+      "label": "Raspberry Pi 5",
+      "sublabel": "ROS 2 · micro-ROS agent",
+      "pos": [
+        400,
+        40
+      ],
+      "size": [
+        220,
+        72
+      ]
+    },
+    {
+      "id": "lidar",
+      "type": "frontend",
+      "label": "RPLIDAR C1",
+      "sublabel": "3.3 V TTL UART · 5 V supply",
+      "pos": [
+        800,
+        40
+      ],
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "buck",
+      "type": "messagebus",
+      "label": "Pololu D36V50F5",
+      "sublabel": "5 V rail · PG output",
+      "pos": [
+        1160,
+        40
+      ],
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "hcsr04",
+      "type": "frontend",
+      "label": "HC-SR04",
+      "sublabel": "5 V supply · 5 V echo",
+      "pos": [
+        40,
+        270
+      ],
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "esp32",
+      "type": "backend",
+      "label": "ESP32 WROOM-32",
+      "sublabel": "micro-ROS · PCNT · ADC1 · I2C",
+      "pos": [
+        400,
+        250
+      ],
+      "size": [
+        220,
+        190
+      ]
+    },
+    {
+      "id": "mdd3a",
+      "type": "messagebus",
+      "label": "Cytron MDD3A",
+      "sublabel": "2 ch · 20 kHz · 1.8–12 V logic",
+      "pos": [
+        800,
+        270
+      ],
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "motors",
+      "type": "external",
+      "label": "4 TT motors",
+      "sublabel": "ch 1 left pair · ch 2 right pair",
+      "pos": [
+        1160,
+        270
+      ],
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "imu",
+      "type": "frontend",
+      "label": "MPU-6050",
+      "sublabel": "I2C · 3.3 V · near CoR",
+      "pos": [
+        40,
+        520
+      ],
+      "size": [
+        200,
+        72
+      ]
+    },
+    {
+      "id": "enc",
+      "type": "frontend",
+      "label": "4 Hall encoders",
+      "sublabel": "A/B each = 8 lines",
+      "pos": [
+        400,
+        520
+      ],
+      "size": [
+        220,
+        72
+      ],
+      "tag": "3.3 V output unverified (M7)"
+    },
+    {
+      "id": "divider",
+      "type": "security",
+      "label": "47 k / 10 k + 100 nF",
+      "sublabel": "pack 12.6 V → 2.21 V",
+      "pos": [
+        800,
+        520
+      ],
+      "size": [
+        200,
+        72
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "w1",
+      "from": "camera",
+      "to": "pi",
+      "label": "CSI 22-pin FFC",
+      "variant": "emphasis"
+    },
+    {
+      "id": "w2",
+      "from": "lidar",
+      "to": "pi",
+      "label": "UART #2 · 460800",
+      "variant": "emphasis"
+    },
+    {
+      "id": "w3",
+      "from": "pi",
+      "to": "esp32",
+      "label": "UART #1 · 3.3 V · micro-ROS",
+      "variant": "emphasis"
+    },
+    {
+      "id": "w4",
+      "from": "esp32",
+      "to": "mdd3a",
+      "label": "4× PWM/DIR",
+      "variant": "emphasis"
+    },
+    {
+      "id": "w5",
+      "from": "mdd3a",
+      "to": "motors",
+      "label": "M1A/B · M2A/B"
+    },
+    {
+      "id": "w6",
+      "from": "esp32",
+      "to": "hcsr04",
+      "label": "TRIG",
+      "fromSide": "left",
+      "toSide": "right"
+    },
+    {
+      "id": "w7",
+      "from": "hcsr04",
+      "to": "esp32",
+      "label": "ECHO 1k/2k",
+      "fromSide": "right",
+      "toSide": "left"
+    },
+    {
+      "id": "w8",
+      "from": "imu",
+      "to": "esp32",
+      "label": "I2C SDA/SCL"
+    },
+    {
+      "id": "w9",
+      "from": "enc",
+      "to": "esp32",
+      "label": "A/B → PCNT"
+    },
+    {
+      "id": "w10",
+      "from": "divider",
+      "to": "esp32",
+      "label": "ADC1",
+      "variant": "dashed"
+    },
+    {
+      "id": "w11",
+      "from": "buck",
+      "to": "esp32",
+      "label": "PG → GPIO",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "Pi 5 links",
+      "items": [
+        "ESP32 and RPLIDAR C1 each on their own Pi UART: no USB plugs, avoids the 600 mA no-PD USB limit",
+        "C1: UART TX+RX 460800 baud, 3.3 V logic, 4.8–5.2 V supply (XH2.54-5P lead)",
+        "Camera Module 3 on CSI via 22-pin mini FFC"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "ESP32 real-time I/O",
+      "items": [
+        "MDD3A: 4 PWM/DIR lines; watchdog drives all inputs LOW/LOW (brake, 0.16–0.19 s)",
+        "PWM pins boot LOW; duty cap lives in the lowest PWM-write function",
+        "4 encoders × A/B counted by PCNT (no GPIO ISRs); edge timing below 0.1 m/s",
+        "18 of 19 safe ESP32 pins used with the MDD3A"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Logic levels",
+      "items": [
+        "HC-SR04 ECHO is 5 V → 1 k / 2 k divider to 3.3 V; TRIG direct",
+        "MPU-6050 on ESP32 3V3 with pull-ups",
+        "Hiwonder encoder at 3.3 V unpublished: check on arrival, else dividers"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "Not specified in the review",
+      "items": [
+        "Which Pi UART (UART0/2/3…) and which ESP32 GPIO numbers are used",
+        "Pi 5 ↔ ESP32 baud rate"
+      ]
+    }
+  ]
+}

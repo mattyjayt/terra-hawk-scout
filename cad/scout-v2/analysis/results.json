@@ -1,0 +1,3772 @@
+{
+ "mass": {
+  "geometry_source": "robot_params.json v2-r3",
+  "robot_params_json_present": true,
+  "battery_mass_g": 110,
+  "battery_mass_range_g": [
+   100,
+   126
+  ],
+  "battery_label_Wh": 33.3,
+  "battery_label_Wh_per_kg": 302.727,
+  "battery_label_Wh_per_L": 634.286,
+  "battery_realistic_Wh": [
+   16.5,
+   27.5
+  ],
+  "components_proposed_c1": [
+   {
+    "label": "bottom_plate",
+    "mass_g": 115,
+    "source": "V1 CAD volume x A acrylic 1.19 g/cm3 (weigh!)",
+    "pos_mm": [
+     2,
+     0,
+     19.25
+    ]
+   },
+   {
+    "label": "top_plate",
+    "mass_g": 113,
+    "source": "V1 CAD volume x A acrylic 1.19 g/cm3 (weigh!)",
+    "pos_mm": [
+     2,
+     0,
+     63.45
+    ]
+   },
+   {
+    "label": "dead_plate",
+    "mass_g": 3,
+    "source": "V1 CAD",
+    "pos_mm": [
+     106,
+     0,
+     67
+    ]
+   },
+   {
+    "label": "battery",
+    "mass_g": 110,
+    "source": "C 52.5 cm3 x A 2.1 g/cm3 (range (100, 126))",
+    "pos_mm": [
+     30,
+     0,
+     29.0
+    ]
+   },
+   {
+    "label": "pi5",
+    "mass_g": 46,
+    "source": "A commonly reported board mass",
+    "pos_mm": [
+     -75,
+     0,
+     72.7
+    ]
+   },
+   {
+    "label": "pi5_cooler",
+    "mass_g": 20,
+    "source": "A (weigh)",
+    "pos_mm": [
+     -75,
+     0,
+     79.7
+    ]
+   },
+   {
+    "label": "pi5_standoffs",
+    "mass_g": 4,
+    "source": "A 4x M2.5x6 brass",
+    "pos_mm": [
+     -75,
+     0,
+     68.7
+    ]
+   },
+   {
+    "label": "camera",
+    "mass_g": 7,
+    "source": "A 4 g module + 3 g cable",
+    "pos_mm": [
+     106,
+     0,
+     80
+    ]
+   },
+   {
+    "label": "lidar",
+    "mass_g": 125,
+    "source": "D c1 110 g + A 15 g cable/USB board",
+    "pos_mm": [
+     -75,
+     0,
+     121.2
+    ]
+   },
+   {
+    "label": "lidar_standoffs",
+    "mass_g": 15,
+    "source": "A 4x M2.5 brass ~35-40 mm + plate/screws",
+    "pos_mm": [
+     -75,
+     0,
+     85.95
+    ]
+   },
+   {
+    "label": "esp32",
+    "mass_g": 10,
+    "source": "A DevKit",
+    "pos_mm": [
+     -35,
+     12,
+     33
+    ]
+   },
+   {
+    "label": "motor_driver",
+    "mass_g": 15,
+    "source": "A MDD3A-class board",
+    "pos_mm": [
+     -35,
+     -15.5,
+     30
+    ]
+   },
+   {
+    "label": "imu",
+    "mass_g": 2,
+    "source": "A GY-521",
+    "pos_mm": [
+     0,
+     0,
+     59
+    ]
+   },
+   {
+    "label": "ultrasonic",
+    "mass_g": 9,
+    "source": "A HC-SR04 8.5 g",
+    "pos_mm": [
+     105.5,
+     0,
+     31.5
+    ]
+   },
+   {
+    "label": "buck_5v",
+    "mass_g": 7,
+    "source": "A Pololu D36V50F5 (25x25x9.5 mm)",
+    "pos_mm": [
+     -63,
+     0,
+     27
+    ]
+   },
+   {
+    "label": "fuse_switch_conn",
+    "mass_g": 22,
+    "source": "A mini-blade holder + switch + 2x XT30",
+    "pos_mm": [
+     -90,
+     0,
+     30
+    ]
+   },
+   {
+    "label": "wiring",
+    "mass_g": 35,
+    "source": "A 20/22 AWG + Dupont + zip ties",
+    "pos_mm": [
+     0,
+     0,
+     40
+    ]
+   },
+   {
+    "label": "motor_fl",
+    "mass_g": 34.0,
+    "source": "D https://www.hiwonder.com/products/tt-motor-plastic",
+    "pos_mm": [
+     64,
+     36.5,
+     32.5
+    ]
+   },
+   {
+    "label": "motor_bracket_fl",
+    "mass_g": 4,
+    "source": "A Elegoo mount + M3 bolts",
+    "pos_mm": [
+     64,
+     36.5,
+     32.5
+    ]
+   },
+   {
+    "label": "wheel_fl",
+    "mass_g": 25,
+    "source": "A v1 value (weigh)",
+    "pos_mm": [
+     40,
+     62,
+     32.5
+    ]
+   },
+   {
+    "label": "motor_fr",
+    "mass_g": 34.0,
+    "source": "D https://www.hiwonder.com/products/tt-motor-plastic",
+    "pos_mm": [
+     64,
+     -36.5,
+     32.5
+    ]
+   },
+   {
+    "label": "motor_bracket_fr",
+    "mass_g": 4,
+    "source": "A Elegoo mount + M3 bolts",
+    "pos_mm": [
+     64,
+     -36.5,
+     32.5
+    ]
+   },
+   {
+    "label": "wheel_fr",
+    "mass_g": 25,
+    "source": "A v1 value (weigh)",
+    "pos_mm": [
+     40,
+     -62,
+     32.5
+    ]
+   },
+   {
+    "label": "motor_rl",
+    "mass_g": 34.0,
+    "source": "D https://www.hiwonder.com/products/tt-motor-plastic",
+    "pos_mm": [
+     -64,
+     36.5,
+     32.5
+    ]
+   },
+   {
+    "label": "motor_bracket_rl",
+    "mass_g": 4,
+    "source": "A Elegoo mount + M3 bolts",
+    "pos_mm": [
+     -64,
+     36.5,
+     32.5
+    ]
+   },
+   {
+    "label": "wheel_rl",
+    "mass_g": 25,
+    "source": "A v1 value (weigh)",
+    "pos_mm": [
+     -40,
+     62,
+     32.5
+    ]
+   },
+   {
+    "label": "motor_rr",
+    "mass_g": 34.0,
+    "source": "D https://www.hiwonder.com/products/tt-motor-plastic",
+    "pos_mm": [
+     -64,
+     -36.5,
+     32.5
+    ]
+   },
+   {
+    "label": "motor_bracket_rr",
+    "mass_g": 4,
+    "source": "A Elegoo mount + M3 bolts",
+    "pos_mm": [
+     -64,
+     -36.5,
+     32.5
+    ]
+   },
+   {
+    "label": "wheel_rr",
+    "mass_g": 25,
+    "source": "A v1 value (weigh)",
+    "pos_mm": [
+     -40,
+     -62,
+     32.5
+    ]
+   }
+  ],
+  "empty_mass_g": 910.0,
+  "contingency_10pct_g": 91.0,
+  "design_mass_kg_with_payload": 1.301,
+  "lidar_delta_c1_minus_ld19_g": 68,
+  "cases": {
+   "v1_ld19_pay0": {
+    "mass_kg": 0.842,
+    "com_mm": [
+     -0.143,
+     -0.134,
+     45.633
+    ],
+    "front_axle_frac": 0.498
+   },
+   "v1_ld19_pay300": {
+    "mass_kg": 1.142,
+    "com_mm": [
+     -21.909,
+     -0.099,
+     58.785
+    ],
+    "front_axle_frac": 0.226
+   },
+   "v1_c1_pay0": {
+    "mass_kg": 0.91,
+    "com_mm": [
+     -0.132,
+     -0.124,
+     51.217
+    ],
+    "front_axle_frac": 0.498
+   },
+   "v1_c1_pay300": {
+    "mass_kg": 1.21,
+    "com_mm": [
+     -20.678,
+     -0.093,
+     62.246
+    ],
+    "front_axle_frac": 0.242
+   },
+   "proposed_ld19_pay0": {
+    "mass_kg": 0.842,
+    "com_mm": [
+     -9.716,
+     -0.134,
+     45.633
+    ],
+    "front_axle_frac": 0.379
+   },
+   "proposed_ld19_pay300": {
+    "mass_kg": 1.142,
+    "com_mm": [
+     -7.163,
+     -0.099,
+     58.785
+    ],
+    "front_axle_frac": 0.41
+   },
+   "proposed_c1_pay0": {
+    "mass_kg": 0.91,
+    "com_mm": [
+     -14.594,
+     -0.124,
+     51.217
+    ],
+    "front_axle_frac": 0.318
+   },
+   "proposed_c1_pay300": {
+    "mass_kg": 1.21,
+    "com_mm": [
+     -10.976,
+     -0.093,
+     62.246
+    ],
+    "front_axle_frac": 0.363
+   }
+  }
+ },
+ "_meta": {
+  "frame": "REP-103 base_footprint, SI units",
+  "geometry_source": "robot_params.json v2-r3",
+  "sources": {
+   "tt_adafruit": "https://www.adafruit.com/product/3777",
+   "hiwonder_tt_enc": "https://www.hiwonder.com/products/tt-motor-plastic",
+   "dfrobot_fit0450": "https://www.dfrobot.com/product-1457.html",
+   "yahboom_tt_enc": "https://www.yahboom.net/study/Quad-MD-Module/13991/",
+   "ld19": "https://cdn.robotshop.com/media/D/Dfr/RB-Dfr-1273/pdf/dfrobot-dtof-ld19-laser-lidar-sensor-kit-12m-datasheet.pdf",
+   "c1": "https://www.slamtec.com/en/c1/spec",
+   "c1_wiki": "https://www.waveshare.com/wiki/RPLIDAR_C1",
+   "tb6612": "https://toshiba.semicon-storage.com/info/TB6612FNG_datasheet_en_20141001.pdf?did=10660&prodName=TB6612FNG",
+   "mdd3a": "https://www.cytron.io/p-3amp-4v-16v-dc-motor-driver-2-channels",
+   "mdd3a_pdf": "https://download.kamami.pl/p578534-MDD3A%20Datasheet.pdf",
+   "d36v50f5": "https://www.pololu.com/product/4091",
+   "pi_pd": "https://pip-assets.raspberrypi.com/categories/685-app-notes-guides-whitepapers/documents/RP-009856-WP-1-USB%20Power%20delivery%20on%20Raspberry%20Pi%205.pdf",
+   "pi_power": "https://github.com/raspberrypi/documentation/blob/master/documentation/asciidoc/computers/raspberry-pi/power-supplies.adoc",
+   "pi5_cnx": "https://www.cnx-software.com/2023/11/05/raspberry-pi-5-review-raspberry-pi-os-bookworm-benchmarks-power-consumption/",
+   "pi5_tips": "https://raspberry.tips/en/raspberrypi-tutorials/raspberry-pi-power-consumption-update-2026-all-models-compared",
+   "cam3": "https://www.raspberrypi.com/products/camera-module-3/",
+   "mandow2007": "http://babel.isa.uma.es/_utils/downloads/logdownloads.php?u=jafma&t=pdf&f=downloads/jafma/papers/mandow2007ekw.pdf",
+   "rr_review": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7863146/",
+   "ld19_ros2": "https://github.com/ldrobotSensorTeam/ldlidar_stl_ros2",
+   "c1_ros2": "https://github.com/Slamtec/sllidar_ros2",
+   "fit0450_wiki": "https://wiki.dfrobot.com/fit0450/",
+   "fit0450_dim": "https://dfimg.dfrobot.com/wiki/19292/FIT0450_tt-motor-with-encoder_dimension_v1.pdf",
+   "fit0450_eur": "https://opencircuit.shop/product/tt-motor-with-encoder-6v-160rpm-1201",
+   "d36v50f5_eur": "https://www.berrybase.de/en/pololu-d36v50f5-5v-5.5a-step-down-voltage-regulator",
+   "d36v50f5_graphs": "https://www.pololu.com/product/4091 (dropout / efficiency / max-current graphs, read by eye)",
+   "mdd3a_eur": "https://opencircuit.shop/product/3amp-4v-16v-dc-motor-driver-2-channels",
+   "c1_eur": "https://www.generationrobots.com/en/404200-360-rplidar-c1-slamtec.html",
+   "ld19_eur": "https://robot-italy.com/en/products/sen0547-dtof-ld19-laser-lidar-sensor-kit-12m",
+   "ld19_pdf": "https://raw.githubusercontent.com/LetsOKdo/ld19/master/datasheet/LDROBOT_LD19_Datasheet_V1.0.pdf",
+   "c1_pdf": "https://engineering.purdue.edu/477grp3/Files/refs/SLAMTEC_rplidar_datasheet_C1_v1.0_en.pdf",
+   "pi_power_doc": "https://github.com/raspberrypi/documentation/blob/master/documentation/asciidoc/computers/raspberry-pi/power-supplies.adoc",
+   "yolo_pi5": "https://docs.ultralytics.com/guides/raspberry-pi/",
+   "mpu6050_ps": "https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Datasheet1.pdf",
+   "hcsr04": "https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf",
+   "esp32_ds": "https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf"
+  }
+ },
+ "drivetrain": {
+  "assumptions": {
+   "accel_m_s2": 0.6,
+   "chi_used": 0.69,
+   "crawl_speed_m_s": 0.05,
+   "crr": {
+    "hard": 0.015,
+    "carpet": 0.08
+   },
+   "mu": {
+    "hard": 0.7,
+    "carpet": 0.6
+   },
+   "note": "4 wheels share traction equally (A); quasi-static step climb, square edge (worst case)"
+  },
+  "wheel_rpm": {
+   "cruise_0.3": 88.1474,
+   "pivot_1rad_geometric": 18.2171,
+   "pivot_1rad_slip_chi": 26.4016,
+   "arc_outer_0.3+1rad": 114.549
+  },
+  "operating_points_w_T": {
+   "proposed_c1_pay300_carpet": {
+    "cruise": {
+     "rpm": 88.1474,
+     "T_Nm": 0.0077
+    },
+    "accel_0.6": {
+     "rpm": 88.1474,
+     "T_Nm": 0.0136
+    },
+    "pivot_1rad": {
+     "rpm": 26.4016,
+     "T_Nm": 0.045
+    },
+    "arc_0.3+1rad": {
+     "rpm": 114.549,
+     "T_Nm": 0.045
+    },
+    "step_front": {
+     "rpm": 14.6912,
+     "T_Nm": 0.0339
+    },
+    "step_rear": {
+     "rpm": 14.6912,
+     "T_Nm": 0.0635
+    }
+   },
+   "proposed_c1_pay300_hard": {
+    "cruise": {
+     "rpm": 88.1474,
+     "T_Nm": 0.0014
+    },
+    "accel_0.6": {
+     "rpm": 88.1474,
+     "T_Nm": 0.0073
+    },
+    "pivot_1rad": {
+     "rpm": 26.4016,
+     "T_Nm": 0.045
+    },
+    "arc_0.3+1rad": {
+     "rpm": 114.549,
+     "T_Nm": 0.045
+    },
+    "step_front": {
+     "rpm": 14.6912,
+     "T_Nm": 0.0306
+    },
+    "step_rear": {
+     "rpm": 14.6912,
+     "T_Nm": 0.0555
+    }
+   },
+   "v1_c1_pay300_carpet": {
+    "cruise": {
+     "rpm": 88.1474,
+     "T_Nm": 0.0077
+    },
+    "accel_0.6": {
+     "rpm": 88.1474,
+     "T_Nm": 0.0136
+    },
+    "pivot_1rad": {
+     "rpm": 26.4016,
+     "T_Nm": 0.045
+    },
+    "arc_0.3+1rad": {
+     "rpm": 114.549,
+     "T_Nm": 0.045
+    },
+    "step_front": {
+     "rpm": 14.6912,
+     "T_Nm": 0.0247
+    },
+    "step_rear": {
+     "rpm": 14.6912,
+     "T_Nm": NaN
+    }
+   },
+   "v1_c1_pay300_hard": {
+    "cruise": {
+     "rpm": 88.1474,
+     "T_Nm": 0.0014
+    },
+    "accel_0.6": {
+     "rpm": 88.1474,
+     "T_Nm": 0.0073
+    },
+    "pivot_1rad": {
+     "rpm": 26.4016,
+     "T_Nm": 0.045
+    },
+    "arc_0.3+1rad": {
+     "rpm": 114.549,
+     "T_Nm": 0.045
+    },
+    "step_front": {
+     "rpm": 14.6912,
+     "T_Nm": 0.0208
+    },
+    "step_rear": {
+     "rpm": 14.6912,
+     "T_Nm": 0.0835
+    }
+   },
+   "proposed_c1_pay0_carpet": {
+    "cruise": {
+     "rpm": 88.1474,
+     "T_Nm": 0.0058
+    },
+    "accel_0.6": {
+     "rpm": 88.1474,
+     "T_Nm": 0.0102
+    },
+    "pivot_1rad": {
+     "rpm": 26.4016,
+     "T_Nm": 0.0339
+    },
+    "arc_0.3+1rad": {
+     "rpm": 114.549,
+     "T_Nm": 0.0339
+    },
+    "step_front": {
+     "rpm": 14.6912,
+     "T_Nm": 0.0229
+    },
+    "step_rear": {
+     "rpm": 14.6912,
+     "T_Nm": NaN
+    }
+   },
+   "proposed_c1_pay0_hard": {
+    "cruise": {
+     "rpm": 88.1474,
+     "T_Nm": 0.0011
+    },
+    "accel_0.6": {
+     "rpm": 88.1474,
+     "T_Nm": 0.0055
+    },
+    "pivot_1rad": {
+     "rpm": 26.4016,
+     "T_Nm": 0.0338
+    },
+    "arc_0.3+1rad": {
+     "rpm": 114.549,
+     "T_Nm": 0.0338
+    },
+    "step_front": {
+     "rpm": 14.6912,
+     "T_Nm": 0.0203
+    },
+    "step_rear": {
+     "rpm": 14.6912,
+     "T_Nm": 0.0496
+    }
+   }
+  },
+  "step_climb": {
+   "proposed_c1_pay300": {
+    "front_axle_load_frac": 0.3628,
+    "front_mu0.5_T_req_Nm": 0.0348,
+    "rear_mu0.5_T_req_Nm": null,
+    "front_mu0.6_T_req_Nm": 0.0339,
+    "rear_mu0.6_T_req_Nm": 0.0635,
+    "front_mu0.7_T_req_Nm": 0.0339,
+    "rear_mu0.7_T_req_Nm": 0.0587,
+    "front_mu0.9_T_req_Nm": 0.0339,
+    "rear_mu0.9_T_req_Nm": 0.0547
+   },
+   "v1_c1_pay300": {
+    "front_axle_load_frac": 0.2415,
+    "front_mu0.5_T_req_Nm": 0.0283,
+    "rear_mu0.5_T_req_Nm": null,
+    "front_mu0.6_T_req_Nm": 0.0247,
+    "rear_mu0.6_T_req_Nm": null,
+    "front_mu0.7_T_req_Nm": 0.0247,
+    "rear_mu0.7_T_req_Nm": null,
+    "front_mu0.9_T_req_Nm": 0.0247,
+    "rear_mu0.9_T_req_Nm": 0.0791
+   },
+   "proposed_c1_pay0": {
+    "front_axle_load_frac": 0.3176,
+    "front_mu0.5_T_req_Nm": 0.0243,
+    "rear_mu0.5_T_req_Nm": null,
+    "front_mu0.6_T_req_Nm": 0.0229,
+    "rear_mu0.6_T_req_Nm": null,
+    "front_mu0.7_T_req_Nm": 0.0229,
+    "rear_mu0.7_T_req_Nm": 0.0517,
+    "front_mu0.9_T_req_Nm": 0.0229,
+    "rear_mu0.9_T_req_Nm": 0.0453
+   }
+  },
+  "safety_factors_design_case_carpet": {
+   "tt_stock": {
+    "3V": {
+     "no_load_rpm": 88.8889,
+     "stall_Nm": 0.0392,
+     "stall_A": 0.75,
+     "in_rated_range": true,
+     "SF_cruise": 0.0424,
+     "I_cruise_A": 0.2828,
+     "SF_accel_0.6": 0.024,
+     "I_accel_0.6_A": 0.3843,
+     "SF_pivot_1rad": 0.6121,
+     "I_pivot_1rad_A": 0.9252,
+     "SF_arc_0.3+1rad": 0.0,
+     "I_arc_0.3+1rad_A": 0.9252,
+     "SF_step_front": 0.967,
+     "I_step_front_A": 0.7327,
+     "SF_step_rear": 0.5157,
+     "I_step_rear_A": 1.2427
+    },
+    "6V": {
+     "no_load_rpm": 200.0,
+     "stall_Nm": 0.0785,
+     "stall_A": 1.5,
+     "in_rated_range": true,
+     "SF_cruise": 5.6867,
+     "I_cruise_A": 0.2828,
+     "SF_accel_0.6": 3.2228,
+     "I_accel_0.6_A": 0.3843,
+     "SF_pivot_1rad": 1.5116,
+     "I_pivot_1rad_A": 0.9252,
+     "SF_arc_0.3+1rad": 0.7441,
+     "I_arc_0.3+1rad_A": 0.9252,
+     "SF_step_front": 2.1467,
+     "I_step_front_A": 0.7327,
+     "SF_step_rear": 1.1448,
+     "I_step_rear_A": 1.2427
+    },
+    "7.4V": {
+     "no_load_rpm": 251.8519,
+     "stall_Nm": 0.0968,
+     "stall_A": 1.85,
+     "in_rated_range": false,
+     "SF_cruise": 8.1515,
+     "I_cruise_A": 0.2828,
+     "SF_accel_0.6": 4.6197,
+     "I_accel_0.6_A": 0.3843,
+     "SF_pivot_1rad": 1.9227,
+     "I_pivot_1rad_A": 0.9252,
+     "SF_arc_0.3+1rad": 1.171,
+     "I_arc_0.3+1rad_A": 0.9252,
+     "SF_step_front": 2.6908,
+     "I_step_front_A": 0.7327,
+     "SF_step_rear": 1.4349,
+     "I_step_rear_A": 1.2427
+    },
+    "model": {
+     "name": "Elegoo/Adafruit TT 1:48 (stock, no encoder)",
+     "v_ref": 6.0,
+     "rpm0": 200,
+     "i0": 0.15,
+     "i_stall": 1.5,
+     "ratio": 48,
+     "cpr": 0,
+     "mass": 0.0306,
+     "v_range": [
+      3,
+      6
+     ],
+     "src": "https://www.adafruit.com/product/3777",
+     "notes": "spec 200 rpm @6 V (Adafruit measured 250); stall 0.8 kgf.cm, 1.5 A measured @6 V",
+     "t_stall_Nm": 0.0785,
+     "R_ohm": 4.0,
+     "Ke": 0.2578,
+     "kt": 0.0581
+    }
+   },
+   "hiwonder": {
+    "6V": {
+     "no_load_rpm": 150.0,
+     "stall_Nm": 0.1177,
+     "stall_A": 1.2,
+     "in_rated_range": true,
+     "SF_cruise": 6.2893,
+     "I_cruise_A": 0.1721,
+     "SF_accel_0.6": 3.5643,
+     "I_accel_0.6_A": 0.2273,
+     "SF_pivot_1rad": 2.1525,
+     "I_pivot_1rad_A": 0.5211,
+     "SF_arc_0.3+1rad": 0.6174,
+     "I_arc_0.3+1rad_A": 0.5211,
+     "SF_step_front": 3.1349,
+     "I_step_front_A": 0.4165,
+     "SF_step_rear": 1.6718,
+     "I_step_rear_A": 0.6935
+    },
+    "7.4V": {
+     "no_load_rpm": 188.1818,
+     "stall_Nm": 0.1451,
+     "stall_A": 1.48,
+     "in_rated_range": true,
+     "SF_cruise": 9.9997,
+     "I_cruise_A": 0.1721,
+     "SF_accel_0.6": 5.6671,
+     "I_accel_0.6_A": 0.2273,
+     "SF_pivot_1rad": 2.7698,
+     "I_pivot_1rad_A": 0.5211,
+     "SF_arc_0.3+1rad": 1.2606,
+     "I_arc_0.3+1rad_A": 0.5211,
+     "SF_step_front": 3.9515,
+     "I_step_front_A": 0.4165,
+     "SF_step_rear": 2.1073,
+     "I_step_rear_A": 0.6935
+    },
+    "9V": {
+     "no_load_rpm": 231.8182,
+     "stall_Nm": 0.1765,
+     "stall_A": 1.8,
+     "in_rated_range": true,
+     "SF_cruise": 14.179,
+     "I_cruise_A": 0.1721,
+     "SF_accel_0.6": 8.0356,
+     "I_accel_0.6_A": 0.2273,
+     "SF_pivot_1rad": 3.4721,
+     "I_pivot_1rad_A": 0.5211,
+     "SF_arc_0.3+1rad": 1.9822,
+     "I_arc_0.3+1rad_A": 0.5211,
+     "SF_step_front": 4.8825,
+     "I_step_front_A": 0.4165,
+     "SF_step_rear": 2.6037,
+     "I_step_rear_A": 0.6935
+    },
+    "model": {
+     "name": "Hiwonder TT Hall-encoder 1:42 (plastic shaft)",
+     "v_ref": 6.0,
+     "rpm0": 150,
+     "i0": 0.1,
+     "i_stall": 1.2,
+     "ratio": 42,
+     "cpr": 1008,
+     "mass": 0.034,
+     "v_range": [
+      3,
+      12
+     ],
+     "src": "https://www.hiwonder.com/products/tt-motor-plastic",
+     "notes": "'torque 1.2 kg.cm' treated as stall torque (worst case); 6-line ring x 42 = 252 ppr/ch claimed, one buyer measured 150/ch -> verify on arrival; body 79.95x22.4x25.79 mm; recommend 6-9 V",
+     "t_stall_Nm": 0.1177,
+     "R_ohm": 5.0,
+     "Ke": 0.3501,
+     "kt": 0.107
+    }
+   },
+   "dfrobot": {
+    "6V": {
+     "no_load_rpm": 160.0,
+     "stall_Nm": 0.0785,
+     "stall_A": 2.8,
+     "in_rated_range": true,
+     "SF_cruise": 4.5663,
+     "I_cruise_A": 0.4287,
+     "SF_accel_0.6": 2.5878,
+     "I_accel_0.6_A": 0.6264,
+     "SF_pivot_1rad": 1.4541,
+     "I_pivot_1rad_A": 1.6802,
+     "SF_arc_0.3+1rad": 0.4947,
+     "I_arc_0.3+1rad_A": 1.6802,
+     "SF_step_front": 2.1041,
+     "I_step_front_A": 1.3052,
+     "SF_step_rear": 1.1221,
+     "I_step_rear_A": 2.2987
+    },
+    "7.4V": {
+     "no_load_rpm": 199.7465,
+     "stall_Nm": 0.0968,
+     "stall_A": 3.4533,
+     "in_rated_range": true,
+     "SF_cruise": 7.0066,
+     "I_cruise_A": 0.4287,
+     "SF_accel_0.6": 3.9708,
+     "I_accel_0.6_A": 0.6264,
+     "SF_pivot_1rad": 1.864,
+     "I_pivot_1rad_A": 1.6802,
+     "SF_arc_0.3+1rad": 0.9161,
+     "I_arc_0.3+1rad_A": 1.6802,
+     "SF_step_front": 2.6473,
+     "I_step_front_A": 1.3052,
+     "SF_step_rear": 1.4117,
+     "I_step_rear_A": 2.2987
+    },
+    "model": {
+     "name": "DFRobot FIT0450 TT encoder 1:120",
+     "v_ref": 6.0,
+     "rpm0": 160,
+     "i0": 0.17,
+     "i_stall": 2.8,
+     "ratio": 120,
+     "cpr": 3840,
+     "mass": 0.05,
+     "v_range": [
+      3,
+      7.5
+     ],
+     "src": "https://www.dfrobot.com/product-1457.html",
+     "notes": "960 pulses/output rev (8 ppr motor x 120) -> 3840 counts x4 if 960 is per channel; encoder needs 4.5-7.5 V supply (5 V outputs -> level shift for ESP32); 0.8 kgf.cm at 1:120 is suspiciously equal to the 1:48 TT",
+     "t_stall_Nm": 0.0785,
+     "R_ohm": 2.1429,
+     "Ke": 0.3364,
+     "kt": 0.0298
+    }
+   },
+   "yahboom": {
+    "6V": {
+     "no_load_rpm": 355.0,
+     "stall_Nm": 0.1177,
+     "stall_A": 1.1,
+     "in_rated_range": true,
+     "SF_cruise": 11.4651,
+     "I_cruise_A": 0.1469,
+     "SF_accel_0.6": 6.4975,
+     "I_accel_0.6_A": 0.198,
+     "SF_pivot_1rad": 2.418,
+     "I_pivot_1rad_A": 0.4705,
+     "SF_arc_0.3+1rad": 1.7694,
+     "I_arc_0.3+1rad_A": 0.4705,
+     "SF_step_front": 3.3314,
+     "I_step_front_A": 0.3735,
+     "SF_step_rear": 1.7766,
+     "I_step_rear_A": 0.6304
+    },
+    "7.4V": {
+     "no_load_rpm": 444.3301,
+     "stall_Nm": 0.1451,
+     "stall_A": 1.3567,
+     "in_rated_range": true,
+     "SF_cruise": 15.0793,
+     "I_cruise_A": 0.1469,
+     "SF_accel_0.6": 8.5458,
+     "I_accel_0.6_A": 0.198,
+     "SF_pivot_1rad": 3.0304,
+     "I_pivot_1rad_A": 0.4705,
+     "SF_arc_0.3+1rad": 2.3912,
+     "I_arc_0.3+1rad_A": 0.4705,
+     "SF_step_front": 4.1444,
+     "I_step_front_A": 0.3735,
+     "SF_step_rear": 2.2101,
+     "I_step_rear_A": 0.6304
+    },
+    "model": {
+     "name": "Yahboom TT encoder 1:45",
+     "v_ref": 6.0,
+     "rpm0": 355,
+     "i0": 0.08,
+     "i_stall": 1.1,
+     "ratio": 45,
+     "cpr": 2340,
+     "mass": 0.05,
+     "v_range": [
+      5,
+      13
+     ],
+     "src": "https://www.yahboom.net/study/Quad-MD-Module/13991/",
+     "notes": "torque printed '1.2 N.m' (implausible) -> read as 1.2 kg.cm; 13-line encoder 3.3-5 V; mass not published (A 50 g)",
+     "t_stall_Nm": 0.1177,
+     "R_ohm": 5.4545,
+     "Ke": 0.1497,
+     "kt": 0.1154
+    }
+   }
+  },
+  "step_SF_layout_compare": {
+   "tt_stock@6V_v1_c1_pay300_carpet_rear_step_SF": null,
+   "tt_stock@6V_v1_c1_pay300_carpet_front_step_SF": 2.9485,
+   "tt_stock@6V_proposed_c1_pay300_carpet_rear_step_SF": 1.1448,
+   "tt_stock@6V_proposed_c1_pay300_carpet_front_step_SF": 2.1467,
+   "hiwonder@7.4V_v1_c1_pay300_carpet_rear_step_SF": null,
+   "hiwonder@7.4V_v1_c1_pay300_carpet_front_step_SF": 5.4276,
+   "hiwonder@7.4V_proposed_c1_pay300_carpet_rear_step_SF": 2.1073,
+   "hiwonder@7.4V_proposed_c1_pay300_carpet_front_step_SF": 3.9515,
+   "dfrobot@7.4V_v1_c1_pay300_carpet_rear_step_SF": null,
+   "dfrobot@7.4V_v1_c1_pay300_carpet_front_step_SF": 3.6362,
+   "dfrobot@7.4V_proposed_c1_pay300_carpet_rear_step_SF": 1.4117,
+   "dfrobot@7.4V_proposed_c1_pay300_carpet_front_step_SF": 2.6473,
+   "yahboom@7.4V_v1_c1_pay300_carpet_rear_step_SF": null,
+   "yahboom@7.4V_v1_c1_pay300_carpet_front_step_SF": 5.6926,
+   "yahboom@7.4V_proposed_c1_pay300_carpet_rear_step_SF": 2.2101,
+   "yahboom@7.4V_proposed_c1_pay300_carpet_front_step_SF": 4.1444
+  },
+  "max_threshold_m_hiwonder_7.4V_mu0.6": {
+   "proposed_c1_pay300": 0.0105,
+   "v1_c1_pay300": 0.0075,
+   "proposed_c1_pay0": 0.009
+  }
+ },
+ "skid_steer": {
+  "L_over_B": 0.6452,
+  "turn_feasible_traction": true,
+  "mass_kg": 1.21,
+  "com_x_m": -0.011,
+  "sweep_carpet": {
+   "tt_stock@6.0V": {
+    "mu": [
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75,
+     0.8,
+     0.85,
+     0.9
+    ],
+    "SF": [
+     2.5812,
+     2.3089,
+     2.0886,
+     1.9066,
+     1.7539,
+     1.6238,
+     1.5116,
+     1.414,
+     1.3282,
+     1.2522,
+     1.1844,
+     1.1236,
+     1.0688
+    ],
+    "I_motor_A": [
+     0.604,
+     0.6575,
+     0.711,
+     0.7646,
+     0.8181,
+     0.8717,
+     0.9252,
+     0.9787,
+     1.0323,
+     1.0858,
+     1.1393,
+     1.1929,
+     1.2464
+    ],
+    "T_wheel_Nm": [
+     0.0264,
+     0.0295,
+     0.0326,
+     0.0357,
+     0.0388,
+     0.0419,
+     0.045,
+     0.0482,
+     0.0513,
+     0.0544,
+     0.0575,
+     0.0606,
+     0.0637
+    ]
+   },
+   "hiwonder@7.4V": {
+    "mu": [
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75,
+     0.8,
+     0.85,
+     0.9
+    ],
+    "SF": [
+     4.7295,
+     4.2306,
+     3.8269,
+     3.4936,
+     3.2137,
+     2.9753,
+     2.7698,
+     2.5909,
+     2.4336,
+     2.2944,
+     2.1703,
+     2.0589,
+     1.9583
+    ],
+    "I_motor_A": [
+     0.3466,
+     0.3757,
+     0.4048,
+     0.4338,
+     0.4629,
+     0.492,
+     0.5211,
+     0.5502,
+     0.5793,
+     0.6083,
+     0.6374,
+     0.6665,
+     0.6956
+    ],
+    "T_wheel_Nm": [
+     0.0264,
+     0.0295,
+     0.0326,
+     0.0357,
+     0.0388,
+     0.0419,
+     0.045,
+     0.0482,
+     0.0513,
+     0.0544,
+     0.0575,
+     0.0606,
+     0.0637
+    ]
+   },
+   "hiwonder@9.0V": {
+    "mu": [
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75,
+     0.8,
+     0.85,
+     0.9
+    ],
+    "SF": [
+     5.9288,
+     5.3034,
+     4.7974,
+     4.3795,
+     4.0286,
+     3.7297,
+     3.4721,
+     3.2478,
+     3.0508,
+     2.8762,
+     2.7206,
+     2.5809,
+     2.4549
+    ],
+    "I_motor_A": [
+     0.3466,
+     0.3757,
+     0.4048,
+     0.4338,
+     0.4629,
+     0.492,
+     0.5211,
+     0.5502,
+     0.5793,
+     0.6083,
+     0.6374,
+     0.6665,
+     0.6956
+    ],
+    "T_wheel_Nm": [
+     0.0264,
+     0.0295,
+     0.0326,
+     0.0357,
+     0.0388,
+     0.0419,
+     0.045,
+     0.0482,
+     0.0513,
+     0.0544,
+     0.0575,
+     0.0606,
+     0.0637
+    ]
+   },
+   "dfrobot@7.4V": {
+    "mu": [
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75,
+     0.8,
+     0.85,
+     0.9
+    ],
+    "SF": [
+     3.1828,
+     2.8471,
+     2.5754,
+     2.3511,
+     2.1627,
+     2.0022,
+     1.864,
+     1.7436,
+     1.6378,
+     1.5441,
+     1.4605,
+     1.3855,
+     1.3179
+    ],
+    "I_motor_A": [
+     1.0544,
+     1.1587,
+     1.263,
+     1.3673,
+     1.4716,
+     1.5759,
+     1.6802,
+     1.7845,
+     1.8888,
+     1.9931,
+     2.0974,
+     2.2017,
+     2.306
+    ],
+    "T_wheel_Nm": [
+     0.0264,
+     0.0295,
+     0.0326,
+     0.0357,
+     0.0388,
+     0.0419,
+     0.045,
+     0.0482,
+     0.0513,
+     0.0544,
+     0.0575,
+     0.0606,
+     0.0637
+    ]
+   },
+   "yahboom@7.4V": {
+    "mu": [
+     0.3,
+     0.35,
+     0.4,
+     0.45,
+     0.5,
+     0.55,
+     0.6,
+     0.65,
+     0.7,
+     0.75,
+     0.8,
+     0.85,
+     0.9
+    ],
+    "SF": [
+     5.1745,
+     4.6286,
+     4.187,
+     3.8223,
+     3.516,
+     3.2552,
+     3.0304,
+     2.8346,
+     2.6626,
+     2.5103,
+     2.3744,
+     2.2525,
+     2.1426
+    ],
+    "I_motor_A": [
+     0.3087,
+     0.3356,
+     0.3626,
+     0.3896,
+     0.4165,
+     0.4435,
+     0.4705,
+     0.4974,
+     0.5244,
+     0.5514,
+     0.5783,
+     0.6053,
+     0.6323
+    ],
+    "T_wheel_Nm": [
+     0.0264,
+     0.0295,
+     0.0326,
+     0.0357,
+     0.0388,
+     0.0419,
+     0.045,
+     0.0482,
+     0.0513,
+     0.0544,
+     0.0575,
+     0.0606,
+     0.0637
+    ]
+   }
+  },
+  "design_points": {
+   "tt_stock_carpet": {
+    "M_r_Nm": 0.2849,
+    "F_side_N": 2.7722,
+    "T_wheel_Nm": 0.045,
+    "wheel_rpm": 26.4016,
+    "T_avail_Nm": 0.0681,
+    "SF": 1.5116,
+    "I_motor_A": 0.9252,
+    "V_needed": 4.4136
+   },
+   "tt_stock_hard": {
+    "M_r_Nm": 0.3324,
+    "F_side_N": 2.7694,
+    "T_wheel_Nm": 0.045,
+    "wheel_rpm": 26.4016,
+    "T_avail_Nm": 0.0681,
+    "SF": 1.5132,
+    "I_motor_A": 0.9244,
+    "V_needed": 4.4104
+   },
+   "hiwonder_carpet": {
+    "M_r_Nm": 0.2849,
+    "F_side_N": 2.7722,
+    "T_wheel_Nm": 0.045,
+    "wheel_rpm": 26.4016,
+    "T_avail_Nm": 0.1248,
+    "SF": 2.7698,
+    "I_motor_A": 0.5211,
+    "V_needed": 3.5735
+   },
+   "hiwonder_hard": {
+    "M_r_Nm": 0.3324,
+    "F_side_N": 2.7694,
+    "T_wheel_Nm": 0.045,
+    "wheel_rpm": 26.4016,
+    "T_avail_Nm": 0.1248,
+    "SF": 2.7727,
+    "I_motor_A": 0.5207,
+    "V_needed": 3.5713
+   },
+   "dfrobot_carpet": {
+    "M_r_Nm": 0.2849,
+    "F_side_N": 2.7722,
+    "T_wheel_Nm": 0.045,
+    "wheel_rpm": 26.4016,
+    "T_avail_Nm": 0.084,
+    "SF": 1.864,
+    "I_motor_A": 1.6802,
+    "V_needed": 4.5303
+   },
+   "dfrobot_hard": {
+    "M_r_Nm": 0.3324,
+    "F_side_N": 2.7694,
+    "T_wheel_Nm": 0.045,
+    "wheel_rpm": 26.4016,
+    "T_avail_Nm": 0.084,
+    "SF": 1.8659,
+    "I_motor_A": 1.6786,
+    "V_needed": 4.527
+   },
+   "yahboom_carpet": {
+    "M_r_Nm": 0.2849,
+    "F_side_N": 2.7722,
+    "T_wheel_Nm": 0.045,
+    "wheel_rpm": 26.4016,
+    "T_avail_Nm": 0.1365,
+    "SF": 3.0304,
+    "I_motor_A": 0.4705,
+    "V_needed": 2.9799
+   },
+   "yahboom_hard": {
+    "M_r_Nm": 0.3324,
+    "F_side_N": 2.7694,
+    "T_wheel_Nm": 0.045,
+    "wheel_rpm": 26.4016,
+    "T_avail_Nm": 0.1365,
+    "SF": 3.0335,
+    "I_motor_A": 0.4701,
+    "V_needed": 2.9777
+   }
+  },
+  "scrub_power_W_hard": 0.3324,
+  "odometry": {
+   "yaw_rate_overestimate_factor_if_geometric_B": [
+    1.4493,
+    1.3158
+   ],
+   "heading_error_deg_per_90deg_turn": [
+    40.4348,
+    28.4211
+   ],
+   "effective_track_m": [
+    0.1797,
+    0.1632
+   ],
+   "chi_variation_deg_per_90deg_after_calibration": 8.6897,
+   "conclusion": "wheel yaw is unusable for the 5 deg/10 m budget; fuse vx from wheels, yaw rate from the gyro"
+  },
+  "gyro_budget": {
+   "t_10m_s": 33.3333,
+   "max_bias_deg_s_for_5deg": 0.15,
+   "MPU6050_noise_0.005dps_rtHz_ARW_deg": 0.0289,
+   "note": "MPU-6050 datasheet: ZRO +/-20 dps initial, 0.005 dps/rtHz noise -> calibrate bias at start and at every stop (ZUPT); keep IMU away from the Pi heat"
+  }
+ },
+ "driver": {
+  "drivers": {
+   "tb6612_elegoo_shield": {
+    "cont_A": 1.2,
+    "peak_A": 3.2,
+    "vm_max": 13.5,
+    "vm_abs": 15.0,
+    "motors_per_ch": 2,
+    "pins": 7,
+    "src": "https://toshiba.semicon-storage.com/info/TB6612FNG_datasheet_en_20141001.pdf?did=10660&prodName=TB6612FNG",
+    "note": "1.2 A ave / 3.2 A peak per ch; VM operating 2.5-13.5 V"
+   },
+   "2x_tb6612_one_ch_per_motor": {
+    "cont_A": 1.2,
+    "peak_A": 3.2,
+    "vm_max": 13.5,
+    "vm_abs": 15.0,
+    "motors_per_ch": 1,
+    "pins": 13,
+    "src": "https://toshiba.semicon-storage.com/info/TB6612FNG_datasheet_en_20141001.pdf?did=10660&prodName=TB6612FNG",
+    "note": "12 PWM/IN + shared STBY"
+   },
+   "drv8833": {
+    "cont_A": 1.5,
+    "peak_A": 2.0,
+    "vm_max": 10.8,
+    "vm_abs": 11.8,
+    "motors_per_ch": 2,
+    "pins": 4,
+    "src": "https://www.ti.com/product/DRV8833",
+    "note": "10.8 V max -> cannot sit on 3S (12.6 V)"
+   },
+   "cytron_mdd3a": {
+    "cont_A": 3.0,
+    "peak_A": 5.0,
+    "vm_max": 16.0,
+    "vm_abs": 16.0,
+    "motors_per_ch": 2,
+    "pins": 4,
+    "src": "https://download.kamami.pl/p578534-MDD3A%20Datasheet.pdf",
+    "note": "2 PWM inputs/ch, LL = brake, 20 kHz, 1.7-12 V logic, 48x42 mm"
+   }
+  },
+  "per_channel_A": {
+   "tt_stock@6V|tb6612_elegoo_shield": {
+    "I": {
+     "cruise": 0.566,
+     "accel_0.6": 0.769,
+     "pivot_1rad": 1.85,
+     "step_front": 1.465,
+     "step_rear": 2.485,
+     "stall_at_cap": 3.0,
+     "stall_unlimited_12.6V": 5.6
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "peak-only",
+     "step_front": "peak-only",
+     "step_rear": "peak-only",
+     "stall_at_cap": "peak-only",
+     "stall_unlimited_12.6V": "OVER"
+    }
+   },
+   "tt_stock@6V|2x_tb6612_one_ch_per_motor": {
+    "I": {
+     "cruise": 0.283,
+     "accel_0.6": 0.384,
+     "pivot_1rad": 0.925,
+     "step_front": 0.733,
+     "step_rear": 1.243,
+     "stall_at_cap": 1.5,
+     "stall_unlimited_12.6V": 2.8
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "peak-only",
+     "stall_at_cap": "peak-only",
+     "stall_unlimited_12.6V": "peak-only"
+    }
+   },
+   "tt_stock@6V|drv8833": {
+    "I": {
+     "cruise": 0.566,
+     "accel_0.6": 0.769,
+     "pivot_1rad": 1.85,
+     "step_front": 1.465,
+     "step_rear": 2.485,
+     "stall_at_cap": 3.0,
+     "stall_unlimited_12.6V": 5.6
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "peak-only",
+     "step_front": "ok",
+     "step_rear": "OVER",
+     "stall_at_cap": "OVER",
+     "stall_unlimited_12.6V": "OVER"
+    }
+   },
+   "tt_stock@6V|cytron_mdd3a": {
+    "I": {
+     "cruise": 0.566,
+     "accel_0.6": 0.769,
+     "pivot_1rad": 1.85,
+     "step_front": 1.465,
+     "step_rear": 2.485,
+     "stall_at_cap": 3.0,
+     "stall_unlimited_12.6V": 5.6
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "ok",
+     "stall_at_cap": "ok",
+     "stall_unlimited_12.6V": "OVER"
+    }
+   },
+   "hiwonder@7.4V|tb6612_elegoo_shield": {
+    "I": {
+     "cruise": 0.344,
+     "accel_0.6": 0.455,
+     "pivot_1rad": 1.042,
+     "step_front": 0.833,
+     "step_rear": 1.387,
+     "stall_at_cap": 2.96,
+     "stall_unlimited_12.6V": 4.582
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "peak-only",
+     "stall_at_cap": "peak-only",
+     "stall_unlimited_12.6V": "OVER"
+    }
+   },
+   "hiwonder@7.4V|2x_tb6612_one_ch_per_motor": {
+    "I": {
+     "cruise": 0.172,
+     "accel_0.6": 0.227,
+     "pivot_1rad": 0.521,
+     "step_front": 0.416,
+     "step_rear": 0.694,
+     "stall_at_cap": 1.48,
+     "stall_unlimited_12.6V": 2.291
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "ok",
+     "stall_at_cap": "peak-only",
+     "stall_unlimited_12.6V": "peak-only"
+    }
+   },
+   "hiwonder@7.4V|drv8833": {
+    "I": {
+     "cruise": 0.344,
+     "accel_0.6": 0.455,
+     "pivot_1rad": 1.042,
+     "step_front": 0.833,
+     "step_rear": 1.387,
+     "stall_at_cap": 2.96,
+     "stall_unlimited_12.6V": 4.582
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "ok",
+     "stall_at_cap": "OVER",
+     "stall_unlimited_12.6V": "OVER"
+    }
+   },
+   "hiwonder@7.4V|cytron_mdd3a": {
+    "I": {
+     "cruise": 0.344,
+     "accel_0.6": 0.455,
+     "pivot_1rad": 1.042,
+     "step_front": 0.833,
+     "step_rear": 1.387,
+     "stall_at_cap": 2.96,
+     "stall_unlimited_12.6V": 4.582
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "ok",
+     "stall_at_cap": "ok",
+     "stall_unlimited_12.6V": "peak-only"
+    }
+   },
+   "hiwonder@9V|tb6612_elegoo_shield": {
+    "I": {
+     "cruise": 0.344,
+     "accel_0.6": 0.455,
+     "pivot_1rad": 1.042,
+     "step_front": 0.833,
+     "step_rear": 1.387,
+     "stall_at_cap": 3.6,
+     "stall_unlimited_12.6V": 4.582
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "peak-only",
+     "stall_at_cap": "OVER",
+     "stall_unlimited_12.6V": "OVER"
+    }
+   },
+   "hiwonder@9V|2x_tb6612_one_ch_per_motor": {
+    "I": {
+     "cruise": 0.172,
+     "accel_0.6": 0.227,
+     "pivot_1rad": 0.521,
+     "step_front": 0.416,
+     "step_rear": 0.694,
+     "stall_at_cap": 1.8,
+     "stall_unlimited_12.6V": 2.291
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "ok",
+     "stall_at_cap": "peak-only",
+     "stall_unlimited_12.6V": "peak-only"
+    }
+   },
+   "hiwonder@9V|drv8833": {
+    "I": {
+     "cruise": 0.344,
+     "accel_0.6": 0.455,
+     "pivot_1rad": 1.042,
+     "step_front": 0.833,
+     "step_rear": 1.387,
+     "stall_at_cap": 3.6,
+     "stall_unlimited_12.6V": 4.582
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "ok",
+     "stall_at_cap": "OVER",
+     "stall_unlimited_12.6V": "OVER"
+    }
+   },
+   "hiwonder@9V|cytron_mdd3a": {
+    "I": {
+     "cruise": 0.344,
+     "accel_0.6": 0.455,
+     "pivot_1rad": 1.042,
+     "step_front": 0.833,
+     "step_rear": 1.387,
+     "stall_at_cap": 3.6,
+     "stall_unlimited_12.6V": 4.582
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "ok",
+     "stall_at_cap": "peak-only",
+     "stall_unlimited_12.6V": "peak-only"
+    }
+   },
+   "dfrobot@7.4V|tb6612_elegoo_shield": {
+    "I": {
+     "cruise": 0.857,
+     "accel_0.6": 1.253,
+     "pivot_1rad": 3.36,
+     "step_front": 2.61,
+     "step_rear": 4.597,
+     "stall_at_cap": 6.907,
+     "stall_unlimited_12.6V": 9.535
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "peak-only",
+     "pivot_1rad": "OVER",
+     "step_front": "peak-only",
+     "step_rear": "OVER",
+     "stall_at_cap": "OVER",
+     "stall_unlimited_12.6V": "OVER"
+    }
+   },
+   "dfrobot@7.4V|2x_tb6612_one_ch_per_motor": {
+    "I": {
+     "cruise": 0.429,
+     "accel_0.6": 0.626,
+     "pivot_1rad": 1.68,
+     "step_front": 1.305,
+     "step_rear": 2.299,
+     "stall_at_cap": 3.453,
+     "stall_unlimited_12.6V": 4.768
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "peak-only",
+     "step_front": "peak-only",
+     "step_rear": "peak-only",
+     "stall_at_cap": "OVER",
+     "stall_unlimited_12.6V": "OVER"
+    }
+   },
+   "dfrobot@7.4V|drv8833": {
+    "I": {
+     "cruise": 0.857,
+     "accel_0.6": 1.253,
+     "pivot_1rad": 3.36,
+     "step_front": 2.61,
+     "step_rear": 4.597,
+     "stall_at_cap": 6.907,
+     "stall_unlimited_12.6V": 9.535
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "OVER",
+     "step_front": "OVER",
+     "step_rear": "OVER",
+     "stall_at_cap": "OVER",
+     "stall_unlimited_12.6V": "OVER"
+    }
+   },
+   "dfrobot@7.4V|cytron_mdd3a": {
+    "I": {
+     "cruise": 0.857,
+     "accel_0.6": 1.253,
+     "pivot_1rad": 3.36,
+     "step_front": 2.61,
+     "step_rear": 4.597,
+     "stall_at_cap": 6.907,
+     "stall_unlimited_12.6V": 9.535
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "peak-only",
+     "step_front": "ok",
+     "step_rear": "peak-only",
+     "stall_at_cap": "OVER",
+     "stall_unlimited_12.6V": "OVER"
+    }
+   },
+   "yahboom@7.4V|tb6612_elegoo_shield": {
+    "I": {
+     "cruise": 0.294,
+     "accel_0.6": 0.396,
+     "pivot_1rad": 0.941,
+     "step_front": 0.747,
+     "step_rear": 1.261,
+     "stall_at_cap": 2.713,
+     "stall_unlimited_12.6V": 4.232
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "peak-only",
+     "stall_at_cap": "peak-only",
+     "stall_unlimited_12.6V": "OVER"
+    }
+   },
+   "yahboom@7.4V|2x_tb6612_one_ch_per_motor": {
+    "I": {
+     "cruise": 0.147,
+     "accel_0.6": 0.198,
+     "pivot_1rad": 0.47,
+     "step_front": 0.373,
+     "step_rear": 0.63,
+     "stall_at_cap": 1.357,
+     "stall_unlimited_12.6V": 2.116
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "ok",
+     "stall_at_cap": "peak-only",
+     "stall_unlimited_12.6V": "peak-only"
+    }
+   },
+   "yahboom@7.4V|drv8833": {
+    "I": {
+     "cruise": 0.294,
+     "accel_0.6": 0.396,
+     "pivot_1rad": 0.941,
+     "step_front": 0.747,
+     "step_rear": 1.261,
+     "stall_at_cap": 2.713,
+     "stall_unlimited_12.6V": 4.232
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "ok",
+     "stall_at_cap": "OVER",
+     "stall_unlimited_12.6V": "OVER"
+    }
+   },
+   "yahboom@7.4V|cytron_mdd3a": {
+    "I": {
+     "cruise": 0.294,
+     "accel_0.6": 0.396,
+     "pivot_1rad": 0.941,
+     "step_front": 0.747,
+     "step_rear": 1.261,
+     "stall_at_cap": 2.713,
+     "stall_unlimited_12.6V": 4.232
+    },
+    "verdict": {
+     "cruise": "ok",
+     "accel_0.6": "ok",
+     "pivot_1rad": "ok",
+     "step_front": "ok",
+     "step_rear": "ok",
+     "stall_at_cap": "ok",
+     "stall_unlimited_12.6V": "peak-only"
+    }
+   }
+  },
+  "pins": {
+   "tb6612x1_2enc (DD-SCOUT-HW draft)": {
+    "need": {
+     "motor": 7,
+     "encoder_inputs": 4,
+     "i2c": 2,
+     "hcsr04": 2,
+     "batt_adc": 1,
+     "buck_pg": 1
+    },
+    "total": 17,
+    "safe_available": 19,
+    "fits_without_strapping": true,
+    "strapping_pins_needed": 0
+   },
+   "tb6612x1_4enc": {
+    "need": {
+     "motor": 7,
+     "encoder_inputs": 8,
+     "i2c": 2,
+     "hcsr04": 2,
+     "batt_adc": 1,
+     "buck_pg": 1
+    },
+    "total": 21,
+    "safe_available": 19,
+    "fits_without_strapping": false,
+    "strapping_pins_needed": 2
+   },
+   "tb6612x2_4enc": {
+    "need": {
+     "motor": 13,
+     "encoder_inputs": 8,
+     "i2c": 2,
+     "hcsr04": 2,
+     "batt_adc": 1,
+     "buck_pg": 1
+    },
+    "total": 27,
+    "safe_available": 19,
+    "fits_without_strapping": false,
+    "strapping_pins_needed": 8
+   },
+   "mdd3a_2enc": {
+    "need": {
+     "motor": 4,
+     "encoder_inputs": 4,
+     "i2c": 2,
+     "hcsr04": 2,
+     "batt_adc": 1,
+     "buck_pg": 1
+    },
+    "total": 14,
+    "safe_available": 19,
+    "fits_without_strapping": true,
+    "strapping_pins_needed": 0
+   },
+   "mdd3a_4enc (recommended)": {
+    "need": {
+     "motor": 4,
+     "encoder_inputs": 8,
+     "i2c": 2,
+     "hcsr04": 2,
+     "batt_adc": 1,
+     "buck_pg": 1
+    },
+    "total": 18,
+    "safe_available": 19,
+    "fits_without_strapping": true,
+    "strapping_pins_needed": 0
+   },
+   "safe_io": [
+    4,
+    13,
+    14,
+    16,
+    17,
+    18,
+    19,
+    21,
+    22,
+    23,
+    25,
+    26,
+    27,
+    32,
+    33
+   ],
+   "input_only": [
+    34,
+    35,
+    36,
+    39
+   ],
+   "strapping": [
+    0,
+    2,
+    5,
+    12,
+    15
+   ]
+  },
+  "recommended_pinout_mdd3a_4enc": {
+   "MDD3A M1A/M1B (left side)": [
+    25,
+    26
+   ],
+   "MDD3A M2A/M2B (right side)": [
+    27,
+    33
+   ],
+   "ENC FL A/B": [
+    34,
+    35
+   ],
+   "ENC RL A/B": [
+    36,
+    39
+   ],
+   "ENC FR A/B": [
+    18,
+    19
+   ],
+   "ENC RR A/B": [
+    16,
+    17
+   ],
+   "I2C SDA/SCL (MPU-6050)": [
+    21,
+    22
+   ],
+   "HC-SR04 TRIG/ECHO": [
+    4,
+    13
+   ],
+   "BATT ADC (ADC1, 47k/10k divider)": [
+    32
+   ],
+   "buck PG (open drain, pull-up)": [
+    14
+   ],
+   "spare": [
+    23
+   ],
+   "note": "34-39 need external 10k pull-ups to 3.3 V; ECHO through 1k/2k divider; encoders powered at 3.3 V; use the PCNT peripheral (4 units)"
+  }
+ },
+ "motor_review": {
+  "source": {
+   "cad_c1_pay0": "checks/fit_check_v2.json scout_v2 (empty)",
+   "cad_c1_pay300": "checks/fit_check_v2.json scout_v2 (300 g payload at x=-50 mm)",
+   "cad_ld19_pay0": "robot_params_ld19_hiwonder_pay.json v2-r3 (empty)",
+   "cad_ld19_pay300": "robot_params_ld19_hiwonder_pay.json v2-r3 (300 g payload)"
+  },
+  "assumptions": {
+   "eta_gear_bound": [
+    0.4,
+    0.65
+   ],
+   "crawl_m_s": 0.05,
+   "crr_carpet": 0.08,
+   "volts_cap": {
+    "tt_stock": 6.0,
+    "hiwonder": 8.4,
+    "dfrobot": 7.4,
+    "yahboom": 7.4
+   },
+   "drivers_cont_peak_A": {
+    "tb6612 (Elegoo shield)": [
+     1.2,
+     3.2
+    ],
+    "mdd3a": [
+     3.0,
+     5.0
+    ]
+   }
+  },
+  "datasheet_consistency": {
+   "tt_stock": {
+    "Ke_V_s_rad_output": 0.2578,
+    "R_ohm": 4.0,
+    "printed_stall_Nm": 0.0785,
+    "electrical_stall_Nm_range": [
+     0.1392,
+     0.2262
+    ],
+    "ratio_elec_over_printed": [
+     1.7747,
+     2.8838
+    ]
+   },
+   "hiwonder": {
+    "Ke_V_s_rad_output": 0.3501,
+    "R_ohm": 5.0,
+    "printed_stall_Nm": 0.1177,
+    "electrical_stall_Nm_range": [
+     0.1541,
+     0.2504
+    ],
+    "ratio_elec_over_printed": [
+     1.3092,
+     2.1274
+    ]
+   },
+   "dfrobot": {
+    "Ke_V_s_rad_output": 0.3364,
+    "R_ohm": 2.1429,
+    "printed_stall_Nm": 0.0785,
+    "electrical_stall_Nm_range": [
+     0.3538,
+     0.575
+    ],
+    "ratio_elec_over_printed": [
+     4.5103,
+     7.3292
+    ]
+   },
+   "yahboom": {
+    "Ke_V_s_rad_output": 0.1497,
+    "R_ohm": 5.4545,
+    "printed_stall_Nm": 0.1177,
+    "electrical_stall_Nm_range": [
+     0.0611,
+     0.0992
+    ],
+    "ratio_elec_over_printed": [
+     0.5189,
+     0.8432
+    ]
+   }
+  },
+  "climb_quasi_static": {
+   "cad_c1_pay0": {
+    "mass_kg": 0.9981,
+    "com_x_mm": 13.8,
+    "front_share": 0.6725,
+    "mu0.4": {
+     "T_front_Nm": null,
+     "T_rear_Nm": 0.0322
+    },
+    "mu0.5": {
+     "T_front_Nm": null,
+     "T_rear_Nm": 0.0271
+    },
+    "mu0.55": {
+     "T_front_Nm": null,
+     "T_rear_Nm": 0.0257
+    },
+    "mu0.6": {
+     "T_front_Nm": null,
+     "T_rear_Nm": 0.0257
+    },
+    "mu0.7": {
+     "T_front_Nm": 0.0548,
+     "T_rear_Nm": 0.0257
+    },
+    "mu0.8": {
+     "T_front_Nm": 0.0512,
+     "T_rear_Nm": 0.0257
+    },
+    "mu0.9": {
+     "T_front_Nm": 0.0476,
+     "T_rear_Nm": 0.0257
+    },
+    "mu_min_both_axles": 0.62
+   },
+   "cad_c1_pay300": {
+    "mass_kg": 1.2981,
+    "com_x_mm": -0.9,
+    "front_share": 0.4888,
+    "mu0.4": {
+     "T_front_Nm": null,
+     "T_rear_Nm": null
+    },
+    "mu0.5": {
+     "T_front_Nm": 0.0466,
+     "T_rear_Nm": 0.0484
+    },
+    "mu0.55": {
+     "T_front_Nm": 0.0466,
+     "T_rear_Nm": 0.0484
+    },
+    "mu0.6": {
+     "T_front_Nm": 0.0466,
+     "T_rear_Nm": 0.0484
+    },
+    "mu0.7": {
+     "T_front_Nm": 0.0466,
+     "T_rear_Nm": 0.0484
+    },
+    "mu0.8": {
+     "T_front_Nm": 0.0466,
+     "T_rear_Nm": 0.0484
+    },
+    "mu0.9": {
+     "T_front_Nm": 0.0466,
+     "T_rear_Nm": 0.0484
+    },
+    "mu_min_both_axles": 0.48
+   },
+   "cad_ld19_pay0": {
+    "mass_kg": 0.9389,
+    "com_x_mm": 11.226,
+    "front_share": 0.6403,
+    "mu0.4": {
+     "T_front_Nm": null,
+     "T_rear_Nm": 0.0321
+    },
+    "mu0.5": {
+     "T_front_Nm": null,
+     "T_rear_Nm": 0.0269
+    },
+    "mu0.55": {
+     "T_front_Nm": null,
+     "T_rear_Nm": 0.0261
+    },
+    "mu0.6": {
+     "T_front_Nm": 0.0498,
+     "T_rear_Nm": 0.0261
+    },
+    "mu0.7": {
+     "T_front_Nm": 0.0461,
+     "T_rear_Nm": 0.0261
+    },
+    "mu0.8": {
+     "T_front_Nm": 0.0426,
+     "T_rear_Nm": 0.0261
+    },
+    "mu0.9": {
+     "T_front_Nm": 0.0426,
+     "T_rear_Nm": 0.0261
+    },
+    "mu_min_both_axles": 0.59
+   },
+   "cad_ld19_pay300": {
+    "mass_kg": 1.2389,
+    "com_x_mm": -3.6,
+    "front_share": 0.455,
+    "mu0.4": {
+     "T_front_Nm": null,
+     "T_rear_Nm": null
+    },
+    "mu0.5": {
+     "T_front_Nm": 0.0418,
+     "T_rear_Nm": null
+    },
+    "mu0.55": {
+     "T_front_Nm": 0.0418,
+     "T_rear_Nm": 0.0488
+    },
+    "mu0.6": {
+     "T_front_Nm": 0.0418,
+     "T_rear_Nm": 0.0488
+    },
+    "mu0.7": {
+     "T_front_Nm": 0.0418,
+     "T_rear_Nm": 0.0488
+    },
+    "mu0.8": {
+     "T_front_Nm": 0.0418,
+     "T_rear_Nm": 0.0488
+    },
+    "mu0.9": {
+     "T_front_Nm": 0.0418,
+     "T_rear_Nm": 0.0488
+    },
+    "mu_min_both_axles": 0.51
+   }
+  },
+  "climb_motor_SF_design_case_cad_c1_pay300_mu0.6": {
+   "T_need_rear_Nm": 0.0484,
+   "motors": {
+    "tt_stock": {
+     "V": 6.0,
+     "T_avail_printed_Nm": 0.0727,
+     "SF_rear_climb_printed": 1.5012,
+     "T_avail_if_electrical_stall_low_eta_Nm": 0.129,
+     "I_motor_at_climb_A": 0.9832,
+     "I_channel_2_motors_A": 1.9664,
+     "in_rated_voltage": true
+    },
+    "hiwonder": {
+     "V": 8.4,
+     "T_avail_printed_Nm": 0.1535,
+     "SF_rear_climb_printed": 3.1705,
+     "T_avail_if_electrical_stall_low_eta_Nm": 0.201,
+     "I_motor_at_climb_A": 0.5526,
+     "I_channel_2_motors_A": 1.1052,
+     "in_rated_voltage": true
+    },
+    "dfrobot": {
+     "V": 7.4,
+     "T_avail_printed_Nm": 0.0896,
+     "SF_rear_climb_printed": 1.8513,
+     "T_avail_if_electrical_stall_low_eta_Nm": 0.4043,
+     "I_motor_at_climb_A": 1.7932,
+     "I_channel_2_motors_A": 3.5865,
+     "in_rated_voltage": true
+    },
+    "yahboom": {
+     "V": 7.4,
+     "T_avail_printed_Nm": 0.1403,
+     "SF_rear_climb_printed": 2.8983,
+     "T_avail_if_electrical_stall_low_eta_Nm": 0.0728,
+     "I_motor_at_climb_A": 0.4997,
+     "I_channel_2_motors_A": 0.9994,
+     "in_rated_voltage": true
+    }
+   }
+  },
+  "sim_disagreement": {
+   "sim_crawl_payload_stall_torque_sweep": [
+    {
+     "stall_torque_Nm": 0.0785,
+     "equiv_supply_V": 4.0,
+     "success": true,
+     "peak_wheel_torque_Nm": 0.0559
+    },
+    {
+     "stall_torque_Nm": 0.0968,
+     "equiv_supply_V": 4.93,
+     "success": true,
+     "peak_wheel_torque_Nm": 0.058
+    },
+    {
+     "stall_torque_Nm": 0.1099,
+     "equiv_supply_V": 5.6,
+     "success": true,
+     "peak_wheel_torque_Nm": 0.0583
+    },
+    {
+     "stall_torque_Nm": 0.1177,
+     "equiv_supply_V": 6.0,
+     "success": true,
+     "peak_wheel_torque_Nm": 0.0581
+    },
+    {
+     "stall_torque_Nm": 0.1336,
+     "equiv_supply_V": 6.81,
+     "success": true,
+     "peak_wheel_torque_Nm": 0.0567
+    },
+    {
+     "stall_torque_Nm": 0.1648,
+     "equiv_supply_V": 8.4,
+     "success": true,
+     "peak_wheel_torque_Nm": 0.0557
+    }
+   ],
+   "sim_crawl_payload_mu_sweep": [
+    {
+     "mu_floor_and_edge": 0.3,
+     "success": false,
+     "peak_wheel_torque_Nm": 0.056,
+     "saturated": false
+    },
+    {
+     "mu_floor_and_edge": 0.4,
+     "success": true,
+     "peak_wheel_torque_Nm": 0.0558,
+     "saturated": false
+    },
+    {
+     "mu_floor_and_edge": 0.5,
+     "success": true,
+     "peak_wheel_torque_Nm": 0.0553,
+     "saturated": false
+    },
+    {
+     "mu_floor_and_edge": 0.6,
+     "success": true,
+     "peak_wheel_torque_Nm": 0.0553,
+     "saturated": false
+    },
+    {
+     "mu_floor_and_edge": 0.7,
+     "success": true,
+     "peak_wheel_torque_Nm": 0.0556,
+     "saturated": false
+    }
+   ],
+   "sim_mass_kg": 1.2981,
+   "note": "round 4 (CAD r3 params, cup at x = -50): the sim crawl climb now needs only ~0.056-0.058 N m peak and succeeds from 0.0785 N m stall and mu 0.4 up, i.e. it agrees with the quasi-static TORQUE (0.05-0.06 N m) but is MORE optimistic on traction (quasi-static square edge: mu >= ~0.55). The r1 'stall at 0.11' came from the v1 fallback params (rear payload x = -83 mm). The sim threshold has a 1.5 mm edge radius (A); measure the real threshold profile and mu (M3, M4)."
+  },
+  "payload_x_sweep_c1_mu0.6": {
+   "rows": [
+    {
+     "payload_x_mm": -80.0,
+     "com_x_mm": -7.8332,
+     "front_share": 0.4021,
+     "T_front": 0.0395,
+     "T_rear": 0.0593,
+     "T_max": 0.0593
+    },
+    {
+     "payload_x_mm": -70.0,
+     "com_x_mm": -5.5221,
+     "front_share": 0.431,
+     "T_front": 0.0419,
+     "T_rear": 0.0531,
+     "T_max": 0.0531
+    },
+    {
+     "payload_x_mm": -60.0,
+     "com_x_mm": -3.2111,
+     "front_share": 0.4599,
+     "T_front": 0.0442,
+     "T_rear": 0.0508,
+     "T_max": 0.0508
+    },
+    {
+     "payload_x_mm": -50.0,
+     "com_x_mm": -0.9,
+     "front_share": 0.4888,
+     "T_front": 0.0466,
+     "T_rear": 0.0484,
+     "T_max": 0.0484
+    },
+    {
+     "payload_x_mm": -40.0,
+     "com_x_mm": 1.4111,
+     "front_share": 0.5176,
+     "T_front": 0.0489,
+     "T_rear": 0.0461,
+     "T_max": 0.0489
+    },
+    {
+     "payload_x_mm": -30.0,
+     "com_x_mm": 3.7221,
+     "front_share": 0.5465,
+     "T_front": 0.0513,
+     "T_rear": 0.0437,
+     "T_max": 0.0513
+    },
+    {
+     "payload_x_mm": -20.0,
+     "com_x_mm": 6.0332,
+     "front_share": 0.5754,
+     "T_front": 0.0543,
+     "T_rear": 0.0414,
+     "T_max": 0.0543
+    },
+    {
+     "payload_x_mm": -10.0,
+     "com_x_mm": 8.3443,
+     "front_share": 0.6043,
+     "T_front": 0.0608,
+     "T_rear": 0.039,
+     "T_max": 0.0608
+    },
+    {
+     "payload_x_mm": -0.0,
+     "com_x_mm": 10.6554,
+     "front_share": 0.6332,
+     "T_front": 0.0672,
+     "T_rear": 0.0367,
+     "T_max": 0.0672
+    },
+    {
+     "payload_x_mm": 10.0,
+     "com_x_mm": 12.9664,
+     "front_share": 0.6621,
+     "T_front": null,
+     "T_rear": 0.0343,
+     "T_max": null
+    },
+    {
+     "payload_x_mm": 20.0,
+     "com_x_mm": 15.2775,
+     "front_share": 0.691,
+     "T_front": null,
+     "T_rear": 0.0319,
+     "T_max": null
+    },
+    {
+     "payload_x_mm": 30.0,
+     "com_x_mm": 17.5886,
+     "front_share": 0.7199,
+     "T_front": null,
+     "T_rear": 0.0296,
+     "T_max": null
+    },
+    {
+     "payload_x_mm": 40.0,
+     "com_x_mm": 19.8996,
+     "front_share": 0.7487,
+     "T_front": null,
+     "T_rear": 0.0272,
+     "T_max": null
+    },
+    {
+     "payload_x_mm": 50.0,
+     "com_x_mm": 22.2107,
+     "front_share": 0.7776,
+     "T_front": null,
+     "T_rear": 0.0254,
+     "T_max": null
+    },
+    {
+     "payload_x_mm": 60.0,
+     "com_x_mm": 24.5218,
+     "front_share": 0.8065,
+     "T_front": null,
+     "T_rear": 0.0242,
+     "T_max": null
+    },
+    {
+     "payload_x_mm": 70.0,
+     "com_x_mm": 26.8328,
+     "front_share": 0.8354,
+     "T_front": null,
+     "T_rear": 0.0231,
+     "T_max": null
+    },
+    {
+     "payload_x_mm": 80.0,
+     "com_x_mm": 29.1439,
+     "front_share": 0.8643,
+     "T_front": null,
+     "T_rear": 0.0219,
+     "T_max": null
+    }
+   ],
+   "best": {
+    "payload_x_mm": -50.0,
+    "com_x_mm": -0.9,
+    "front_share": 0.4888,
+    "T_front": 0.0466,
+    "T_rear": 0.0484,
+    "T_max": 0.0484
+   }
+  },
+  "swap_layout_c1": {
+   "stack_mass_g": 237.9,
+   "com_x_mm": 1.0945,
+   "front_share": 0.5137,
+   "T_front": 0.0486,
+   "T_rear": 0.0464
+  },
+  "spin_1rad_s": {
+   "cad_c1_pay300_carpet": {
+    "M_resist_Nm": 0.3056,
+    "T_wheel_Nm": 0.0483,
+    "wheel_rpm": 26.0869,
+    "traction_ok_L_over_B": true,
+    "tt_stock": {
+     "SF": 1.4116,
+     "I_motor_A": 0.9816,
+     "I_channel_A": 1.9633
+    },
+    "hiwonder": {
+     "SF": 2.9962,
+     "I_motor_A": 0.5517,
+     "I_channel_A": 1.1035
+    },
+    "dfrobot": {
+     "SF": 1.7406,
+     "I_motor_A": 1.7901,
+     "I_channel_A": 3.5803
+    },
+    "yahboom": {
+     "SF": 2.8268,
+     "I_motor_A": 0.4989,
+     "I_channel_A": 0.9978
+    }
+   },
+   "cad_c1_pay300_hard": {
+    "M_resist_Nm": 0.4075,
+    "T_wheel_Nm": 0.055,
+    "wheel_rpm": 31.6431,
+    "traction_ok_L_over_B": true,
+    "tt_stock": {
+     "SF": 1.2017,
+     "I_motor_A": 1.0956,
+     "I_channel_A": 2.1913
+    },
+    "hiwonder": {
+     "SF": 2.5577,
+     "I_motor_A": 0.6137,
+     "I_channel_A": 1.2274
+    },
+    "dfrobot": {
+     "SF": 1.4818,
+     "I_motor_A": 2.0122,
+     "I_channel_A": 4.0245
+    },
+    "yahboom": {
+     "SF": 2.453,
+     "I_motor_A": 0.5563,
+     "I_channel_A": 1.1126
+    }
+   },
+   "cad_ld19_pay300_carpet": {
+    "M_resist_Nm": 0.2917,
+    "T_wheel_Nm": 0.0461,
+    "wheel_rpm": 26.0869,
+    "traction_ok_L_over_B": true,
+    "tt_stock": {
+     "SF": 1.479,
+     "I_motor_A": 0.9437,
+     "I_channel_A": 1.8875
+    },
+    "hiwonder": {
+     "SF": 3.1393,
+     "I_motor_A": 0.5312,
+     "I_channel_A": 1.0623
+    },
+    "dfrobot": {
+     "SF": 1.8237,
+     "I_motor_A": 1.7163,
+     "I_channel_A": 3.4326
+    },
+    "yahboom": {
+     "SF": 2.9618,
+     "I_motor_A": 0.4798,
+     "I_channel_A": 0.9596
+    }
+   },
+   "cad_ld19_pay300_hard": {
+    "M_resist_Nm": 0.3889,
+    "T_wheel_Nm": 0.0525,
+    "wheel_rpm": 31.6431,
+    "traction_ok_L_over_B": true,
+    "tt_stock": {
+     "SF": 1.2591,
+     "I_motor_A": 1.0525,
+     "I_channel_A": 2.1051
+    },
+    "hiwonder": {
+     "SF": 2.6798,
+     "I_motor_A": 0.5903,
+     "I_channel_A": 1.1805
+    },
+    "dfrobot": {
+     "SF": 1.5525,
+     "I_motor_A": 1.9283,
+     "I_channel_A": 3.8566
+    },
+    "yahboom": {
+     "SF": 2.5701,
+     "I_motor_A": 0.5346,
+     "I_channel_A": 1.0692
+    }
+   },
+   "cad_c1_pay0_carpet": {
+    "M_resist_Nm": 0.235,
+    "T_wheel_Nm": 0.0372,
+    "wheel_rpm": 26.0869,
+    "traction_ok_L_over_B": true,
+    "tt_stock": {
+     "SF": 1.8359,
+     "I_motor_A": 0.7894,
+     "I_channel_A": 1.5789
+    },
+    "hiwonder": {
+     "SF": 3.8968,
+     "I_motor_A": 0.4473,
+     "I_channel_A": 0.8947
+    },
+    "dfrobot": {
+     "SF": 2.2638,
+     "I_motor_A": 1.4157,
+     "I_channel_A": 2.8314
+    },
+    "yahboom": {
+     "SF": 3.6765,
+     "I_motor_A": 0.4021,
+     "I_channel_A": 0.8042
+    }
+   },
+   "cad_c1_pay0_hard": {
+    "M_resist_Nm": 0.3133,
+    "T_wheel_Nm": 0.0423,
+    "wheel_rpm": 31.6431,
+    "traction_ok_L_over_B": true,
+    "tt_stock": {
+     "SF": 1.5629,
+     "I_motor_A": 0.8771,
+     "I_channel_A": 1.7542
+    },
+    "hiwonder": {
+     "SF": 3.3264,
+     "I_motor_A": 0.495,
+     "I_channel_A": 0.9899
+    },
+    "dfrobot": {
+     "SF": 1.9272,
+     "I_motor_A": 1.5865,
+     "I_channel_A": 3.173
+    },
+    "yahboom": {
+     "SF": 3.1903,
+     "I_motor_A": 0.4462,
+     "I_channel_A": 0.8925
+    }
+   }
+  },
+  "spin_verdict": "Traction allows it (L/B = 0.645 < 1). Kinematics: wheels must run 1.7-1.9x the geometric speed (sim), i.e. 32-37 wheel rpm -- easy. Torque: 0.047 (carpet) - 0.055 (hard, mu 0.8) N m per wheel vs 0.0785 N m printed stall of TT-class motors -> SF 1.1-1.5 at the motor's own rated voltage. Achievable ONLY with gyro-closed-loop yaw-rate control (sim open-loop: 0.45-0.65 rad/s; closed-loop gyro: 1.0 rad/s). Requirement change proposed: REQ-SCOUT-001 angular target 1 rad/s measured by the IMU, with Nav2 max_vel_theta 0.8 rad/s for margin.",
+  "driver_channels": {
+   "tt_stock": {
+    "V_cap": 6.0,
+    "I_ch_climb_A": 1.9664,
+    "I_ch_stall_A": 3.0,
+    "tb6612 (Elegoo shield)": {
+     "climb": "peak-only",
+     "stall": "peak-only"
+    },
+    "mdd3a": {
+     "climb": "ok",
+     "stall": "ok"
+    }
+   },
+   "hiwonder": {
+    "V_cap": 8.4,
+    "I_ch_climb_A": 1.1052,
+    "I_ch_stall_A": 3.36,
+    "tb6612 (Elegoo shield)": {
+     "climb": "ok",
+     "stall": "OVER"
+    },
+    "mdd3a": {
+     "climb": "ok",
+     "stall": "peak-only"
+    }
+   },
+   "dfrobot": {
+    "V_cap": 7.4,
+    "I_ch_climb_A": 3.5865,
+    "I_ch_stall_A": 6.9067,
+    "tb6612 (Elegoo shield)": {
+     "climb": "OVER",
+     "stall": "OVER"
+    },
+    "mdd3a": {
+     "climb": "peak-only",
+     "stall": "OVER"
+    }
+   },
+   "yahboom": {
+    "V_cap": 7.4,
+    "I_ch_climb_A": 0.9994,
+    "I_ch_stall_A": 2.7133,
+    "tb6612 (Elegoo shield)": {
+     "climb": "ok",
+     "stall": "peak-only"
+    },
+    "mdd3a": {
+     "climb": "ok",
+     "stall": "ok"
+    }
+   }
+  }
+ },
+ "power": {
+  "case": "cad_c1_pay300",
+  "mass_kg": 1.298,
+  "com_m": [
+   -0.001,
+   0.0,
+   0.066
+  ],
+  "loads_5V_W": {
+   "pi5_8gb_active_cooler": {
+    "typ": 6.5,
+    "peak": 10.0,
+    "src": "D/M cnx-software wall meter: idle 3.0 W headless, stress -c 4 8.8 W (https://www.cnx-software.com/2023/11/05/raspberry-pi-5-review-raspberry-pi-os-bookworm-benchmarks-power-consumption/); typ A: SLAM+Nav2+detector ~2-3 cores busy; peak A: 8.8 W + 1.2 W USB/GPU margin"
+   },
+   "camera_module_3": {
+    "typ": 0.6,
+    "peak": 1.0,
+    "src": "A: no official power figure published; IMX708 streaming estimate, bound 0.3-1.0 W"
+   },
+   "lidar_c1": {
+    "typ": 1.15,
+    "peak": 1.5,
+    "src": "D 5 V x 230 mA operating (https://www.waveshare.com/wiki/RPLIDAR_C1); start-up not published -> A 300 mA"
+   },
+   "esp32_devkit_wifi_off": {
+    "typ": 0.5,
+    "peak": 1.0,
+    "src": "A from ESP32 datasheet modem-sleep 20-68 mA @240 MHz + LDO/USB-UART losses (https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf)"
+   },
+   "encoders_x4": {
+    "typ": 0.2,
+    "peak": 0.25,
+    "src": "A ~10 mA each at 5 V (hall sensor + pull-ups); not in the Hiwonder listing"
+   },
+   "hcsr04_imu_mdd3a_logic": {
+    "typ": 0.2,
+    "peak": 0.3,
+    "src": "D HC-SR04 15 mA @5 V (https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf); D MPU-6050 3.9 mA; A MDD3A logic"
+   },
+   "(alt) lidar_ld19": {
+    "typ": 0.9,
+    "peak": 1.5,
+    "src": "D 180 mA work / 300 mA start (https://raw.githubusercontent.com/LetsOKdo/ld19/master/datasheet/LDROBOT_LD19_Datasheet_V1.0.pdf)"
+   }
+  },
+  "rail_5V": {
+   "typ_W": 9.15,
+   "peak_W": 14.05,
+   "typ_A": 1.83,
+   "peak_A": 2.81,
+   "pi_spec_A": 5.0,
+   "eta_typ": 0.927,
+   "eta_peak": 0.942,
+   "buck_in_typ_W": 9.875,
+   "buck_in_peak_W": 14.913,
+   "buck_loss_typ_W": 0.725,
+   "buck_loss_peak_W": 0.863,
+   "buck_loss_at_5A_W": 1.316
+  },
+  "motor_ops": {
+   "cruise_0.3": {
+    "T_wheel_Nm": 0.008,
+    "wheel_rpm": 88.147,
+    "hiwonder": {
+     "P_bus_W": 3.076,
+     "V_avg": 4.119,
+     "I_motor_A": 0.177,
+     "V_ok_under_cap": true
+    },
+    "tt_proxy": {
+     "P_bus_W": 4.371,
+     "V_avg": 3.55,
+     "I_motor_A": 0.292,
+     "V_ok_under_cap": true
+    }
+   },
+   "accel_0.6": {
+    "T_wheel_Nm": 0.015,
+    "wheel_rpm": 88.147,
+    "hiwonder": {
+     "P_bus_W": 4.397,
+     "V_avg": 4.415,
+     "I_motor_A": 0.237,
+     "V_ok_under_cap": true
+    },
+    "tt_proxy": {
+     "P_bus_W": 6.734,
+     "V_avg": 3.985,
+     "I_motor_A": 0.401,
+     "V_ok_under_cap": true
+    }
+   },
+   "pivot_1rad_s": {
+    "T_wheel_Nm": 0.048,
+    "wheel_rpm": 30.969,
+    "hiwonder": {
+     "P_bus_W": 9.047,
+     "V_avg": 3.894,
+     "I_motor_A": 0.552,
+     "V_ok_under_cap": true
+    },
+    "tt_proxy": {
+     "P_bus_W": 19.685,
+     "V_avg": 4.763,
+     "I_motor_A": 0.982,
+     "V_ok_under_cap": true
+    }
+   },
+   "arc_0.3+1rad_s": {
+    "T_wheel_Nm": 0.048,
+    "wheel_rpm": 119.116,
+    "hiwonder": {
+     "P_bus_W": 16.556,
+     "V_avg": 7.126,
+     "I_motor_A": 0.552,
+     "V_ok_under_cap": true
+    },
+    "tt_proxy": {
+     "P_bus_W": 29.522,
+     "V_avg": 7.143,
+     "I_motor_A": 0.982,
+     "V_ok_under_cap": false
+    }
+   },
+   "climb_10mm_0.05": {
+    "T_wheel_Nm": 0.061,
+    "wheel_rpm": 14.691,
+    "hiwonder": {
+     "P_bus_W": 10.976,
+     "V_avg": 3.89,
+     "I_motor_A": 0.67,
+     "V_ok_under_cap": true
+    },
+    "tt_proxy": {
+     "P_bus_W": 26.243,
+     "V_avg": 5.195,
+     "I_motor_A": 1.2,
+     "V_ok_under_cap": true
+    }
+   },
+   "stall_all_4": {
+    "hiwonder@8.4": {
+     "I_motor_A": 1.68,
+     "I_motor_side_4_A": 6.72,
+     "P_windings_W": 56.448,
+     "I_batt_at_11.1V_A": 5.353,
+     "I_channel_2_motors_A": 3.36
+    },
+    "tt_stock@6": {
+     "I_motor_A": 1.5,
+     "I_motor_side_4_A": 6.0,
+     "P_windings_W": 36.0,
+     "I_batt_at_11.1V_A": 3.414,
+     "I_channel_2_motors_A": 3.0
+    },
+    "fit0450@7.4": {
+     "I_motor_A": 3.453,
+     "I_motor_side_4_A": 13.813,
+     "P_windings_W": 102.219,
+     "I_batt_at_11.1V_A": 9.694,
+     "I_channel_2_motors_A": 6.907
+    },
+    "hiwonder@12.6_firmware_fault": {
+     "I_motor_A": 2.52,
+     "I_motor_side_4_A": 10.08,
+     "P_windings_W": 127.008,
+     "I_batt_at_11.1V_A": 12.044,
+     "I_channel_2_motors_A": 5.04
+    },
+    "fit0450@12.6_firmware_fault": {
+     "I_motor_A": 5.88,
+     "I_motor_side_4_A": 23.52,
+     "P_windings_W": 296.352,
+     "I_batt_at_11.1V_A": 28.104,
+     "I_channel_2_motors_A": 11.76
+    }
+   }
+  },
+  "battery": {
+   "label_Wh": 33.3,
+   "label_Wh_per_L": 634.286,
+   "realistic_Wh_range": [
+    12.0,
+    27.5
+   ],
+   "design_Wh": 16.5,
+   "usable_fraction": 0.85,
+   "why_label_implausible": "634 Wh/L at pack level; good cylindrical cells alone reach ~600-700 Wh/L and a 15 mm-thick pack cannot hold 18650s, so these are pouch cells + BMS + wrap: expect ~230-520 Wh/L -> 12-27.5 Wh (A)"
+  },
+  "runtime": {
+   "profile": {
+    "stationary": 0.4,
+    "cruise": 0.45,
+    "turn": 0.1,
+    "accel_climb": 0.05
+   },
+   "avg_W": {
+    "hiwonder": 12.384,
+    "tt_proxy": 14.147
+   },
+   "worst_continuous_W": {
+    "hiwonder": 19.78,
+    "tt_proxy": 23.878
+   },
+   "minutes": {
+    "label_33.3Wh": {
+     "typ_hiwonder_min": 137.141,
+     "typ_tt_proxy_min": 120.048,
+     "worst_hiwonder_min": 85.859,
+     "worst_tt_proxy_min": 71.125
+    },
+    "realistic_low_12Wh": {
+     "typ_hiwonder_min": 49.42,
+     "typ_tt_proxy_min": 43.26,
+     "worst_hiwonder_min": 30.94,
+     "worst_tt_proxy_min": 25.631
+    },
+    "design_16.5Wh": {
+     "typ_hiwonder_min": 67.953,
+     "typ_tt_proxy_min": 59.483,
+     "worst_hiwonder_min": 42.543,
+     "worst_tt_proxy_min": 35.242
+    },
+    "realistic_high_27.5Wh": {
+     "typ_hiwonder_min": 113.255,
+     "typ_tt_proxy_min": 99.138,
+     "worst_hiwonder_min": 70.905,
+     "worst_tt_proxy_min": 58.737
+    }
+   },
+   "min_Wh_for_30min_worst": 14.046,
+   "min_Wh_for_60min_typ": 16.643
+  },
+  "currents_A": {
+   "avg": 1.274,
+   "worst_continuous": 2.388,
+   "burst_4_stall_at_cap_plus_pi_peak": 7.743,
+   "firmware_fault_100pct_duty_at_12.6V": 11.794
+  },
+  "brownout": {
+   "R_pack_bound_ohm": [
+    0.06,
+    0.25
+   ],
+   "R_path_ohm": 0.04,
+   "cases": {
+    "Rpack_0.06": {
+     "V_bus_during_4_motor_stall": 8.826,
+     "buck_min_Vin_at_3A": 5.92,
+     "margin_V": 2.906,
+     "V_bus_full_pack": 11.826
+    },
+    "Rpack_0.25": {
+     "V_bus_during_4_motor_stall": 7.355,
+     "buck_min_Vin_at_3A": 5.92,
+     "margin_V": 1.435,
+     "V_bus_full_pack": 10.355
+    }
+   },
+   "verdict": "Pi 5 V rail survives a 4-motor stall even at R_pack 0.25 ohm and a 9.6 V pack (the buck needs only ~5.9 V in). The real brown-out mechanism is the pack's BMS over-current trip (rating UNKNOWN): if it trips below the burst current the whole robot, Pi included, loses power. Read the pack/BMS markings; add a firmware stall-current limit (back-EMF model from encoder speed)."
+  },
+  "buck_5V_options": {
+   "pololu_d36v50f5": {
+    "verdict": "BUY (recommended)",
+    "vin": "5.5-50 V; dropout ~0.83 V @1 A, ~0.92 V @3 A, ~1.0 V @5 A (graph) -> regulates down to ~6 V in; pack floor 9.0 V leaves >= 3 V headroom",
+    "iout": "~8.0 A continuous at 9-18 V in, still air (graph); 5.5 A at 36 V",
+    "eff_12V": "91 % @1 A, ~94-95 % @3-5 A (graph)",
+    "protection": "reverse input to 40 V, OCP, short, thermal, soft-start, PG output, EN pin (D)",
+    "size_mass": "25.4 x 25.4 x 9.5 mm, 7 g (D)",
+    "price_eur": "34.95 (BerryBase)",
+    "src": "https://www.pololu.com/product/4091",
+    "weak_point": "fixed 5.0 V: REQ-SCOUT-012 lower limit 5.0 V is not guaranteed after tolerance and lead drop"
+   },
+   "xl4015_generic": {
+    "verdict": "DON'T BUY as the Pi supply",
+    "why": "listing rates ~3.5 A sustained without extra cooling (round-1 source manuals.plus B078JTR9GM) < 5 A Pi spec; no reverse protection, no PG; trim pot drifts with vibration; 51 x 26 x 14 mm. Only advantage: can be trimmed to 5.15 V."
+   },
+   "ubec_5A_generic": {
+    "verdict": "DON'T BUY (unverifiable)",
+    "why": "no datasheet with output tolerance, ripple or dropout found; hobby UBECs are specified for servo loads, not for a 5.0-5.25 V window"
+   },
+   "owned_lm2596": {
+    "verdict": "NOT for the Pi",
+    "why": "2-3 A class (BRIEF) < 5 A"
+   }
+  },
+  "pi_supply": {
+   "lead_drop": {
+    "18AWG_0.15m_pair": {
+     "R_ohm": 0.006,
+     "drop_3A_V": 0.019,
+     "drop_5A_V": 0.031
+    },
+    "20AWG_0.15m_pair": {
+     "R_ohm": 0.01,
+     "drop_3A_V": 0.03,
+     "drop_5A_V": 0.05
+    },
+    "22AWG_0.15m_pair": {
+     "R_ohm": 0.016,
+     "drop_3A_V": 0.048,
+     "drop_5A_V": 0.079
+    },
+    "24AWG_0.15m_pair": {
+     "R_ohm": 0.025,
+     "drop_3A_V": 0.076,
+     "drop_5A_V": 0.126
+    }
+   },
+   "V_at_pi_worst_20AWG_peak": 4.772,
+   "V_at_pi_best": 5.2,
+   "pi_undervoltage_threshold_V": "4.63 +/- 5 % (https://github.com/raspberrypi/documentation/blob/master/documentation/asciidoc/computers/raspberry-pi/power-supplies.adoc)",
+   "REQ_SCOUT_012": "5.0-5.25 V NOT guaranteed by a fixed 5.0 V +/-4 % buck (tolerance as read in round 1 -- re-verify) -> propose: '>= 4.9 V at the header under load and vcgencmd get_throttled == 0x0 over 30 min', or verify the delivered unit reads >= 5.0 V at 3 A before installing",
+   "usb_current": "Without USB-PD the Pi 5 limits downstream USB to 600 mA total; with a 5 A-capable supply it gives 1.6 A (https://github.com/raspberrypi/documentation/blob/master/documentation/asciidoc/computers/raspberry-pi/power-supplies.adoc). GPIO back-powering cannot negotiate PD, so set usb_max_current_enable=1 in config.txt (and PSU_MAX_CURRENT=5000 in the EEPROM, round-1 source https://pip-assets.raspberrypi.com/categories/685-app-notes-guides-whitepapers/documents/RP-009856-WP-1-USB%20Power%20delivery%20on%20Raspberry%20Pi%205.pdf). USB load: LiDAR 230-300 mA (+ ESP32 ~100-250 mA if powered over USB) = 0.33-0.55 A -> fits even 600 mA, but start-up surges make it marginal: set the flag.",
+   "wiring": "buck VOUT -> header pins 2 and 4, GND -> pins 6 and 14; 20 AWG, <= 15 cm; keyed connector; GPIO 5 V bypasses the Pi's input protection -> verify polarity with the multimeter, never hot-plug the 5 V lead",
+   "heat": "buck loss 0.72 W typical, 0.86 W peak, 1.32 W at 5 A -- fine for a 25 mm board in the lower deck; keep >= 5 mm air gap to the battery"
+  },
+  "motor_rail": {
+   "decision": "NO separate motor buck. MDD3A (4-16 V) straight on the pack, PWM duty capped in firmware to V_cap / V_batt with V_cap = 8.4 V (Hiwonder, rated 3-12 V) or 7.4 V (FIT0450, max 7.5 V); V_batt from the ESP32 ADC.",
+   "why_no_buck": "a 5 A motor buck would current-limit exactly when torque is needed (climb 1.2-2.4 A/channel, 4-motor stall 6-7 A) and adds a part; the CAD's D36V28F-class motor buck (2.8 A family) is far too small and also overlaps buck_5v in fit_check_v2.json",
+   "pwm_heating": "at 20 kHz the motor's electrical time constant (L/R ~0.1-0.5 ms, A: 130-size can L 0.3-1 mH not published) is >> the 50 us PWM period: ripple <= ~0.3 A p-p worst, extra copper loss < 0.02 W/motor. Heating follows average current, i.e. the same as DC at V_cap.",
+   "brush_wear": "commutation arcing scales with the PEAK applied voltage, so 12.6 V PWM wears brushes somewhat faster than 6 V DC (not quantifiable from any datasheet); acceptable for a TT-class motor (EUR 6-13, spare bought). Speed and gearbox wear follow the average voltage, which the cap limits.",
+   "failure_mode": "firmware fault at 100 % duty puts 12.6 V on the motors: Hiwonder 2.5 A stall each, 5 A/channel = MDD3A peak; FIT0450 5.9 A each -> MDD3A over-current shutdown. Mitigation: the cap lives in the lowest PWM write function; watchdog brakes (LL); boot with PWM pins low.",
+   "alt_two_packs": "Option: motors on the owned Elegoo 2S box (7.4-8.4 V, no cap needed), Pi on the 3S pack -> removes all coupling, costs space/mass (measure the 2S box first)."
+  },
+  "protection": {
+   "fuse": "7.5 A ATM mini-blade in an inline holder with 18 AWG leads, right after the battery XT30. Normal max 2.4 A continuous; 4-motor stall burst 7.7 A (< 1 s); a pack short delivers >> 20 A. If the BMS trips below 7.5 A the BMS is the real protection -> still fit the fuse (BMS failure, wiring short ahead of the BMS).",
+   "switch": "the CAD's MTS-102-class mini toggle is typically AC-rated only (~3 A at 250 VAC, DC not stated): inadequate for 6-7 A bursts. Use a >= 10 A DC-rated rocker/toggle (e.g. Pololu #1406 10 A rocker, check its DC rating) or a MOSFET pushbutton switch.",
+   "wire": {
+    "battery->fuse->switch->split": "18 AWG silicone",
+    "split->MDD3A VM": "20 AWG",
+    "MDD3A->motors": "22-24 AWG (<= 1.8 A each)",
+    "buck->Pi header": "20 AWG pair or 2 x 22 AWG pairs",
+    "signals/encoders": "26-28 AWG, JST-PH/Dupont"
+   },
+   "bulk_cap": "470 uF / 25 V low-ESR electrolytic at the MDD3A VM input + 47-100 uF at the buck input (Pololu warns about LC input spikes on hot-plug; a 3S pack can ring towards 2 x 12.6 V)",
+   "low_voltage_cutoff_3S": {
+    "warn_V": 10.5,
+    "stop_motors_V": 10.2,
+    "pi_shutdown_V": 9.9,
+    "absolute_floor_V": 9.0,
+    "filter": "2 s average, ignore dips < 0.5 s, 0.3 V hysteresis",
+    "measure": "ESP32 ADC1 pin, 47k/10k divider (12.6 V -> 2.21 V), 100 nF, calibrate with the multimeter (REQ-SCOUT-013)",
+    "bms": "UNKNOWN whether the blue pack has a BMS. With a BMS: its cutoff (2.5-3.0 V/cell) is the last line. Without (bare LiPo with a balance lead): the firmware cutoff is the ONLY protection -> add a 3S LiPo buzzer alarm (~EUR 3)."
+   }
+  },
+  "distribution_table": [
+   {
+    "node": "Battery 3S",
+    "V": "9.0-12.6",
+    "I_typ_A": 1.27,
+    "I_peak_A": 7.7,
+    "protection": "BMS? (unknown) + 7.5 A fuse",
+    "wire": "18 AWG",
+    "connector": "XT30"
+   },
+   {
+    "node": "Main switch",
+    "V": "9.0-12.6",
+    "I_typ_A": 1.27,
+    "I_peak_A": 7.7,
+    "protection": "-",
+    "wire": "18 AWG",
+    "connector": ">= 10 A DC switch"
+   },
+   {
+    "node": "MDD3A VM (4 motors, 2 per channel)",
+    "V": "9.0-12.6 (PWM avg cap 8.4)",
+    "I_typ_A": 0.39,
+    "I_peak_A": 6.2,
+    "protection": "MDD3A OCP/UVLO/thermal + firmware cap",
+    "wire": "20 AWG",
+    "connector": "screw terminal"
+   },
+   {
+    "node": "D36V50F5 VIN",
+    "V": "9.0-12.6",
+    "I_typ_A": 0.89,
+    "I_peak_A": 1.66,
+    "protection": "reverse, OCP, thermal (built in)",
+    "wire": "20 AWG",
+    "connector": "soldered"
+   },
+   {
+    "node": "5 V bus -> Pi 5 header pins 2/4",
+    "V": "5.0 (4.8-5.2)",
+    "I_typ_A": 1.3,
+    "I_peak_A": 2.0,
+    "protection": "buck PG -> ESP32 input",
+    "wire": "20 AWG pair",
+    "connector": "keyed 2x2 housing / JST-XH"
+   },
+   {
+    "node": "Pi USB -> LiDAR C1",
+    "V": "5.0 (C1 accepts 4.8-5.2 D)",
+    "I_typ_A": 0.23,
+    "I_peak_A": 0.3,
+    "protection": "Pi USB limit 0.6 / 1.6 A",
+    "wire": "kit cable",
+    "connector": "USB-A"
+   },
+   {
+    "node": "Pi CSI -> Camera 3",
+    "V": "3.3 (from Pi)",
+    "I_typ_A": 0.12,
+    "I_peak_A": 0.2,
+    "protection": "-",
+    "wire": "FFC",
+    "connector": "22-pin mini FFC (Pi 5)"
+   },
+   {
+    "node": "5 V bus -> ESP32 VIN, encoders, HC-SR04",
+    "V": "5.0",
+    "I_typ_A": 0.18,
+    "I_peak_A": 0.3,
+    "protection": "-",
+    "wire": "22-24 AWG",
+    "connector": "Dupont"
+   },
+   {
+    "node": "ESP32 3V3 -> MPU-6050, encoder pull-ups",
+    "V": "3.3",
+    "I_typ_A": 0.01,
+    "I_peak_A": 0.02,
+    "protection": "-",
+    "wire": "26 AWG",
+    "connector": "Dupont"
+   }
+  ]
+ },
+ "stability": {
+  "assumptions": {
+   "y_wheel_m": 0.062,
+   "mu_max": 0.8,
+   "a_req": 0.6,
+   "a_decel_cap": 1.5,
+   "cup": {
+    "r": 0.037,
+    "h": 0.08,
+    "mu_cup_deck": [
+     0.3,
+     0.5
+    ]
+   }
+  },
+  "cases": {
+   "cad_c1_pay0": {
+    "com_mm": [
+     13.8,
+     0.0,
+     55.0
+    ],
+    "mass_kg": 0.998,
+    "flat": {
+     "tip_fwd_deg": 25.471,
+     "tip_back_deg": 44.368,
+     "tip_side_deg": 48.424,
+     "a_front_lift_accel": 9.596,
+     "a_rear_lift_brake": 4.673,
+     "a_side_tip": 11.059
+    },
+    "ramp_5deg_uphill": {
+     "tip_fwd_deg": 25.471,
+     "tip_back_deg": 44.368,
+     "tip_side_deg": 48.424,
+     "a_front_lift_accel": 8.704,
+     "a_rear_lift_brake": 5.51,
+     "a_side_tip": 11.059
+    },
+    "ramp_5deg_downhill": {
+     "tip_fwd_deg": 25.471,
+     "tip_back_deg": 44.368,
+     "tip_side_deg": 48.424,
+     "a_front_lift_accel": 10.414,
+     "a_rear_lift_brake": 3.8,
+     "a_side_tip": 11.059
+    },
+    "on_10mm_step_front_up": {
+     "tip_fwd_deg": 25.471,
+     "tip_back_deg": 44.368,
+     "tip_side_deg": 48.424,
+     "a_front_lift_accel": 8.295,
+     "a_rear_lift_brake": 5.863,
+     "a_side_tip": 11.059
+    },
+    "on_10mm_step_rear_up": {
+     "tip_fwd_deg": 25.471,
+     "tip_back_deg": 44.368,
+     "tip_side_deg": 48.424,
+     "a_front_lift_accel": 10.747,
+     "a_rear_lift_brake": 3.41,
+     "a_side_tip": 11.059
+    },
+    "margins": {
+     "accel_req_SF": 15.993,
+     "decel_cap_SF": 3.115,
+     "front_lift_possible_at_mu_g": false,
+     "rear_lift_possible_at_mu_g": true,
+     "rollover_possible_flat": false,
+     "tip_back_margin_vs_sim_dynamic_pitch_deg": 35.918,
+     "ramp5_uphill_accel_SF": 14.507,
+     "step_front_up_accel_SF": 13.824
+    }
+   },
+   "cad_c1_pay300": {
+    "com_mm": [
+     -0.9,
+     0.0,
+     66.0
+    ],
+    "mass_kg": 1.298,
+    "flat": {
+     "tip_fwd_deg": 31.786,
+     "tip_back_deg": 30.644,
+     "tip_side_deg": 43.21,
+     "a_front_lift_accel": 5.812,
+     "a_rear_lift_brake": 6.079,
+     "a_side_tip": 9.215
+    },
+    "ramp_5deg_uphill": {
+     "tip_fwd_deg": 31.786,
+     "tip_back_deg": 30.644,
+     "tip_side_deg": 43.21,
+     "a_front_lift_accel": 4.935,
+     "a_rear_lift_brake": 6.911,
+     "a_side_tip": 9.215
+    },
+    "ramp_5deg_downhill": {
+     "tip_fwd_deg": 31.786,
+     "tip_back_deg": 30.644,
+     "tip_side_deg": 43.21,
+     "a_front_lift_accel": 6.645,
+     "a_rear_lift_brake": 5.201,
+     "a_side_tip": 9.215
+    },
+    "on_10mm_step_front_up": {
+     "tip_fwd_deg": 31.786,
+     "tip_back_deg": 30.644,
+     "tip_side_deg": 43.21,
+     "a_front_lift_accel": 4.54,
+     "a_rear_lift_brake": 7.258,
+     "a_side_tip": 9.215
+    },
+    "on_10mm_step_rear_up": {
+     "tip_fwd_deg": 31.786,
+     "tip_back_deg": 30.644,
+     "tip_side_deg": 43.21,
+     "a_front_lift_accel": 6.992,
+     "a_rear_lift_brake": 4.805,
+     "a_side_tip": 9.215
+    },
+    "margins": {
+     "accel_req_SF": 9.686,
+     "decel_cap_SF": 4.053,
+     "front_lift_possible_at_mu_g": true,
+     "rear_lift_possible_at_mu_g": true,
+     "rollover_possible_flat": false,
+     "tip_back_margin_vs_sim_dynamic_pitch_deg": 22.194,
+     "ramp5_uphill_accel_SF": 8.224,
+     "step_front_up_accel_SF": 7.567
+    }
+   },
+   "cad_ld19_pay0": {
+    "com_mm": [
+     11.226,
+     0.0,
+     49.97
+    ],
+    "mass_kg": 0.939,
+    "flat": {
+     "tip_fwd_deg": 29.934,
+     "tip_back_deg": 45.711,
+     "tip_side_deg": 51.132,
+     "a_front_lift_accel": 10.057,
+     "a_rear_lift_brake": 5.649,
+     "a_side_tip": 12.172
+    },
+    "ramp_5deg_uphill": {
+     "tip_fwd_deg": 29.934,
+     "tip_back_deg": 45.711,
+     "tip_side_deg": 51.132,
+     "a_front_lift_accel": 9.163,
+     "a_rear_lift_brake": 6.482,
+     "a_side_tip": 12.172
+    },
+    "ramp_5deg_downhill": {
+     "tip_fwd_deg": 29.934,
+     "tip_back_deg": 45.711,
+     "tip_side_deg": 51.132,
+     "a_front_lift_accel": 10.873,
+     "a_rear_lift_brake": 4.772,
+     "a_side_tip": 12.172
+    },
+    "on_10mm_step_front_up": {
+     "tip_fwd_deg": 29.934,
+     "tip_back_deg": 45.711,
+     "tip_side_deg": 51.132,
+     "a_front_lift_accel": 8.752,
+     "a_rear_lift_brake": 6.831,
+     "a_side_tip": 12.172
+    },
+    "on_10mm_step_rear_up": {
+     "tip_fwd_deg": 29.934,
+     "tip_back_deg": 45.711,
+     "tip_side_deg": 51.132,
+     "a_front_lift_accel": 11.204,
+     "a_rear_lift_brake": 4.378,
+     "a_side_tip": 12.172
+    },
+    "margins": {
+     "accel_req_SF": 16.761,
+     "decel_cap_SF": 3.766,
+     "front_lift_possible_at_mu_g": false,
+     "rear_lift_possible_at_mu_g": true,
+     "rollover_possible_flat": false,
+     "tip_back_margin_vs_sim_dynamic_pitch_deg": 37.261,
+     "ramp5_uphill_accel_SF": 15.272,
+     "step_front_up_accel_SF": 14.586
+    }
+   },
+   "cad_ld19_pay300": {
+    "com_mm": [
+     -3.6,
+     0.0,
+     62.691
+    ],
+    "mass_kg": 1.239,
+    "flat": {
+     "tip_fwd_deg": 34.818,
+     "tip_back_deg": 30.141,
+     "tip_side_deg": 44.682,
+     "a_front_lift_accel": 5.696,
+     "a_rear_lift_brake": 6.823,
+     "a_side_tip": 9.702
+    },
+    "ramp_5deg_uphill": {
+     "tip_fwd_deg": 34.818,
+     "tip_back_deg": 30.141,
+     "tip_side_deg": 44.682,
+     "a_front_lift_accel": 4.819,
+     "a_rear_lift_brake": 7.652,
+     "a_side_tip": 9.702
+    },
+    "ramp_5deg_downhill": {
+     "tip_fwd_deg": 34.818,
+     "tip_back_deg": 30.141,
+     "tip_side_deg": 44.682,
+     "a_front_lift_accel": 6.529,
+     "a_rear_lift_brake": 5.942,
+     "a_side_tip": 9.702
+    },
+    "on_10mm_step_front_up": {
+     "tip_fwd_deg": 34.818,
+     "tip_back_deg": 30.141,
+     "tip_side_deg": 44.682,
+     "a_front_lift_accel": 4.425,
+     "a_rear_lift_brake": 7.995,
+     "a_side_tip": 9.702
+    },
+    "on_10mm_step_rear_up": {
+     "tip_fwd_deg": 34.818,
+     "tip_back_deg": 30.141,
+     "tip_side_deg": 44.682,
+     "a_front_lift_accel": 6.877,
+     "a_rear_lift_brake": 5.543,
+     "a_side_tip": 9.702
+    },
+    "margins": {
+     "accel_req_SF": 9.493,
+     "decel_cap_SF": 4.548,
+     "front_lift_possible_at_mu_g": true,
+     "rear_lift_possible_at_mu_g": true,
+     "rollover_possible_flat": false,
+     "tip_back_margin_vs_sim_dynamic_pitch_deg": 21.691,
+     "ramp5_uphill_accel_SF": 8.032,
+     "step_front_up_accel_SF": 7.375
+    }
+   }
+  },
+  "payload_retention": {
+   "slide_at_mu0.3_m_s2": 2.943,
+   "slide_at_mu0.5_m_s2": 4.905,
+   "tip_cup_m_s2": 9.197,
+   "sim_estop_active_peak_decel": 7.31,
+   "sim_full_duty_step_accel": 5.68,
+   "sim_brake_LL_peak_decel": 4.12,
+   "sim_free_cup_max_slide_mm": {
+    "fence": 1.43,
+    "no_fence": 5.41
+   },
+   "verdict": "an unrestrained cup slides above 2.9-4.9 m/s^2 (mu 0.3-0.5); sim peaks reach that (active stop, full-duty start). With the CAD r3 fence (4 x M3 x 20, 2 mm play) the free-cup sim moves <= 1.43 mm (no fence: 5.41 mm per event, cumulative). Keep the fence; firmware |a| <= 1.5 m/s^2 except a true e-stop (brake LL)."
+  },
+  "spin": {
+   "yaw_accel_rad_s2": 5.0,
+   "payload_tangential_m_s2": 0.25,
+   "centripetal_on_com_1rad_s_m_s2": 0.011,
+   "verdict": "negligible for tip; payload ok"
+  },
+  "com_limits": {
+   "rule": "front-lift and rear-lift accel >= 3.0 m/s^2 on flat, front-lift >= 0.6 m/s^2 with the nose 7.2 deg up",
+   "x_min_mm_vs_z_mm": {
+    "40": -27.768,
+    "50": -24.709,
+    "60": -21.651,
+    "70": -18.593,
+    "80": -15.535,
+    "90": -12.477,
+    "100": -9.419,
+    "110": -6.361,
+    "120": -3.303
+   },
+   "x_max_mm_vs_z_mm": {
+    "40": 27.768,
+    "50": 24.709,
+    "60": 21.651,
+    "70": 18.593,
+    "80": 15.535,
+    "90": 12.477,
+    "100": 9.419,
+    "110": 6.361,
+    "120": 3.303
+   },
+   "lateral_y_max_mm_at_z65": 10.0
+  },
+  "stop": {
+   "latency_s": {
+    "lidar_scan_worst_10Hz": 0.1,
+    "ROS costmap/collision monitor": 0.05,
+    "micro-ROS + ESP32 50 Hz loop": 0.02,
+    "driver/motor current reversal": 0.005
+   },
+   "t_latency_s": 0.175,
+   "cases": {
+    "decel_1.0": {
+     "latency_m": 0.053,
+     "braking_m": 0.045,
+     "total_m": 0.098
+    },
+    "decel_1.5": {
+     "latency_m": 0.053,
+     "braking_m": 0.03,
+     "total_m": 0.083
+    },
+    "decel_3.0": {
+     "latency_m": 0.053,
+     "braking_m": 0.015,
+     "total_m": 0.068
+    }
+   },
+   "lidar_range_to_15cm_zone_m": 0.212,
+   "margin_C1_err30mm_m": 0.037,
+   "margin_LD19_err45mm_m": 0.022,
+   "LD19_note": "LD19 datasheet gives NO accuracy below 300 mm; the 15 cm stop zone is 212 mm from the LiDAR",
+   "sim_watchdog": {
+    "hard_floor_active": 0.009,
+    "hard_floor_brake": 0.014,
+    "hard_floor_coast": 0.056,
+    "carpet_coast": 0.043
+   },
+   "sim_brake_LL_stop_s": {
+    "hard_floor_brake": 0.127,
+    "carpet_brake": 0.119
+   },
+   "verdict": "stop budget 82 mm from 0.3 m/s at 1.5 m/s^2 (175 ms latency) -> 37 mm (C1) margin inside 15 cm. Watchdog must brake (MDD3A LL): sim brake {'hard_floor_brake': 0.127, 'carpet_brake': 0.119} s vs coast > 0.3 s."
+  }
+ },
+ "odometry": {
+  "sample_rate_Hz": 50.0,
+  "wheel_circumference_m": 0.2042,
+  "cpr_required_x4": {
+   "rule": ">= 4 counts per 20 ms sample",
+   "per_speed": {
+    "nav2_creep_0.02": 2042.0352,
+    "threshold_crawl_0.05": 816.8141,
+    "pivot_wheel_1rad_s": 387.483,
+    "cruise_0.3": 136.1357
+   },
+   "position_for_nav2_10cm": "any encoder > ~20 cpr (10 mm/count) suffices for position; Nav2 arrival error is dominated by slip and map/AMCL error, not quantisation",
+   "verdict": "~1000 counts/rev (x4) for PID down to 0.05 m/s at 50 Hz; below that use edge timing (period measurement) or a 100 ms window"
+  },
+  "candidates": {
+   "hiwonder_claimed_252ppr": {
+    "counts_per_rev_x4": 1008,
+    "mm_per_count": 0.2026,
+    "counts_per_sample_nav2_creep_0.02": 1.9745,
+    "counts_per_sample_threshold_crawl_0.05": 4.9363,
+    "counts_per_sample_pivot_wheel_1rad_s": 10.4056,
+    "counts_per_sample_cruise_0.3": 29.6175,
+    "max_edge_rate_kHz_250rpm": 4.2,
+    "meets_1000cpr": true
+   },
+   "hiwonder_buyer_measured_150ppr": {
+    "counts_per_rev_x4": 600,
+    "mm_per_count": 0.3403,
+    "counts_per_sample_nav2_creep_0.02": 1.1753,
+    "counts_per_sample_threshold_crawl_0.05": 2.9382,
+    "counts_per_sample_pivot_wheel_1rad_s": 6.1938,
+    "counts_per_sample_cruise_0.3": 17.6295,
+    "max_edge_rate_kHz_250rpm": 2.5,
+    "meets_1000cpr": false
+   },
+   "fit0450_960_per_ch": {
+    "counts_per_rev_x4": 3840,
+    "mm_per_count": 0.0532,
+    "counts_per_sample_nav2_creep_0.02": 7.5219,
+    "counts_per_sample_threshold_crawl_0.05": 18.8048,
+    "counts_per_sample_pivot_wheel_1rad_s": 39.6405,
+    "counts_per_sample_cruise_0.3": 112.8286,
+    "max_edge_rate_kHz_250rpm": 16.0,
+    "meets_1000cpr": true
+   },
+   "fit0450_sim_1920": {
+    "counts_per_rev_x4": 1920,
+    "mm_per_count": 0.1064,
+    "counts_per_sample_nav2_creep_0.02": 3.761,
+    "counts_per_sample_threshold_crawl_0.05": 9.4024,
+    "counts_per_sample_pivot_wheel_1rad_s": 19.8202,
+    "counts_per_sample_cruise_0.3": 56.4143,
+    "max_edge_rate_kHz_250rpm": 8.0,
+    "meets_1000cpr": true
+   },
+   "yahboom_13line_1:45": {
+    "counts_per_rev_x4": 2340,
+    "mm_per_count": 0.0873,
+    "counts_per_sample_nav2_creep_0.02": 4.5837,
+    "counts_per_sample_threshold_crawl_0.05": 11.4592,
+    "counts_per_sample_pivot_wheel_1rad_s": 24.1559,
+    "counts_per_sample_cruise_0.3": 68.7549,
+    "max_edge_rate_kHz_250rpm": 9.75,
+    "meets_1000cpr": true
+   },
+   "stock_tt_no_encoder": {
+    "verdict": "no encoder -> REQ-SCOUT-003/004 impossible"
+   }
+  },
+  "esp32_counting": "use the PCNT peripheral (classic ESP32 has 8 units; 4 needed, x4 decoding with both channels), glitch filter ~1 us; edge rate <= 16 kHz/motor is trivial for PCNT, a GPIO-ISR design would cost ~4 x 16k = 64k interrupts/s -> don't",
+  "gyro": {
+   "t_10m_s": 33.3333,
+   "bias_max_dps_if_all_budget": 0.15,
+   "ARW_deg_over_10m": 0.0289,
+   "scale_factor_error_deg": {
+    "straight_10m": 0.0,
+    "square_4x90": 10.8,
+    "patrol_with_U_turns": 21.6
+   },
+   "scale_max_pct_for_5deg_square": 1.3889,
+   "zro_temp_coeff_worst_dps_per_C": 0.32,
+   "deg_C_drift_that_uses_whole_budget": 0.4688,
+   "sim_gyro_fused_drift_deg_per_10m": 2.84,
+   "sim_wheel_only_drift_deg_per_10m": 141.97,
+   "sim_wheel_calibrated_on_wrong_floor": 75.74,
+   "allocation": {
+    "bias_after_ZUPT_dps": 0.05,
+    "bias_deg": 1.6667,
+    "scale_after_cal_pct": 0.5,
+    "scale_deg_square": 1.8,
+    "ARW_deg": 0.0289,
+    "total_deg_rss": 2.4533
+   },
+   "verdict": "feasible ONLY with (1) bias re-estimated at every stop (ZUPT), (2) gyro scale factor calibrated to <= 1 % (datasheet tolerance 3 % alone gives 10.8 deg on a 4x90 deg square), (3) wheel yaw excluded from the EKF (sim: 184 deg/10 m wheel-only; 55 deg/10 m when the slip calibration is for the wrong floor)"
+  },
+  "imu_placement": {
+   "cad_r3": "GY-521 hung chip-down on 2 x M3 x 10 nylon standoffs under the top plate, die at (-24, 0, 46) mm, 24 mm from the CoR, rpy (pi, 0, 0); round-4 URDF imu_joint = robot_params sensors.imu (verified)",
+   "issues": [
+    "CLOSED (r4): URDF imu_joint now carries roll pi and the CAD position; the driver must NOT flip axes again",
+    "CLOSED (r3): IMU moved from under the Pi to x = -24 mm, away from the CPU heat; ZUPT still mandatory (0.32 dps/C worst coefficient)",
+    "LiDAR motor (C1 600 rpm = 10 Hz) and gear mesh vibration couple through the brass towers: set MPU DLPF to 44 Hz, sample >= 200 Hz on the ESP32, average to 50-100 Hz; nylon standoffs (already in CAD) help",
+    "magnetics irrelevant: MPU-6050 has no magnetometer; motor magnets do not affect a MEMS gyro"
+   ],
+   "zupt": "when |cmd_vel| = 0 and all encoder counts unchanged for 0.5 s: bias <- EMA(gyro, tau 5 s); publish with covariance; 40 % stationary duty in the mission profile gives frequent updates"
+  }
+ },
+ "sensors": {
+  "lidars": {
+   "ld19": {
+    "mass_g": 47,
+    "size_mm": "38.6 x 38.6 x 33.5 body (54 x 46.3 x 34.8 with ears)",
+    "range_m": [
+     0.02,
+     12
+    ],
+    "acc_mm": 45,
+    "acc_note": "+/-45 mm for 0.3-12 m; NO accuracy spec <= 300 mm (D)",
+    "std_mm": 10,
+    "rate_hz": 4500,
+    "scan_hz": [
+     5,
+     10,
+     13
+    ],
+    "ang_res_deg": 1.0,
+    "ang_err_deg": 2.0,
+    "uart": "TX only, 230400 baud, 3.3 V, ZH1.5T-4P; PWM pin -> internal speed control",
+    "power": "4.5-5.5 V, 180 mA work / 300 mA start (D)",
+    "ros2": "ldlidar_stl_ros2 (vendor repo, ROS 2 support community-maintained for Jazzy)",
+    "price_eur": 142.8,
+    "price_src": "https://robot-italy.com/en/products/sen0547-dtof-ld19-laser-lidar-sensor-kit-12m",
+    "src": "https://raw.githubusercontent.com/LetsOKdo/ld19/master/datasheet/LDROBOT_LD19_Datasheet_V1.0.pdf"
+   },
+   "c1": {
+    "mass_g": 110,
+    "size_mm": "55.6 x 55.6 x 41.3",
+    "range_m": [
+     0.05,
+     12
+    ],
+    "acc_mm": 30,
+    "acc_note": "+/-30 mm, 15 mm resolution, from 0.05 m (D)",
+    "std_mm": null,
+    "rate_hz": 5000,
+    "scan_hz": [
+     8,
+     10,
+     12
+    ],
+    "ang_res_deg": 0.72,
+    "ang_err_deg": null,
+    "uart": "TX+RX 460800 baud 3.3 V, XH2.54-5P; USB adapter in kit",
+    "power": "4.8-5.2 V, 230 mA (1.15 W) (D)",
+    "ros2": "sllidar_ros2 (Slamtec official, C1 launch file)",
+    "price_eur": 81.12,
+    "price_src": "https://www.generationrobots.com/en/404200-360-rplidar-c1-slamtec.html",
+    "src": "https://engineering.purdue.edu/477grp3/Files/refs/SLAMTEC_rplidar_datasheet_C1_v1.0_en.pdf"
+   }
+  },
+  "lidar_vs_req": {
+   "ld19": {
+    "beam_spacing_1m_mm": 17.4533,
+    "beam_spacing_2m_mm": 34.9066,
+    "beam_spacing_4m_mm": 69.8132,
+    "beam_spacing_6m_mm": 104.7198,
+    "max_range_2_beams_per_5cm_cell_m": 1.4324,
+    "max_range_1_beam_per_5cm_cell_m": 2.8648,
+    "range_err_vs_5cm_cell": 0.9,
+    "stop_zone_range_m": 0.2124,
+    "stop_zone_spec_ok": false,
+    "mass_on_tower_g": 47
+   },
+   "c1": {
+    "beam_spacing_1m_mm": 12.5664,
+    "beam_spacing_2m_mm": 25.1327,
+    "beam_spacing_4m_mm": 50.2655,
+    "beam_spacing_6m_mm": 75.3982,
+    "max_range_2_beams_per_5cm_cell_m": 1.9894,
+    "max_range_1_beam_per_5cm_cell_m": 3.9789,
+    "range_err_vs_5cm_cell": 0.6,
+    "stop_zone_range_m": 0.2124,
+    "stop_zone_spec_ok": true,
+    "mass_on_tower_g": 110
+   }
+  },
+  "lidar_choice": {
+   "recommend": "RPLIDAR C1",
+   "why": [
+    "accuracy specified (+/-30 mm) from 0.05 m, so the 15 cm stop zone (222 mm from the LiDAR) is inside spec; LD19 has no accuracy spec below 300 mm",
+    "0.72 deg vs 1.0 deg: 2 beams per 5 cm cell out to 2.0 m (LD19 1.4 m)",
+    "official, maintained ROS 2 driver (sllidar_ros2) with a C1 launch file vs vendor/community LD19 driver",
+    "EUR 81 vs 143 (EU shops, Nov 2026 listings)"
+   ],
+   "against": [
+    "+63 g mass 15 cm above the floor (CoM +3.5 mm up; all stability margins still >= 3.5x, a6)",
+    "41.3 mm tall vs 34.8 mm, 55.6 mm square base; VCC window 4.8-5.2 V is tighter than LD19's 4.5-5.5 V -> feed it from the Pi USB (regulated) or straight from the D36V50F5, never via a long thin lead"
+   ]
+  },
+  "scan_plane_cad": {
+   "scout_v2": {
+    "scan_z_mm": 148.91,
+    "margin_mm": 6.4,
+    "highest_other": "payload",
+    "dip_tolerance": [
+     {
+      "part": "payload",
+      "deg": 5.42,
+      "horizontal_distance_mm": 67.5
+     },
+     {
+      "part": "fence_post_3",
+      "deg": 26.21,
+      "horizontal_distance_mm": 134.9
+     }
+    ],
+    "margin_over_payload_keepout_mm": 6.4,
+    "unintended_overlaps": []
+   },
+   "scout_v2__c1_hiwonder_nopay": {
+    "scan_z_mm": 148.91,
+    "margin_mm": 22.39,
+    "highest_other": "cable_lidar_uart",
+    "dip_tolerance": [
+     {
+      "part": "fence_post_3",
+      "deg": 26.21,
+      "horizontal_distance_mm": 134.9
+     },
+     {
+      "part": "fence_post_4",
+      "deg": 26.21,
+      "horizontal_distance_mm": 134.9
+     }
+    ],
+    "margin_over_payload_keepout_mm": 6.4,
+    "unintended_overlaps": []
+   }
+  },
+  "payload_shadow": {
+   "sector_deg_if_anything_rises_above_scan": 41.8497,
+   "plant_height_allowed_above_cup_rim_mm": 6.4,
+   "verdict": "a seedling in the cup that grows > 6.4 mm above the 80 mm rim blinds a ~42 deg rear sector; either cap the payload envelope at 80 mm total height (REQ) or accept and filter a documented rear blind sector (laser angular-bounds filter) -- and never reverse blind"
+  },
+  "pitch_floor_hits": {
+   "cases": {
+    "1.5deg": {
+     "floor_hit_range_m": 5.6865
+    },
+    "3.0deg": {
+     "floor_hit_range_m": 2.8413
+    },
+    "5.0deg": {
+     "floor_hit_range_m": 1.702
+    },
+    "7.18deg": {
+     "floor_hit_range_m": 1.182
+    }
+   },
+   "verdict": "climbing the threshold pitches the robot 7.2 deg: the scan plane hits the floor 1.2 m away -> phantom obstacles / map corruption. Gate scans when |IMU pitch| > 1.5 deg (filter node) and set slam_toolbox minimum_travel to skip them."
+  },
+  "camera": {
+   "cad": {
+    "lens_centre_mm": [
+     110.47,
+     0.0,
+     79.61
+    ],
+    "pitch_down_deg": 15.0,
+    "fov_deg_h_v": [
+     66.0,
+     41.0
+    ],
+    "lower_edge_below_horizon_deg": 35.5,
+    "upper_edge_deg": 5.5,
+    "nearest_visible_floor_from_lens_mm": 111.6,
+    "nearest_visible_floor_x_mm": 222.1,
+    "nearest_visible_floor_ahead_of_robot_front_mm": 104.7,
+    "robot_front_x_mm": 117.4,
+    "requirement": "floor visible <= 150 mm ahead of the robot front (BRIEF: sees the floor >= 15 cm ahead)",
+    "pass": true,
+    "lower_fov_edge_hits_parts_aabb": [],
+    "lower_edge_clearance_over_mount_base_mm": 9.4
+   },
+   "floor_requirement": "floor visible <= 150 mm ahead of the front: CAD r3 gives 104.7 mm -> PASS",
+   "occlusion": "lower FOV edge clears the camera mount by 9.4 mm and does not hit the HC-SR04 (it hangs under the top plate, below the lens line); check the real holder's front lip",
+   "urdf": "round 4: urdf/scout.urdf camera_joint = robot_params sensors.camera (rpy 0 +0.2618 0, xyz 0.1105 0 0.0796); verified",
+   "fps": {
+    "yolo26n_ncnn_640_ms": 67.0,
+    "fps_640_inference_only": 14.9254,
+    "ultralytics_quoted_fps_640": 7.79,
+    "fps_320_estimate": "~4x fewer FLOPs -> 25-40 FPS inference-only (A: scaling, not measured)",
+    "with_slam_nav2_load": "expect 0.5-0.7x when 1-2 cores are busy with SLAM/Nav2 (A)",
+    "verdict": "REQ-SCOUT-010 (>= 10 FPS) FAILS at 640 px (7.8-15 FPS before other load) and PASSES at 320 px (est. 12-28 FPS under load). Use 320-416 px input, NCNN, 4 threads max 3.",
+    "src": "https://docs.ultralytics.com/guides/raspberry-pi/"
+   }
+  },
+  "ultrasonic": {
+   "supply": "5 V only (datasheet 5 V DC, 15 mA); ECHO is a 5 V output -> divider to the ESP32 (not 5 V tolerant): 1 k (series) / 2 k (to GND) -> 3.33 V; TRIG accepts 3.3 V logic in practice (VIH not specified)",
+   "range": "2-400 cm, 15 deg measuring angle (datasheet) -> blind < 2 cm, but reliable readings start ~3-5 cm (A)",
+   "rate": "60 ms measurement cycle recommended (datasheet) -> 16 Hz max; at 0.3 m/s the robot moves 18 mm per ping",
+   "coverage": "beam centre z ~0.049 m (CAD, under the top plate); 15 deg cone covers z 0.029-0.069 m at 15 cm -> catches low obstacles the LiDAR (z 0.151 m) misses: shoes, pet bowls, door stops",
+   "misses": "soft fabric, thin chair legs at an angle, objects > 7.5 deg off-axis; never sole safety sensor",
+   "src": "https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf"
+  },
+  "obstacles": {
+   "chair leg": {
+    "bottom": 0.0,
+    "top": 0.45,
+    "class": "LiDAR"
+   },
+   "chair rung": {
+    "bottom": 0.15,
+    "top": 0.18,
+    "class": "OVERHANG: robot hits it, LiDAR blind"
+   },
+   "shoe": {
+    "bottom": 0.0,
+    "top": 0.1,
+    "class": "below scan: HC-SR04 / camera"
+   },
+   "door stop": {
+    "bottom": 0.0,
+    "top": 0.05,
+    "class": "below scan: HC-SR04 / camera"
+   },
+   "cable on floor": {
+    "bottom": 0.0,
+    "top": 0.01,
+    "class": "below scan: HC-SR04 / camera (also below sonar cone)"
+   },
+   "small plant pot": {
+    "bottom": 0.0,
+    "top": 0.12,
+    "class": "below scan: HC-SR04 / camera"
+   },
+   "sofa front rail (gap 8-15 cm)": {
+    "bottom": 0.1,
+    "top": 0.4,
+    "class": "LiDAR"
+   },
+   "kick-plate gap": {
+    "bottom": 0.12,
+    "top": 0.3,
+    "class": "LiDAR"
+   }
+  }
+ }
+}

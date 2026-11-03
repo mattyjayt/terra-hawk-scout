@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Scout v2 · Build guide</title>
+<!-- Generated from docs/cad-round3.md, src/scout_v2.py BUILD_STEPS and docs/diagrams/scout-assembly-sequence/candidate.json (CAD round 3, 2026-11-01). -->
+<style>
+@font-face{font-family:"Inter";src:url("vendor/inter-latin-wght-normal.woff2") format("woff2");font-weight:100 900;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url("vendor/jetbrains-mono-latin-wght-normal.woff2") format("woff2");font-weight:100 800;font-display:swap}
+:root{
+  --bg:oklch(0.155 0.013 160);--bg2:oklch(0.185 0.015 160);--panel:oklch(0.21 0.016 160 / .72);
+  --line:oklch(0.96 0.005 160 / .09);--line2:oklch(0.96 0.005 160 / .16);
+  --fg:oklch(0.96 0.005 160);--muted:oklch(0.74 0.01 160);--dim:oklch(0.58 0.01 160);
+  --accent:#6ee7b7;--accent-soft:oklch(0.88 0.11 155);--accent-bg:rgba(110,231,183,.08);--warn:oklch(0.82 0.14 80);
+  --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --r:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.55 var(--sans);
+  background-image:radial-gradient(1200px 600px at 75% -10%,rgba(110,231,183,.10),transparent 60%),radial-gradient(900px 500px at -10% 30%,rgba(110,231,183,.05),transparent 60%);background-attachment:fixed}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+code,.mono{font-family:var(--mono);font-size:.86em}
+code{color:var(--accent-soft);background:rgba(255,255,255,.04);padding:.05em .35em;border-radius:4px}
+h1,h2,h3{font-weight:500;letter-spacing:-.01em;margin:0}
+.micro{font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);font-weight:500}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+/* nav */
+.nav{position:sticky;top:0;z-index:20;background:oklch(0.155 0.013 160 / .82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:22px;height:54px}
+.brand{font-weight:600;letter-spacing:.32em;font-size:13px;white-space:nowrap}
+.brand span{color:var(--accent)}
+.nav ul{display:flex;gap:4px;list-style:none;margin:0;padding:0;overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav li a{display:block;padding:6px 10px;color:var(--muted);font-size:13px;white-space:nowrap;border-radius:6px}
+.nav li a:hover{color:var(--fg);background:rgba(255,255,255,.04);text-decoration:none}
+/* panels */
+.glass{background:linear-gradient(135deg,rgba(255,255,255,.035),rgba(255,255,255,0) 40%),var(--panel);border:1px solid var(--line);border-top-color:var(--line2);border-radius:var(--r);box-shadow:0 0 0 1px rgba(0,0,0,.2),0 20px 50px -20px rgba(0,0,0,.6),0 0 40px -18px rgba(110,231,183,.18)}
+section{padding:56px 0 8px}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.sec-head .idx{font-family:var(--mono);color:var(--accent);font-size:13px}
+.sec-head h2{font-size:26px;font-weight:400}
+.sec-head p{color:var(--muted);margin:0;flex-basis:100%;max-width:760px}
+/* hero */
+.hero{padding-top:26px}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:16px}
+.hero h1{font-size:clamp(28px,4.4vw,46px);font-weight:300;letter-spacing:.01em}
+.hero h1 b{font-weight:500;color:var(--accent)}
+.hero .sub{color:var(--muted);max-width:680px;margin:6px 0 0}
+.facts{display:flex;gap:22px;flex-wrap:wrap}
+.fact .v{font-family:var(--mono);font-size:20px}
+.fact .v small{font-size:12px;color:var(--muted)}
+.viewer{position:relative;overflow:hidden;padding:0}
+model-viewer{display:block;width:100%;height:min(66vh,620px);min-height:360px;background:radial-gradient(ellipse at 50% 40%,oklch(0.25 0.02 160),oklch(0.14 0.012 160) 70%);--poster-color:transparent;--progress-bar-color:var(--accent);border-radius:var(--r) var(--r) 0 0}
+.mv-status{position:absolute;left:16px;top:14px;font-family:var(--mono);font-size:12px;color:var(--muted);pointer-events:none}
+.mv-status.err{color:var(--warn)}
+.seg{position:absolute;right:14px;top:14px;display:flex;background:rgba(10,16,14,.7);border:1px solid var(--line2);border-radius:8px;padding:3px;backdrop-filter:blur(8px)}
+.seg button{all:unset;cursor:pointer;padding:7px 12px;font-size:12.5px;color:var(--muted);border-radius:6px;white-space:nowrap}
+.seg button[aria-pressed=true]{background:var(--accent-bg);color:var(--accent);box-shadow:inset 0 0 0 1px rgba(110,231,183,.35)}
+.seg button:focus-visible,.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.anim{border-top:1px solid var(--line);padding:14px 16px 16px;display:none}
+.viewer.mode-anim .anim{display:block}
+.anim-row{display:flex;align-items:center;gap:14px}
+.play{all:unset;cursor:pointer;width:38px;height:38px;flex:none;display:grid;place-items:center;border:1px solid rgba(110,231,183,.45);border-radius:50%;color:var(--accent);font-size:14px}
+.play:hover{background:var(--accent-bg)}
+input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:28px;background:transparent;margin:0;min-width:0}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:linear-gradient(90deg,var(--accent) var(--p,0%),rgba(255,255,255,.14) var(--p,0%));border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--accent);margin-top:-6px;box-shadow:0 0 12px rgba(110,231,183,.6)}
+input[type=range]::-moz-range-track{height:3px;background:rgba(255,255,255,.14)}
+input[type=range]::-moz-range-progress{height:3px;background:var(--accent)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:var(--accent)}
+.time{font-family:var(--mono);font-size:12.5px;color:var(--muted);white-space:nowrap;min-width:92px;text-align:right}
+.step-now{display:flex;gap:12px;align-items:baseline;margin:10px 0 10px;min-height:22px}
+.step-now .n{font-family:var(--mono);font-size:22px;color:var(--accent)}
+.step-now .t{color:var(--fg);font-size:14px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{all:unset;cursor:pointer;font-family:var(--mono);font-size:12.5px;padding:6px 0;width:40px;text-align:center;border:1px solid var(--line2);border-radius:2px;color:var(--muted)}
+.chips button:hover{color:var(--fg);border-color:rgba(110,231,183,.4)}
+.chips button.on{color:#06281c;background:var(--accent);border-color:var(--accent)}
+.chips button.done{color:var(--accent-soft);border-color:rgba(110,231,183,.28)}
+.hint{color:var(--dim);font-size:12px;margin-top:10px}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:18px}
+.step{display:flex;flex-direction:column;overflow:hidden}
+.step figure{margin:0;background:#eef2f6;aspect-ratio:3/2;overflow:hidden}
+.step img{width:100%;height:100%;object-fit:cover;display:block}
+.step-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1}
+.step-head{display:flex;gap:12px;align-items:flex-start}
+.step-head .num{font-family:var(--mono);font-size:24px;line-height:1;background:linear-gradient(180deg,var(--accent),rgba(110,231,183,.35));-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:600}
+.step-head h3{font-size:15.5px;line-height:1.35}
+.detail{margin:0;color:var(--muted);font-size:13.5px}
+.parts{list-style:none;margin:0;padding:0;font-size:13.5px;display:grid;gap:3px}
+.parts li{display:flex;gap:8px}
+.parts li>span:last-child{min-width:0;overflow-wrap:anywhere}
+.parts .q{font-family:var(--mono);color:var(--accent-soft);min-width:26px;font-size:12.5px;padding-top:1px}
+.parts .cab{color:var(--muted)}
+.check{display:flex;gap:10px;background:var(--accent-bg);border:1px solid rgba(110,231,183,.22);border-radius:8px;padding:10px 12px;font-size:13.5px;margin-top:auto}
+.check .tick{color:var(--accent);font-size:16px;line-height:1.2}
+.btn{all:unset;cursor:pointer;display:inline-flex;gap:10px;align-items:center;justify-content:center;border:1px solid rgba(110,231,183,.45);color:var(--accent);padding:9px 14px;border-radius:2px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:500}
+.btn:hover{background:var(--accent-bg)}
+.btn .mono{letter-spacing:0;text-transform:none;color:var(--muted)}
+/* tabs */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);padding:6px 8px 0;overflow-x:auto;scrollbar-width:none}
+.tabs button{all:unset;cursor:pointer;padding:10px 14px;font-size:13.5px;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button[aria-selected=true]{color:var(--fg);border-bottom-color:var(--accent)}
+.tabpanel{display:none;padding:12px}
+.tabpanel.on{display:block}
+.tabpanel .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:2px 4px 10px;flex-wrap:wrap}
+.tabpanel .bar p{margin:0;color:var(--muted);font-size:13.5px}
+.tabpanel iframe{width:100%;height:min(78vh,760px);min-height:420px;border:0;border-radius:8px;background:#0b0b0b;display:block}
+/* sim */
+.vids{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.vid{overflow:hidden}
+.vid video{width:100%;display:block;aspect-ratio:4/3;background:#000}
+.vid .cap{padding:12px 16px 14px;font-size:13.5px}
+.vid .cap b{font-weight:500}
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:999px;margin-right:6px;vertical-align:1px}
+.pill.pass{color:var(--accent);border:1px solid rgba(110,231,183,.4)}
+.pill.fail{color:var(--warn);border:1px solid oklch(0.82 0.14 80 / .45)}
+.note{color:var(--dim);font-size:12.5px;margin-top:14px;max-width:900px}
+.note.dashed{border:1px dashed oklch(0.82 0.14 80 / .45);color:var(--warn);display:inline-block;padding:6px 12px;border-radius:999px;font-size:12px}
+/* tables */
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{position:sticky;top:0;text-align:left;font-weight:500;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);padding:11px 12px;background:var(--bg2);border-bottom:1px solid var(--line2);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:hover td{background:rgba(255,255,255,.018)}
+td.num{font-family:var(--mono);font-size:12.5px;white-space:nowrap;text-align:right}
+.bom td:first-child,.cables td:first-child{white-space:nowrap}
+.bom td:nth-child(2){font-family:var(--mono);text-align:center}
+.drill td:first-child{font-family:var(--mono);color:var(--accent)}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+.grid2>*{min-width:0}
+.sub-h{margin:26px 0 10px;font-size:16px;font-weight:500}
+.sub-h small{color:var(--dim);font-weight:400;font-size:13px;margin-left:8px}
+.prose{color:var(--muted);font-size:13.5px}
+.prose p{margin:0 0 8px}
+.measure{margin:0;padding:16px 18px 16px 34px;display:grid;gap:8px;font-size:13.5px}
+.measure li::marker{color:var(--accent)}
+details.glass{padding:0}
+details summary{cursor:pointer;padding:14px 18px;list-style:none;display:flex;justify-content:space-between;color:var(--muted);font-size:14px}
+details summary::after{content:"+";font-family:var(--mono);color:var(--accent)}
+details[open] summary::after{content:"−"}
+/* footer */
+footer{margin-top:64px;border-top:1px solid var(--line);padding:40px 0 60px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.25))}
+.files{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.file{padding:16px 18px}
+.file h4{margin:0 0 4px;font-family:var(--mono);font-weight:500;color:var(--accent);font-size:14px}
+.file .for{font-size:13.5px;margin-bottom:8px}
+.file .how{font-size:13px;color:var(--muted)}
+.file .how a{word-break:break-all}
+.colophon{color:var(--dim);font-size:12.5px;margin-top:26px}
+@media (max-width:820px){
+  .grid2{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  model-viewer{height:56vh;min-height:320px}
+  .seg{left:10px;right:10px;top:auto;bottom:10px;justify-content:space-between}
+  .seg button{flex:1;text-align:center;padding:8px 6px;font-size:12px}
+  .mv-status{top:10px;left:12px}
+  .tabpanel iframe{height:68vh;min-height:360px}
+  .facts{gap:16px}.fact .v{font-size:17px}
+  .nav .wrap{gap:12px}.brand{letter-spacing:.22em}
+  section{padding-top:44px}
+}
+</style>
+<script src="vendor/model-viewer-umd.min.js"></script>
+</head>
+<body>
+<nav class="nav"><div class="wrap">
+  <div class="brand">SCOUT <span>V2</span></div>
+  <ul>
+    <li><a href="#model">3D model</a></li>
+    <li><a href="#steps">Build steps</a></li>
+    <li><a href="#wiring">Wiring &amp; power</a></li>
+    <li><a href="#sim">Simulation</a></li>
+    <li><a href="#parts">Parts &amp; drilling</a></li>
+    <li><a href="#files">Files</a></li>
+  </ul>
+</div></nav>
+
+<main class="wrap">
+<section class="hero" id="model">
+  <div class="hero-top">
+    <div>
+      <div class="micro">Build guide · CAD round 3 · 2026-11-01</div>
+      <h1>Scout <b>v2</b> assembly</h1>
+      <p class="sub">The redesigned Elegoo Smart Robot Car V4.0: RPLIDAR C1, four Hiwonder encoder motors, Cytron MDD3A, Pololu 5 V buck, Pi 5 + ESP32. Orbit the model, explode it, or play the nine-step build.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><div class="micro">Mass + cup</div><div class="v">1.298 <small>kg</small></div></div>
+      <div class="fact"><div class="micro">Scan plane</div><div class="v">148.9 <small>mm</small></div></div>
+      <div class="fact"><div class="micro">Ground clr.</div><div class="v">13.8 <small>mm</small></div></div>
+      <div class="fact"><div class="micro">Front / rear</div><div class="v">49 / 51</div></div>
+    </div>
+  </div>
+
+  <div class="viewer glass" id="viewer">
+    <model-viewer id="mv" camera-controls touch-action="pan-y" auto-rotate auto-rotate-delay="0" rotation-per-second="18deg"
+      shadow-intensity="1" shadow-softness="0.8" environment-image="neutral" exposure="1.25" interaction-prompt="none"
+      camera-orbit="35deg 68deg auto" alt="Scout v2 3D model"></model-viewer>
+    <div class="mv-status" id="mvStatus">loading model…</div>
+    <div class="seg" role="group" aria-label="View">
+      <button type="button" data-mode="assembled" aria-pressed="true">Assembled</button>
+      <button type="button" data-mode="exploded" aria-pressed="false">Exploded</button>
+      <button type="button" data-mode="anim" aria-pressed="false">Assembly animation</button>
+    </div>
+    <div class="anim" id="anim">
+      <div class="anim-row">
+        <button class="play" id="playBtn" type="button" aria-label="Play">▶</button>
+        <input type="range" id="scrub" min="0" max="16.4" step="0.01" value="0" aria-label="Animation time">
+        <div class="time" id="timeLbl">0.00 / 16.40 s</div>
+      </div>
+      <div class="step-now"><span class="micro">Step</span><span class="n" id="stepNum">01</span><span class="t" id="stepName"></span></div>
+      <div class="chips" id="chips"></div>
+      <div class="hint">Each step flies in over 1.6 s (step <span class="mono">n</span> starts at <span class="mono">(n−1)·1.6 s</span>). New parts in colour on the build cards below; drag to orbit, pinch or scroll to zoom.</div>
+    </div>
+  </div>
+</section>
+
+<section id="steps">
+  <div class="sec-head"><span class="idx">01</span><h2>Build steps</h2>
+    <p>Nine steps, same order as the animation. Each card lists the parts that go on, the check to pass before moving on, and jumps the 3D view to that step. Pictures: new parts in colour, earlier parts grey; step 05 is drawn lifted and seen from below; from step 06 the top plate is translucent.</p></div>
+  <div class="steps">
+<article class="step" id="step-01" data-step="1">
+  <figure><img src="../assembly/step01.png" alt="Step 01: Bottom plate: motor spacers + Elegoo brackets, Hiwonder encoder motors, wheels" loading="lazy" width="1800" height="1200"></figure>
+  <div class="step-body">
+    <div class="step-head"><span class="num">01</span><h3>Bottom plate: motor spacers + Elegoo brackets, Hiwonder encoder motors, wheels</h3></div>
+    <p class="detail"></p>
+    <div class="micro">Parts</div>
+    <ul class="parts"><li><span class="q">1×</span><span>Elegoo Smart Robot Car V4.0 bottom plate</span></li><li><span class="q">4×</span><span>M3 nylon round spacer 3 mm (2 per bracket)</span></li><li><span class="q">4×</span><span>Elegoo kit TT motor holder</span></li><li><span class="q">4×</span><span>Hiwonder TT Hall-encoder gear motor 1:42, plastic shaft</span></li><li><span class="q">4×</span><span>Elegoo kit 65 mm wheel</span></li></ul>
+    <div class="check"><span class="tick">✓</span><div><div class="micro">Check</div>Wheels spin free; 1 mm nylon washer behind a wheel if it rubs (wheel–plate gap 1.57 mm)</div></div>
+    <button class="btn jump" data-step="1" type="button">▶ Show in 3D <span class="mono">t = 0.0 s</span></button>
+  </div>
+</article>
+<article class="step" id="step-02" data-step="2">
+  <figure><img src="../assembly/step02.png" alt="Step 02: Lower-deck power: battery, XT30, 7.5 A fuse holder, D36V50F5 5 V buck (+100 uF)" loading="lazy" width="1800" height="1200"></figure>
+  <div class="step-body">
+    <div class="step-head"><span class="num">02</span><h3>Lower-deck power: battery, XT30, 7.5 A fuse holder, D36V50F5 5 V buck (+100 uF)</h3></div>
+    <p class="detail"></p>
+    <div class="micro">Parts</div>
+    <ul class="parts"><li><span class="q">1×</span><span>Blue 3S Li-ion pack 70 x 50 x 15, 11.1 V 3000 mAh label</span></li><li><span class="q">1×</span><span>AMASS XT30U-M/F pair</span></li><li><span class="q">1×</span><span>Inline ATM mini-blade fuse holder (18 AWG) + 7.5 A ATM fuse</span></li><li><span class="q">1×</span><span>Pololu D36V50F5 5 V 5.5 A step-down regulator</span></li><li><span class="q">1×</span><span>100 uF / 25 V radial electrolytic D6.3 x 11 (buck VIN)</span></li><li class="cab"><span class="q">⌁</span><span>Leads: <code>batt_xt30</code>, <code>xt30_fuse</code></span></li></ul>
+    <div class="check"><span class="tick">✓</span><div><div class="micro">Check</div>Battery centred on the centre of rotation; XT30 polarity checked before the fuse goes in; ≥2.2 mm side clearance</div></div>
+    <button class="btn jump" data-step="2" type="button">▶ Show in 3D <span class="mono">t = 1.6 s</span></button>
+  </div>
+</article>
+<article class="step" id="step-03" data-step="3">
+  <figure><img src="../assembly/step03.png" alt="Step 03: ESP32 in the rear bay + encoder and 5 V leads" loading="lazy" width="1800" height="1200"></figure>
+  <div class="step-body">
+    <div class="step-head"><span class="num">03</span><h3>ESP32 in the rear bay + encoder and 5 V leads</h3></div>
+    <p class="detail"></p>
+    <div class="micro">Parts</div>
+    <ul class="parts"><li><span class="q">1×</span><span>ESP32 DevKit WROOM-32 USB-C</span></li><li class="cab"><span class="q">⌁</span><span>Leads: <code>5v_esp32</code>, <code>enc_*</code></span></li></ul>
+    <div class="check"><span class="tick">✓</span><div><div class="micro">Check</div>ESP32 at the rear clears the encoder connectors and the XT30/fuse</div></div>
+    <button class="btn jump" data-step="3" type="button">▶ Show in 3D <span class="mono">t = 3.2 s</span></button>
+  </div>
+</article>
+<article class="step" id="step-04" data-step="4">
+  <figure><img src="../assembly/step04.png" alt="Step 04: Deck pillars (Elegoo M3 brass)" loading="lazy" width="1800" height="1200"></figure>
+  <div class="step-body">
+    <div class="step-head"><span class="num">04</span><h3>Deck pillars (Elegoo M3 brass)</h3></div>
+    <p class="detail"></p>
+    <div class="micro">Parts</div>
+    <ul class="parts"><li><span class="q">6×</span><span>Elegoo kit M3 brass hex pillar, 39.7 mm between the decks</span></li></ul>
+    <div class="check"><span class="tick">✓</span><div><div class="micro">Check</div>Pillars square, no wire pinched under the top plate (assumed check)</div></div>
+    <button class="btn jump" data-step="4" type="button">▶ Show in 3D <span class="mono">t = 4.8 s</span></button>
+  </div>
+</article>
+<article class="step" id="step-05" data-step="5">
+  <figure><img src="../assembly/step05.png" alt="Step 05: Top plate pre-fit on the bench: drill, MDD3A + 470 uF, IMU (chip down), rocker switch, HC-SR04 + camera holder" loading="lazy" width="1800" height="1200"></figure>
+  <div class="step-body">
+    <div class="step-head"><span class="num">05</span><h3>Top plate pre-fit on the bench: drill, MDD3A + 470 uF, IMU (chip down), rocker switch, HC-SR04 + camera holder</h3></div>
+    <p class="detail"></p>
+    <div class="micro">Parts</div>
+    <ul class="parts"><li><span class="q">1×</span><span>Elegoo Smart Robot Car V4.0 top plate, drilled per the drilling table</span></li><li><span class="q">4×</span><span>M3 x 5 nylon hex F-F standoff + M3 x 6 nylon screws</span></li><li><span class="q">1×</span><span>Cytron MDD3A 4-16 V 3 A dual DC motor driver</span></li><li><span class="q">1×</span><span>470 uF / 25 V low-ESR radial electrolytic D10 x 16 (Panasonic EEU-FR1E471)</span></li><li><span class="q">2×</span><span>M3 x 10 nylon hex F-F standoff + M3 x 6 nylon screws</span></li><li><span class="q">1×</span><span>GY-521 MPU-6050 breakout</span></li><li><span class="q">1×</span><span>KCD1-form-factor SPST rocker, &gt;= 10 A @ 12 VDC rated (DC rating to confirm on the listing)</span></li><li><span class="q">1×</span><span>generic HC-SR04 L-mount bracket (acrylic/ABS, 2 x M3 base holes)</span></li><li><span class="q">1×</span><span>HC-SR04 ultrasonic sensor</span></li><li><span class="q">1×</span><span>generic tilt-adjustable acrylic Raspberry Pi camera holder (2-piece, hinge screw), locked at 15 deg down</span></li><li><span class="q">2×</span><span>M3 x 12 pan screw + M3 nut (camera holder + HC-SR04 bracket, shared)</span></li></ul>
+    <div class="check"><span class="tick">✓</span><div><div class="micro">Check</div>Bench pre-fit before mounting: MDD3A on nylon standoffs underneath, IMU within 25 mm of the CoR (x ≈ −25 mm), ≥10 A DC switch cut-out drilled</div></div>
+    <button class="btn jump" data-step="5" type="button">▶ Show in 3D <span class="mono">t = 6.4 s</span></button>
+  </div>
+</article>
+<article class="step" id="step-06" data-step="6">
+  <figure><img src="../assembly/step06.png" alt="Step 06: Close the decks: top plate on the pillars; fuse -&gt; switch -&gt; MDD3A / buck, motor and signal leads" loading="lazy" width="1800" height="1200"></figure>
+  <div class="step-body">
+    <div class="step-head"><span class="num">06</span><h3>Close the decks: top plate on the pillars; fuse -&gt; switch -&gt; MDD3A / buck, motor and signal leads</h3></div>
+    <p class="detail"></p>
+    <div class="micro">Parts</div>
+    <ul class="parts"><li class="cab"><span class="q">⌁</span><span>Leads: <code>driver_esp32</code>, <code>driver_motor_*</code>, <code>fuse_switch</code>, <code>imu_esp32</code>, <code>switch_buck5</code>, <code>switch_driver</code>, <code>us_esp32</code></span></li></ul>
+    <div class="check"><span class="tick">✓</span><div><div class="micro">Check</div>Polarity check, then multimeter: 5.0 V at the buck output with the Pi unplugged</div></div>
+    <button class="btn jump" data-step="6" type="button">▶ Show in 3D <span class="mono">t = 8.0 s</span></button>
+  </div>
+</article>
+<article class="step" id="step-07" data-step="7">
+  <figure><img src="../assembly/step07.png" alt="Step 07: Pi 5 on M2.5 standoffs + Active Cooler, 5 V to GPIO, ESP32 UART, Camera Module 3 + FFC" loading="lazy" width="1800" height="1200"></figure>
+  <div class="step-body">
+    <div class="step-head"><span class="num">07</span><h3>Pi 5 on M2.5 standoffs + Active Cooler, 5 V to GPIO, ESP32 UART, Camera Module 3 + FFC</h3></div>
+    <p class="detail"></p>
+    <div class="micro">Parts</div>
+    <ul class="parts"><li><span class="q">4×</span><span>M2.5 nut under the top plate (Pi standoff)</span></li><li><span class="q">4×</span><span>M2.5 x 6 brass hex M-F standoff</span></li><li><span class="q">1×</span><span>Raspberry Pi 5 8 GB</span></li><li><span class="q">1×</span><span>Raspberry Pi Active Cooler</span></li><li><span class="q">1×</span><span>Raspberry Pi Camera Module 3</span></li><li class="cab"><span class="q">⌁</span><span>Leads: <code>buck5_pi</code>, <code>camera_ffc</code>, <code>esp32_pi</code></span></li></ul>
+    <div class="check"><span class="tick">✓</span><div><div class="micro">Check</div>Pi boots; vcgencmd get_throttled = 0x0; camera sees the floor ≤150 mm ahead; HC-SR04 does not block the camera FOV</div></div>
+    <button class="btn jump" data-step="7" type="button">▶ Show in 3D <span class="mono">t = 9.6 s</span></button>
+  </div>
+</article>
+<article class="step" id="step-08" data-step="8">
+  <figure><img src="../assembly/step08.png" alt="Step 08: LiDAR tower: 4 M3 standoff legs + FR4 board, RPLIDAR C1, UART + 5 V leads" loading="lazy" width="1800" height="1200"></figure>
+  <div class="step-body">
+    <div class="step-head"><span class="num">08</span><h3>LiDAR tower: 4 M3 standoff legs + FR4 board, RPLIDAR C1, UART + 5 V leads</h3></div>
+    <p class="detail"></p>
+    <div class="micro">Parts</div>
+    <ul class="parts"><li><span class="q">4×</span><span>M3 nut under the top plate (LiDAR leg)</span></li><li><span class="q">4×</span><span>M3 brass hex M-F standoffs, 5.5 AF, M3 nut under the plate, M3 x 6 screw on top</span></li><li><span class="q">1×</span><span>Electrokit ProtoPCB 80 x 120 mm (EKB12-class FR4 prototyping board)</span></li><li><span class="q">4×</span><span>M3 x 6 pan screw on the LiDAR board</span></li><li><span class="q">4×</span><span>M2.5 x 5 pan screw (LiDAR to board)</span></li><li><span class="q">1×</span><span>SLAMTEC RPLIDAR C1</span></li><li class="cab"><span class="q">⌁</span><span>Leads: <code>buck5_lidar</code>, <code>lidar_uart</code></span></li></ul>
+    <div class="check"><span class="tick">✓</span><div><div class="micro">Check</div>Scan plane ~150 mm, ≥5 mm above every robot part; tower–cooler gap (0.75 mm in CAD) checked on the real cooler</div></div>
+    <button class="btn jump" data-step="8" type="button">▶ Show in 3D <span class="mono">t = 11.2 s</span></button>
+  </div>
+</article>
+<article class="step" id="step-09" data-step="9">
+  <figure><img src="../assembly/step09.png" alt="Step 09: Payload fence: 4 M3 x 20 standoffs around the Ø75 x 80 cup keep-out (&lt;= 300 g)" loading="lazy" width="1800" height="1200"></figure>
+  <div class="step-body">
+    <div class="step-head"><span class="num">09</span><h3>Payload fence: 4 M3 x 20 standoffs around the Ø75 x 80 cup keep-out (&lt;= 300 g)</h3></div>
+    <p class="detail"></p>
+    <div class="micro">Parts</div>
+    <ul class="parts"><li><span class="q">4×</span><span>M3 x 20 brass hex M-F standoff (payload fence)</span></li><li><span class="q">4×</span><span>M3 nut under the top plate (fence)</span></li><li><span class="q">1×</span><span>Seedling cup keep-out Ø75 x 80, &lt;= 300 g (not bought)</span></li></ul>
+    <div class="check"><span class="tick">✓</span><div><div class="micro">Check</div>Cup + plant within Ø75 × 80 mm (else LiDAR rear-sector shadow); 4-standoff fence holds the 300 g cup; CoM x ≥ −22 mm</div></div>
+    <button class="btn jump" data-step="9" type="button">▶ Show in 3D <span class="mono">t = 12.8 s</span></button>
+  </div>
+</article>
+  </div>
+</section>
+
+<section id="wiring">
+  <div class="sec-head"><span class="idx">02</span><h2>Wiring &amp; power</h2>
+    <p>Explorable diagrams (Archify) and the “how it works” figure (Anatomy). On a phone, use “open full screen”.</p></div>
+  <div class="glass">
+    <div class="tabs" role="tablist" id="tabs">
+      <button role="tab" aria-selected="true" data-tab="power">Power distribution</button>
+      <button role="tab" aria-selected="false" data-tab="wiring">Wiring</button>
+      <button role="tab" aria-selected="false" data-tab="seq">Assembly sequence</button>
+      <button role="tab" aria-selected="false" data-tab="anatomy">How it works</button>
+    </div>
+    <div class="tabpanel on" id="tab-power" data-src="../docs/diagrams/scout-power-distribution/scout-power-distribution.html?embed=1&amp;theme=dark">
+      <div class="bar"><p>Battery → XT30 → 7.5 A fuse → rocker → MDD3A (470 µF) and D36V50F5 5 V buck (100 µF) → Pi 5, ESP32, C1.</p><a class="btn" target="_blank" href="../docs/diagrams/scout-power-distribution/scout-power-distribution.html?theme=dark">Open full screen ↗</a></div>
+      <iframe title="Power distribution diagram"></iframe>
+    </div>
+    <div class="tabpanel" id="tab-wiring" data-src="../docs/diagrams/scout-wiring/scout-wiring.html?embed=1&amp;theme=dark">
+      <div class="bar"><p>Signal and power leads: UART0 to the C1, UART2 to the ESP32, encoders, IMU, HC-SR04, camera FFC.</p><a class="btn" target="_blank" href="../docs/diagrams/scout-wiring/scout-wiring.html?theme=dark">Open full screen ↗</a></div>
+      <iframe title="Wiring diagram"></iframe>
+    </div>
+    <div class="tabpanel" id="tab-seq" data-src="../docs/diagrams/scout-assembly-sequence/scout-assembly-sequence.html?embed=1&amp;theme=dark">
+      <div class="bar"><p>The nine build steps in lanes, each with its check.</p><a class="btn" target="_blank" href="../docs/diagrams/scout-assembly-sequence/scout-assembly-sequence.html?theme=dark">Open full screen ↗</a></div>
+      <iframe title="Assembly sequence diagram"></iframe>
+    </div>
+    <div class="tabpanel" id="tab-anatomy" data-src="../docs/figures/drivetrain-power/drivetrain-power.html">
+      <div class="bar"><p>Drivetrain and power path: how energy gets from the pack to the wheels.</p><a class="btn" target="_blank" href="../docs/figures/drivetrain-power/drivetrain-power.html">Open full screen ↗</a></div>
+      <iframe title="Drivetrain and power path figure"></iframe>
+    </div>
+  </div>
+</section>
+
+<section id="sim">
+  <div class="sec-head"><span class="idx">03</span><h2>Simulation</h2>
+    <p>MuJoCo 3.17 runs (<code>sim/scenarios.py</code>, results in <code>sim/results.json</code>).</p></div>
+  <div class="vids">
+    <figure class="vid glass" style="margin:0">
+      <video src="../sim/videos/threshold_climb_crawl_payload.mp4" controls muted playsinline loop preload="metadata"></video>
+      <figcaption class="cap"><span class="pill pass">pass</span><b>10 mm threshold at crawl (0.05 m/s) with the 300 g cup:</b> climbs (0.056 N·m per wheel). Needs floor friction ≥ 0.4 in sim; measure M3/M4.</figcaption>
+    </figure>
+    <figure class="vid glass" style="margin:0">
+      <video src="../sim/videos/threshold_climb_0p3_payload.mp4" controls muted playsinline loop preload="metadata"></video>
+      <figcaption class="cap"><span class="pill pass">pass</span><b>10 mm threshold at 0.3 m/s with the cup:</b> climbs.</figcaption>
+    </figure>
+    <figure class="vid glass" style="margin:0">
+      <video src="../sim/videos/emergency_stop_payload.mp4" controls muted playsinline loop preload="metadata"></video>
+      <figcaption class="cap"><span class="pill pass">pass</span><b>Emergency stop from 0.3 m/s, brake LOW/LOW, hard floor:</b> 0.127 s, so the firmware watchdog must be ≤ 170 ms for REQ-SCOUT-002.</figcaption>
+    </figure>
+    <figure class="vid glass" style="margin:0">
+      <video src="../sim/videos/spin_in_place_carpet.mp4" controls muted playsinline loop preload="metadata"></video>
+      <figcaption class="cap"><span class="pill pass">pass</span><b>Spin in place on carpet with the gyro yaw loop:</b> 1.00 rad/s (open loop only 0.70 rad/s).</figcaption>
+    </figure>
+  </div>
+  <p class="note">Round-4 runs: round-3 CAD params (0.998 kg, 1.298 kg with the cup), Hiwonder 1:42 at the 8.4 V PWM cap. Floor friction is assumed until M4. Details: <code>docs/sim-round4.md</code>, verdict: <code>docs/physics-final.md</code>.</p>
+</section>
+
+<section id="parts">
+  <div class="sec-head"><span class="idx">04</span><h2>Parts &amp; drilling</h2>
+    <p>Copied from <code>docs/cad-round3.md</code> §4, §5 and §7. Off-the-shelf parts only; nothing has been bought yet.</p></div>
+
+  <h3 class="sub-h">Measure these first <small>§7: open questions; they decide whether the model holds</small></h3>
+  <div class="glass"><ul class="measure"><li><strong>M5 (motor fit):</strong> Elegoo bracket hole pattern, gearbox inner-face spacing (54.4 mm assumed between gearboxes → 2.2 mm each side of the 50 mm battery), whether the Hiwonder encoder cap clears the plate with 3 mm spacers, free length behind each motor. Decides whether the Hiwonder fits as modelled.</li><li><strong>M1:</strong> battery mass, markings, BMS → fuse size (7.5 A assumed OK), battery mass in the CoM.</li><li><strong>M6:</strong> weigh plates, wheels, Pi + cooler; measure tyre width and the wheel-to-plate gap (1.57 mm in CAD).</li><li><strong>M7 (on arrival):</strong> D36V50F5 output at 3 A; Hiwonder encoder at 3.3 V; ppr.</li><li><strong>M8:</strong> only if the two-pack option (motors on the Elegoo 2S box) is taken — that would add a box to the lower deck, not modelled.</li><li><strong>Q-SW:</strong> a KCD1-size rocker with a published <strong>DC</strong> rating ≥ 10 A at 12–14 V (generic KCD1 = AC ratings only). If none is found, use a larger DC-rated rocker and re-place the cut-out.</li><li><strong>Q-C1:</strong> C1 connector position and pinout (lead assumed to exit the base's rear; 5 V from the buck, UART to GPIO14/15). Check the SLAMTEC C1 datasheet before wiring.</li><li><strong>Q-UART:</strong> Pi 5 UART2 on GPIO4/5 (<code>dtoverlay=uart2-pi5</code>) for the ESP32 and UART0 on GPIO14/15 for the C1 (disable the serial console). Confirm in the Pi docs.</li><li><strong>Q-MDD3A:</strong> which edge carries the VB+/VB− terminal (cap and cable ends assume the rear short edge).</li><li><strong>Q-holders:</strong> the exact HC-SR04 bracket and tilting camera holder to buy (dimensions assumed); the shared-screw holes (#19, #20) follow the holder bought.</li><li>Brass standoff masses are over-estimated (solid cylinders): expect the real robot ≈ 20 g lighter than 0.998 kg (before M1/M6 corrections).</li></ul></div>
+
+  <h3 class="sub-h">Drilling table <small>top plate + LiDAR board, robot frame</small></h3>
+  <div class="grid2">
+    <div class="glass"><div class="tbl drill"><table><thead><tr><th>#</th><th>Part</th><th>Purpose</th><th>X (mm)</th><th>Y (mm)</th><th>Hole</th></tr></thead><tbody>
+<tr><td class="num">1</td><td class="">top_plate</td><td class="">Pi 5 M2.5 standoff</td><td class="num">+74.0</td><td class="num">+24.5</td><td class="num">Ø2.7</td></tr>
+<tr><td class="num">2</td><td class="">top_plate</td><td class="">Pi 5 M2.5 standoff</td><td class="num">+74.0</td><td class="num">-24.5</td><td class="num">Ø2.7</td></tr>
+<tr><td class="num">3</td><td class="">top_plate</td><td class="">Pi 5 M2.5 standoff</td><td class="num">+16.0</td><td class="num">+24.5</td><td class="num">Ø2.7</td></tr>
+<tr><td class="num">4</td><td class="">top_plate</td><td class="">Pi 5 M2.5 standoff</td><td class="num">+16.0</td><td class="num">-24.5</td><td class="num">Ø2.7</td></tr>
+<tr><td class="num">5</td><td class="">top_plate</td><td class="">MDD3A M3 nylon standoff</td><td class="num">+49.6</td><td class="num">+18.3</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">6</td><td class="">top_plate</td><td class="">MDD3A M3 nylon standoff</td><td class="num">+49.6</td><td class="num">-18.3</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">7</td><td class="">top_plate</td><td class="">MDD3A M3 nylon standoff</td><td class="num">+6.4</td><td class="num">+18.3</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">8</td><td class="">top_plate</td><td class="">MDD3A M3 nylon standoff</td><td class="num">+6.4</td><td class="num">-18.3</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">9</td><td class="">top_plate</td><td class="">IMU M3 nylon standoff</td><td class="num">-16.4</td><td class="num">+5.6</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">10</td><td class="">top_plate</td><td class="">IMU M3 nylon standoff</td><td class="num">-16.4</td><td class="num">-5.6</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">11</td><td class="">top_plate</td><td class="">LiDAR tower leg M3</td><td class="num">+95.0</td><td class="num">+34.0</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">12</td><td class="">top_plate</td><td class="">LiDAR tower leg M3</td><td class="num">+95.0</td><td class="num">-34.0</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">13</td><td class="">top_plate</td><td class="">LiDAR tower leg M3</td><td class="num">+2.0</td><td class="num">+34.0</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">14</td><td class="">top_plate</td><td class="">LiDAR tower leg M3</td><td class="num">+2.0</td><td class="num">-34.0</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">15</td><td class="">top_plate</td><td class="">payload fence post M3</td><td class="num">-20.1</td><td class="num">+29.9</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">16</td><td class="">top_plate</td><td class="">payload fence post M3</td><td class="num">-20.1</td><td class="num">-29.9</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">17</td><td class="">top_plate</td><td class="">payload fence post M3</td><td class="num">-79.9</td><td class="num">+29.9</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">18</td><td class="">top_plate</td><td class="">payload fence post M3</td><td class="num">-79.9</td><td class="num">-29.9</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">19</td><td class="">top_plate</td><td class="">camera holder + HC-SR04 bracket shared M3</td><td class="num">+110.0</td><td class="num">+10.0</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">20</td><td class="">top_plate</td><td class="">camera holder + HC-SR04 bracket shared M3</td><td class="num">+110.0</td><td class="num">-10.0</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">21</td><td class="">top_plate</td><td class="">KCD1 rocker cut-out 13 (X) x 19 (Y): 2 x Ø12 + file</td><td class="num">-100.0</td><td class="num">+0.0</td><td class="">13 x 19 mm cut-out</td></tr>
+<tr><td class="num">22</td><td class="">lidar_board</td><td class="">leg M3 through the FR4 board</td><td class="num">+95.0</td><td class="num">+34.0</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">23</td><td class="">lidar_board</td><td class="">leg M3 through the FR4 board</td><td class="num">+95.0</td><td class="num">-34.0</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">24</td><td class="">lidar_board</td><td class="">leg M3 through the FR4 board</td><td class="num">+2.0</td><td class="num">+34.0</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">25</td><td class="">lidar_board</td><td class="">leg M3 through the FR4 board</td><td class="num">+2.0</td><td class="num">-34.0</td><td class="num">Ø3.2</td></tr>
+<tr><td class="num">26</td><td class="">lidar_board</td><td class="">SLAMTEC RPLIDAR C1 M2.5 fixing</td><td class="num">+76.5</td><td class="num">+21.5</td><td class="num">Ø2.7</td></tr>
+<tr><td class="num">27</td><td class="">lidar_board</td><td class="">SLAMTEC RPLIDAR C1 M2.5 fixing</td><td class="num">+76.5</td><td class="num">-21.5</td><td class="num">Ø2.7</td></tr>
+<tr><td class="num">28</td><td class="">lidar_board</td><td class="">SLAMTEC RPLIDAR C1 M2.5 fixing</td><td class="num">+33.5</td><td class="num">+21.5</td><td class="num">Ø2.7</td></tr>
+<tr><td class="num">29</td><td class="">lidar_board</td><td class="">SLAMTEC RPLIDAR C1 M2.5 fixing</td><td class="num">+33.5</td><td class="num">-21.5</td><td class="num">Ø2.7</td></tr>
+</tbody></table></div></div>
+    <div class="glass prose" style="padding:16px 18px"><p>The Elegoo plate origin: x = 0 is midway between the axles (pillar holes at x −80.7/−0.7/+84.4 are a handy reference), y = 0 is the centreline. Every hole is asserted in the model to lie inside its plate with ≥ 3 mm of material to the edge, to every existing hole and to the other new holes, and is cut in the CAD top plate. Mark from the pillar holes, centre-punch, pilot Ø1.5, then final size.</p><p>The rocker cut-out (#21) is the only non-round hole: drill 2 × Ø12 at x −100, y ±3.5, then file to 13 × 19 until the KCD1 snaps in. Alternative if filing is unwanted: a round Ø20 rocker drilled with a step drill (re-check the rating).</p></div>
+  </div>
+
+  <h3 class="sub-h">Bill of materials <small>every physical part in the model</small></h3>
+  <div class="glass"><div class="tbl bom"><table><thead><tr><th>Label(s)</th><th>Qty</th><th>Product</th><th>Source / URL</th><th>Mass each (g)</th><th>Dim./mass source</th></tr></thead><tbody>
+<tr><td class=""><code>battery</code></td><td class="num">1</td><td class="">Blue 3S Li-ion pack 70 x 50 x 15, 11.1 V 3000 mAh label (owned)</td><td class="">Jaime</td><td class="num">110</td><td class="">measured</td></tr>
+<tr><td class=""><code>bottom_plate</code></td><td class="num">1</td><td class="">Elegoo Smart Robot Car V4.0 bottom plate (owned)</td><td class="">Elegoo kit STL 'Bottom Plate.stl'</td><td class="num">114.5</td><td class="">measured</td></tr>
+<tr><td class=""><code>buck_5v</code></td><td class="num">1</td><td class="">Pololu D36V50F5 5 V 5.5 A step-down regulator (#4091)</td><td class=""><a href="https://www.pololu.com/product/4091/specs" target="_blank" rel="noopener">www.pololu.com</a></td><td class="num">7</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>camera</code></td><td class="num">1</td><td class="">Raspberry Pi Camera Module 3 (owned)</td><td class=""><a href="https://datasheets.raspberrypi.com/camera/camera-module-3-standard-mechanical-drawing.pdf" target="_blank" rel="noopener">datasheets.raspberrypi.com</a></td><td class="num">4</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>camera_mount</code></td><td class="num">1</td><td class="">generic tilt-adjustable acrylic Raspberry Pi camera holder (2-piece, hinge screw; e.g. listing 'Raspberry Pi camera module acrylic holder bracket'), locked at 15 deg down; dims assumed</td><td class="">generic listing</td><td class="num">4.9</td><td class="">assumed</td></tr>
+<tr><td class=""><code>cap_buck</code></td><td class="num">1</td><td class="">100 uF / 25 V radial electrolytic D6.3 x 11 (buck VIN)</td><td class="">any (e.g. Panasonic FR series)</td><td class="num">0.6</td><td class="">assumed</td></tr>
+<tr><td class=""><code>cap_driver</code></td><td class="num">1</td><td class="">470 uF / 25 V low-ESR radial electrolytic D10 x 16 (Panasonic EEU-FR1E471)</td><td class=""><a href="https://industrial.panasonic.com/cdbs/www-data/pdf/RDF0000/ABA0000C1209.pdf" target="_blank" rel="noopener">industrial.panasonic.com</a></td><td class="num">2</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>deck_pillar_1..6</code></td><td class="num">6</td><td class="">Elegoo kit M3 brass hex pillar, 39.7 mm between the decks (owned)</td><td class="">Elegoo V4.0 kit</td><td class="num">8</td><td class="">measured</td></tr>
+<tr><td class=""><code>esp32</code></td><td class="num">1</td><td class="">ESP32 DevKit WROOM-32 USB-C (owned)</td><td class="">-</td><td class="num">10</td><td class="">assumed</td></tr>
+<tr><td class=""><code>fence_nut_1..4</code></td><td class="num">4</td><td class="">M3 nut under the top plate (fence)</td><td class="">ISO 4032</td><td class="num">0.5</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>fence_post_1..4</code></td><td class="num">4</td><td class="">M3 x 20 brass hex M-F standoff (payload fence)</td><td class="">RS PRO 222-452 family</td><td class="num">4</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>front_screw_1..2</code></td><td class="num">2</td><td class="">M3 x 12 pan screw + M3 nut (camera holder + HC-SR04 bracket, shared)</td><td class="">ISO 7045 / ISO 4032</td><td class="num">1.3</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>fuse_holder</code></td><td class="num">1</td><td class="">Inline ATM mini-blade fuse holder (18 AWG) + 7.5 A ATM fuse</td><td class="">any automotive supplier</td><td class="num">5</td><td class="">assumed</td></tr>
+<tr><td class=""><code>imu</code></td><td class="num">1</td><td class="">GY-521 MPU-6050 breakout (owned)</td><td class="">-</td><td class="num">2</td><td class="">assumed</td></tr>
+<tr><td class=""><code>imu_standoff_1..2</code></td><td class="num">2</td><td class="">M3 x 10 nylon hex F-F standoff + M3 x 6 nylon screws</td><td class="">nylon standoff kit</td><td class="num">0.2</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>lidar</code></td><td class="num">1</td><td class="">SLAMTEC RPLIDAR C1</td><td class=""><a href="https://www.slamtec.com/en/C1" target="_blank" rel="noopener">www.slamtec.com</a> (datasheet v1.0 fig 4-1)</td><td class="num">110</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>lidar_board</code></td><td class="num">1</td><td class="">Electrokit ProtoPCB 80 x 120 mm (EKB12-class FR4 prototyping board)</td><td class=""><a href="https://www.electrokit.com/en/experimentkort-1-hal-80x120mm-genomplaterade-hal" target="_blank" rel="noopener">www.electrokit.com</a></td><td class="num">28.3</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>lidar_board_screw_1..4</code></td><td class="num">4</td><td class="">M3 x 6 pan screw on the LiDAR board</td><td class="">ISO 7045</td><td class="num">0.5</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>lidar_leg_1..4</code></td><td class="num">4</td><td class="">M3 brass hex M-F standoffs, 5.5 AF (e.g. RS PRO 222-452 family / Wurth 971xxx), M3 nut under the plate, M3 x 6 screw on top</td><td class="">RS PRO 222-452 family</td><td class="num">11.1</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>lidar_leg_screw_1..4</code></td><td class="num">4</td><td class="">M3 nut under the top plate (LiDAR leg)</td><td class="">ISO 4032</td><td class="num">0.5</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>lidar_screw_1..4</code></td><td class="num">4</td><td class="">M2.5 x 5 pan screw (LiDAR to board)</td><td class="">ISO 7045</td><td class="num">0.2</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>mdd3a</code></td><td class="num">1</td><td class="">Cytron MDD3A 4-16 V 3 A dual DC motor driver</td><td class=""><a href="https://www.cytron.io/p-3amp-4v-16v-dc-motor-driver-2-channels" target="_blank" rel="noopener">www.cytron.io</a></td><td class="num">14.5</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>mdd3a_standoff_1..4</code></td><td class="num">4</td><td class="">M3 x 5 nylon hex F-F standoff + M3 x 6 nylon screws</td><td class="">nylon standoff kit</td><td class="num">0.1</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>motor_bracket_fl, motor_bracket_fr, motor_bracket_rl, motor_bracket_rr</code></td><td class="num">4</td><td class="">Elegoo kit TT motor holder (owned)</td><td class="">Elegoo V4.0 kit</td><td class="num">1.4</td><td class="">assumed</td></tr>
+<tr><td class=""><code>motor_fl, motor_fr, motor_rl, motor_rr</code></td><td class="num">4</td><td class="">Hiwonder TT Hall-encoder gear motor 1:42, plastic shaft (SKU 21100132)</td><td class=""><a href="https://www.hiwonder.com/products/tt-motor-plastic" target="_blank" rel="noopener">www.hiwonder.com</a></td><td class="num">34</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>motor_spacer_fl, motor_spacer_fr, motor_spacer_rl, motor_spacer_rr</code></td><td class="num">4</td><td class="">M3 nylon round spacer 3 mm (2 per bracket)</td><td class="">Essentra/Keystone M3 nylon spacer kit</td><td class="num">0.2</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>payload</code></td><td class="num">1</td><td class="">Seedling cup keep-out Ø75 x 80, &lt;= 300 g (not bought)</td><td class="">BRIEF</td><td class="num">300</td><td class="">assumed</td></tr>
+<tr><td class=""><code>pi5</code></td><td class="num">1</td><td class="">Raspberry Pi 5 8 GB (owned)</td><td class="">vendor/raspberry_pi_5.step</td><td class="num">46</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>pi5_cooler</code></td><td class="num">1</td><td class="">Raspberry Pi Active Cooler (owned)</td><td class="">RP-008187-DS-1 mechanical drawing</td><td class="num">25</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>pi_screw_1..4</code></td><td class="num">4</td><td class="">M2.5 nut under the top plate (Pi standoff)</td><td class="">ISO 4032</td><td class="num">0.2</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>pi_standoff_1..4</code></td><td class="num">4</td><td class="">M2.5 x 6 brass hex M-F standoff</td><td class="">M2.5 brass standoff kit</td><td class="num">1</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>switch</code></td><td class="num">1</td><td class="">KCD1-form-factor SPST rocker, &gt;= 10 A @ 12 VDC rated (DC rating to confirm on the listing)</td><td class=""><a href="https://probots.co.in/kcd1-spdt-momentary-rocker-switch-3-pin-motor-control.html" target="_blank" rel="noopener">probots.co.in</a> (envelope)</td><td class="num">8</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>top_plate</code></td><td class="num">1</td><td class="">Elegoo Smart Robot Car V4.0 top plate (owned), drilled per the drilling table</td><td class="">Elegoo kit STL 'Top Plate.stl'</td><td class="num">110.8</td><td class="">measured</td></tr>
+<tr><td class=""><code>ultrasonic</code></td><td class="num">1</td><td class="">HC-SR04 ultrasonic sensor (owned)</td><td class=""><a href="https://www.mouser.com/datasheet/2/813/HCSR04-1022824.pdf" target="_blank" rel="noopener">www.mouser.com</a></td><td class="num">8.5</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>ultrasonic_bracket</code></td><td class="num">1</td><td class="">generic HC-SR04 L-mount bracket (acrylic/ABS, 2 x M3 base holes), e.g. listing 'HC-SR04 ultrasonic sensor mounting bracket'; dims assumed</td><td class="">generic listing</td><td class="num">3.6</td><td class="">assumed</td></tr>
+<tr><td class=""><code>wheel_fl, wheel_fr, wheel_rl, wheel_rr</code></td><td class="num">4</td><td class="">Elegoo kit 65 mm wheel (owned)</td><td class="">Elegoo V4.0 kit</td><td class="num">25</td><td class="">datasheet</td></tr>
+<tr><td class=""><code>xt30</code></td><td class="num">1</td><td class="">AMASS XT30U-M/F pair</td><td class=""><a href="https://www.amass.com.cn/" target="_blank" rel="noopener">www.amass.com.cn</a></td><td class="num">3</td><td class="">datasheet</td></tr>
+</tbody></table></div></div>
+
+  <h3 class="sub-h">Cables</h3>
+  <details class="glass"><summary>Routes, gauges and lengths (+15 % slack)</summary><div class="tbl cables"><table><thead><tr><th>Route</th><th>Kind</th><th>Path (mm)</th><th>+15 % (mm)</th><th>Cable</th></tr></thead><tbody>
+<tr><td class=""><code>cable_batt_xt30</code></td><td class="">18awg</td><td class="num">14.8</td><td class="num">17.0</td><td class="">battery pack lead (as supplied) + XT30U-M, 18 AWG silicone</td></tr>
+<tr><td class=""><code>cable_xt30_fuse</code></td><td class="">18awg</td><td class="num">94.0</td><td class="num">108.1</td><td class="">XT30U-F pigtail 18 AWG into the inline ATM holder's lead (solder + heat-shrink)</td></tr>
+<tr><td class=""><code>cable_fuse_switch</code></td><td class="">18awg</td><td class="num">97.2</td><td class="num">111.7</td><td class="">18 AWG silicone, 6.3 mm insulated female QC on the rocker's input terminal</td></tr>
+<tr><td class=""><code>cable_switch_driver</code></td><td class="">20awg</td><td class="num">106.2</td><td class="num">122.1</td><td class="">20 AWG silicone pair (+ GND return) from the rocker output QC to the MDD3A VB+/VB- terminal; 470 uF/25 V soldered across VB+/VB- at the terminal</td></tr>
+<tr><td class=""><code>cable_switch_buck5</code></td><td class="">20awg</td><td class="num">159.4</td><td class="num">183.3</td><td class="">20 AWG silicone pair to the D36V50F5 VIN/GND (both 20 AWG wires crimped together in the rocker's output QC = the split); 100 uF/25 V across VIN</td></tr>
+<tr><td class=""><code>cable_buck5_pi</code></td><td class="">20awg</td><td class="num">113.2</td><td class="num">130.1</td><td class="">20 AWG pair, 2.54 mm Dupont housings on GPIO pins 2/4 (+5 V) and 6/14 (GND), &lt;= 15 cm</td></tr>
+<tr><td class=""><code>cable_5v_esp32</code></td><td class="">22awg</td><td class="num">108.3</td><td class="num">124.6</td><td class="">22 AWG pair from the D36V50F5 VOUT to the ESP32 VIN/GND (also feeds encoders + HC-SR04)</td></tr>
+<tr><td class=""><code>cable_buck5_lidar</code></td><td class="">22awg</td><td class="num">234.1</td><td class="num">269.2</td><td class="">22 AWG pair from the D36V50F5 VOUT through the top-plate front slot to the C1 lead's VCC/GND</td></tr>
+<tr><td class=""><code>cable_lidar_uart</code></td><td class="">signal</td><td class="num">121.3</td><td class="num">139.5</td><td class="">C1 XH2.54-5P lead: TX/RX/GND as F Dupont to Pi GPIO 14/15 (pins 8/10, UART0) + GND pin 9</td></tr>
+<tr><td class=""><code>cable_driver_esp32</code></td><td class="">signal</td><td class="num">66.5</td><td class="num">76.5</td><td class="">5 x F-F Dupont jumpers (M1A/M1B/M2A/M2B PWM + GND)</td></tr>
+<tr><td class=""><code>cable_imu_esp32</code></td><td class="">signal</td><td class="num">26.1</td><td class="num">30.0</td><td class="">4 x F-F Dupont jumpers (VCC 3.3 V, GND, SDA, SCL)</td></tr>
+<tr><td class=""><code>cable_us_esp32</code></td><td class="">signal</td><td class="num">174.8</td><td class="num">201.0</td><td class="">4 x F-F Dupont jumpers 20-30 cm (VCC, TRIG, ECHO via 1k/2k divider, GND)</td></tr>
+<tr><td class=""><code>cable_esp32_pi</code></td><td class="">signal</td><td class="num">218.4</td><td class="num">251.1</td><td class="">3 x F-F Dupont jumpers 30 cm (TX, RX, GND) to Pi GPIO4/5 (pins 7/29, UART2, dtoverlay=uart2-pi5)</td></tr>
+<tr><td class=""><code>cable_camera_ffc</code></td><td class="">ffc</td><td class="num">121.0</td><td class="num">139.2</td><td class="">Raspberry Pi 5 camera cable, 22-pin 'standard-mini' (official 200 mm)</td></tr>
+<tr><td class=""><code>cable_driver_motor_fl</code></td><td class="">22awg</td><td class="num">118.4</td><td class="num">136.2</td><td class="">22 AWG pair from the MDD3A outputs to each motor (encoder motors: the motor pins of the 6-pin lead)</td></tr>
+<tr><td class=""><code>cable_enc_fl</code></td><td class="">signal</td><td class="num">174.7</td><td class="num">200.9</td><td class="">motor's own 6-pin lead (PH2.0 / XH) + Dupont breakout to the ESP32 (A, B, VCC 3.3 V, GND)</td></tr>
+<tr><td class=""><code>cable_driver_motor_fr</code></td><td class="">22awg</td><td class="num">118.4</td><td class="num">136.2</td><td class="">22 AWG pair from the MDD3A outputs to each motor (encoder motors: the motor pins of the 6-pin lead)</td></tr>
+<tr><td class=""><code>cable_enc_fr</code></td><td class="">signal</td><td class="num">174.7</td><td class="num">200.9</td><td class="">motor's own 6-pin lead (PH2.0 / XH) + Dupont breakout to the ESP32 (A, B, VCC 3.3 V, GND)</td></tr>
+<tr><td class=""><code>cable_driver_motor_rl</code></td><td class="">22awg</td><td class="num">128.3</td><td class="num">147.5</td><td class="">22 AWG pair from the MDD3A outputs to each motor (encoder motors: the motor pins of the 6-pin lead)</td></tr>
+<tr><td class=""><code>cable_enc_rl</code></td><td class="">signal</td><td class="num">60.7</td><td class="num">69.8</td><td class="">motor's own 6-pin lead (PH2.0 / XH) + Dupont breakout to the ESP32 (A, B, VCC 3.3 V, GND)</td></tr>
+<tr><td class=""><code>cable_driver_motor_rr</code></td><td class="">22awg</td><td class="num">128.3</td><td class="num">147.5</td><td class="">22 AWG pair from the MDD3A outputs to each motor (encoder motors: the motor pins of the 6-pin lead)</td></tr>
+<tr><td class=""><code>cable_enc_rr</code></td><td class="">signal</td><td class="num">60.7</td><td class="num">69.8</td><td class="">motor's own 6-pin lead (PH2.0 / XH) + Dupont breakout to the ESP32 (A, B, VCC 3.3 V, GND)</td></tr>
+</tbody></table></div></details>
+</section>
+</main>
+
+<footer id="files">
+  <div class="wrap">
+    <div class="sec-head"><span class="idx">05</span><h2>Which file for what</h2>
+      <p>Everything lives in <code>cad/scout-v2/</code>. <code>src/exports.py</code> regenerates all of it (<code>cadgen +0.8.4 run src/exports.py</code>).</p></div>
+    <div class="files">
+      <div class="file glass"><h4>GLB</h4><div class="for">Web and phone: this page, quick looks.</div>
+        <div class="how"><a href="../out/GLB/scout_v2.glb">out/GLB/scout_v2.glb</a> (+ <code>_assembly</code>, <code>_exploded</code>). Mac: Quick Look (space bar) or Preview. iPhone: open from Files or AirDrop it. Also gltf-viewer.donmccurdy.com (drag and drop).</div></div>
+      <div class="file glass"><h4>STEP</h4><div class="for">CAD software: exact solids for measuring and editing.</div>
+        <div class="how"><code>out/STEP/scout_v2.step</code> (AP242, git-ignored). Open in Fusion 360, Onshape (import), SolidWorks or FreeCAD.</div></div>
+      <div class="file glass"><h4>STL / 3MF</h4><div class="for">Meshes: slicers, mesh tools, renders.</div>
+        <div class="how"><code>out/STL/scout_v2.stl</code>, one STL per part in <code>out/STL/parts/</code>, <code>out/3MF/scout_v2.3mf</code>. Open in PrusaSlicer, Bambu Studio, Blender or Preview. (Nothing is printed: off-the-shelf parts only.)</div></div>
+      <div class="file glass"><h4>robot_params.json</h4><div class="for">Simulation and URDF/MJCF: masses, frames, sensor poses.</div>
+        <div class="how"><a href="../out/robot_params.json">out/robot_params.json</a> (v2-r3, REP-103, metres). Read by <code>sim/gen_mjcf.py</code> and the URDF generator; any text editor.</div></div>
+      <div class="file glass"><h4>PNG / MP4 / HTML</h4><div class="for">Pictures, sim videos, diagrams.</div>
+        <div class="how"><code>assembly/</code>, <code>shots/</code>, <code>sim/videos/</code>, <code>docs/diagrams/</code>, <code>docs/figures/</code>. Any browser or image viewer.</div></div>
+      <div class="file glass"><h4>guide/</h4><div class="for">This page.</div>
+        <div class="how">Double-click <code>guide/index.html</code>. On a phone, serve the folder: <code>cd cad/scout-v2 &amp;&amp; python3 -m http.server 8000</code>, then open <span class="mono">http://&lt;mac-ip&gt;:8000/guide/</span>. After re-exporting the GLBs, run <code>python3 -I guide/vendor/make_glb_js.py</code>.</div></div>
+    </div>
+    <p class="colophon">Frame: REP-103 <code>base_footprint</code>, +X forward, +Y left, +Z up; mm in CAD. 3D viewer: model-viewer 4.4.0 (Apache-2.0), bundled in <code>guide/vendor/</code>, no network needed.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  "use strict";
+  const STEP = 1.6, TOTAL = 16.4, NSTEPS = 9;
+  const NAMES = {"1": "Bottom plate: motor spacers + Elegoo brackets, Hiwonder encoder motors, wheels", "2": "Lower-deck power: battery, XT30, 7.5 A fuse holder, D36V50F5 5 V buck (+100 uF)", "3": "ESP32 in the rear bay + encoder and 5 V leads", "4": "Deck pillars (Elegoo M3 brass)", "5": "Top plate pre-fit on the bench: drill, MDD3A + 470 uF, IMU (chip down), rocker switch, HC-SR04 + camera holder", "6": "Close the decks: top plate on the pillars; fuse -> switch -> MDD3A / buck, motor and signal leads", "7": "Pi 5 on M2.5 standoffs + Active Cooler, 5 V to GPIO, ESP32 UART, Camera Module 3 + FFC", "8": "LiDAR tower: 4 M3 standoff legs + FR4 board, RPLIDAR C1, UART + 5 V leads", "9": "Payload fence: 4 M3 x 20 standoffs around the \u00d875 x 80 cup keep-out (<= 300 g)"};
+  const FILES = { assembled: "scout_v2", exploded: "scout_v2_exploded", anim: "scout_v2_assembly" };
+  const isFile = location.protocol === "file:";
+  const mv = document.getElementById("mv");
+  const viewer = document.getElementById("viewer");
+  const status = document.getElementById("mvStatus");
+  const scrub = document.getElementById("scrub");
+  const timeLbl = document.getElementById("timeLbl");
+  const playBtn = document.getElementById("playBtn");
+  const stepNum = document.getElementById("stepNum");
+  const stepName = document.getElementById("stepName");
+  const chipsEl = document.getElementById("chips");
+  const urlCache = {};
+  let mode = null, stopAt = null, loadToken = 0;
+
+  // On file:// Chrome blocks fetch() of local files, so model-viewer can't read ../out/GLB/*.glb.
+  // A classic <script> is allowed: vendor/glb/<name>.js carries the GLB as base64 -> blob: URL.
+  function loadScript(src) {
+    return new Promise((res, rej) => {
+      const s = document.createElement("script");
+      s.src = src; s.onload = res; s.onerror = () => rej(new Error("missing " + src));
+      document.head.appendChild(s);
+    });
+  }
+  async function glbUrl(name) {
+    if (urlCache[name]) return urlCache[name];
+    if (!isFile) return (urlCache[name] = `../out/GLB/${name}.glb`);
+    if (!(window.SCOUT_GLB && window.SCOUT_GLB[name])) await loadScript(`vendor/glb/${name}.js`);
+    const b64 = window.SCOUT_GLB[name];
+    const bin = atob(b64), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    delete window.SCOUT_GLB[name];
+    return (urlCache[name] = URL.createObjectURL(new Blob([bytes], { type: "model/gltf-binary" })));
+  }
+
+  const stepOf = t => Math.min(NSTEPS, Math.floor(Math.max(0, t) / STEP + 1e-6) + 1);
+  const pad = n => String(n).padStart(2, "0");
+
+  for (let i = 1; i <= NSTEPS; i++) {
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = pad(i); b.dataset.step = i; b.title = NAMES[i];
+    b.addEventListener("click", () => jumpTo(i, false));
+    chipsEl.appendChild(b);
+  }
+
+  function setMode(m) {
+    if (m === mode) return Promise.resolve();
+    mode = m;
+    document.querySelectorAll(".seg button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === m)));
+    viewer.classList.toggle("mode-anim", m === "anim");
+    const token = ++loadToken;
+    status.className = "mv-status"; status.textContent = "loading model…";
+    mv.pause(); stopAt = null;
+    return glbUrl(FILES[m]).then(url => new Promise(resolve => {
+      if (token !== loadToken) return resolve();
+      const done = () => {
+        mv.removeEventListener("load", done);
+        if (token !== loadToken) return resolve();
+        status.textContent = "";
+        if (m === "anim") {
+          mv.animationName = "assembly";
+          mv.autoRotate = false;
+          mv.currentTime = 0;
+          mv.pause();
+        } else {
+          mv.autoRotate = true;
+        }
+        console.log(`[guide] loaded ${FILES[m]} (${isFile ? "file:// blob" : "http"}) animations=${JSON.stringify(mv.availableAnimations)}`);
+        resolve();
+      };
+      mv.addEventListener("load", done);
+      if (m === "anim") mv.setAttribute("animation-name", "assembly"); else mv.removeAttribute("animation-name");
+      mv.src = url;
+    })).catch(err => {
+      status.className = "mv-status err";
+      status.textContent = "Could not load the 3D model: " + err.message + (isFile ? " (run guide/vendor/make_glb_js.py)" : "");
+      console.error("[guide]", err);
+    });
+  }
+  mv.addEventListener("error", e => {
+    status.className = "mv-status err";
+    status.textContent = "3D model failed to load" + (e.detail && e.detail.type ? ` (${e.detail.type})` : "");
+    console.error("[guide] model-viewer error", e.detail);
+  });
+
+  async function jumpTo(n, playSegment = true) {
+    await setMode("anim");
+    const t0 = (n - 1) * STEP;
+    mv.currentTime = t0;
+    if (playSegment) { stopAt = Math.min(TOTAL, n * STEP) - 0.02; mv.play({ repetitions: 1 }); }
+    else { stopAt = null; mv.pause(); mv.currentTime = Math.min(TOTAL, n * STEP) - 0.02; }
+    // jump-to-step without play shows the step completed; with play, it flies the step in.
+    console.log(`[guide] jumpTo(${n}) currentTime=${mv.currentTime.toFixed(2)}`);
+    render();
+  }
+
+  function render() {
+    const t = mv.currentTime || 0, n = stepOf(t);
+    if (document.activeElement !== scrub) scrub.value = t;
+    scrub.style.setProperty("--p", (t / TOTAL * 100).toFixed(2) + "%");
+    timeLbl.textContent = `${t.toFixed(2)} / ${TOTAL.toFixed(2)} s`;
+    stepNum.textContent = pad(n);
+    stepName.textContent = NAMES[n];
+    chipsEl.querySelectorAll("button").forEach(b => {
+      const k = +b.dataset.step;
+      b.classList.toggle("on", k === n); b.classList.toggle("done", k < n);
+    });
+    playBtn.textContent = mv.paused ? "▶" : "❚❚";
+    playBtn.setAttribute("aria-label", mv.paused ? "Play" : "Pause");
+  }
+  function tick() {
+    if (mode === "anim") {
+      if (stopAt !== null && !mv.paused && mv.currentTime >= stopAt) { mv.pause(); mv.currentTime = stopAt; stopAt = null; }
+      render();
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  playBtn.addEventListener("click", () => {
+    stopAt = null;
+    if (mv.paused) { if (mv.currentTime >= TOTAL - 0.05) mv.currentTime = 0; mv.play(); } else mv.pause();
+  });
+  scrub.addEventListener("input", () => { stopAt = null; mv.pause(); mv.currentTime = parseFloat(scrub.value); render(); });
+  document.querySelectorAll(".seg button").forEach(b => b.addEventListener("click", () => setMode(b.dataset.mode)));
+  document.querySelectorAll(".step .jump").forEach(b => b.addEventListener("click", () => {
+    document.getElementById("model").scrollIntoView({ behavior: "smooth" });
+    jumpTo(+b.dataset.step, true);
+  }));
+
+  // tabs: load each iframe the first time its tab is shown
+  const tabs = document.querySelectorAll("#tabs button");
+  function showTab(id) {
+    tabs.forEach(t => t.setAttribute("aria-selected", String(t.dataset.tab === id)));
+    document.querySelectorAll(".tabpanel").forEach(p => {
+      const on = p.id === "tab-" + id; p.classList.toggle("on", on);
+      const f = p.querySelector("iframe");
+      if (on && !f.getAttribute("src")) f.src = p.dataset.src;
+    });
+  }
+  tabs.forEach(t => t.addEventListener("click", () => showTab(t.dataset.tab)));
+  showTab("power");
+
+  window.scoutGuide = { mv, setMode, jumpTo, stepOf, get mode() { return mode; } };
+  setMode("assembled");
+})();
+</script>
+</body>
+</html>

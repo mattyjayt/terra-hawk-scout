@@ -1,0 +1,367 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Scout v2 — power distribution (3S pack → motors + 5 V rail)",
+    "output": "diagrams/scout-power-distribution/scout-power-distribution.html",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "legend": {
+      "entries": {
+        "database": {
+          "label": "Energy source"
+        },
+        "security": {
+          "label": "Protection / switching"
+        },
+        "messagebus": {
+          "label": "Split / sensing"
+        },
+        "backend": {
+          "label": "Converter / driver"
+        },
+        "external": {
+          "label": "Load"
+        },
+        "frontend": {
+          "label": "Sensor load"
+        }
+      }
+    }
+  },
+  "components": [
+    {
+      "id": "battery",
+      "type": "database",
+      "label": "3S battery pack",
+      "sublabel": "9.0–12.6 V · 1.29 / 7.7 A pk",
+      "pos": [
+        40,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "tag": "BMS trip unknown (M1)"
+    },
+    {
+      "id": "fuse",
+      "type": "security",
+      "label": "7.5 A ATM fuse",
+      "sublabel": "inline holder right after XT30",
+      "pos": [
+        370,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ]
+    },
+    {
+      "id": "switch",
+      "type": "security",
+      "label": "Main switch",
+      "sublabel": "≥10 A DC-rated · 1.29 / 7.7 A",
+      "pos": [
+        700,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ]
+    },
+    {
+      "id": "split",
+      "type": "messagebus",
+      "label": "18 AWG split",
+      "sublabel": "pack bus 9.0–12.6 V",
+      "pos": [
+        700,
+        230
+      ],
+      "size": [
+        190,
+        72
+      ]
+    },
+    {
+      "id": "mdd3a",
+      "type": "backend",
+      "label": "Cytron MDD3A",
+      "sublabel": "VM 0.40/6.2 A · 470 µF cap",
+      "pos": [
+        370,
+        230
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "tag": "470 µF/25 V at VM"
+    },
+    {
+      "id": "motl",
+      "type": "external",
+      "label": "Left motor pair",
+      "sublabel": "Hiwonder TT · PWM avg ≤ 8.4 V",
+      "pos": [
+        40,
+        230
+      ],
+      "size": [
+        190,
+        72
+      ]
+    },
+    {
+      "id": "motr",
+      "type": "external",
+      "label": "Right motor pair",
+      "sublabel": "Hiwonder TT · PWM avg ≤ 8.4 V",
+      "pos": [
+        370,
+        420
+      ],
+      "size": [
+        190,
+        72
+      ]
+    },
+    {
+      "id": "divider",
+      "type": "messagebus",
+      "label": "47 k / 10 k divider",
+      "sublabel": "+100 nF · 12.6 V → 2.21 V",
+      "pos": [
+        700,
+        420
+      ],
+      "size": [
+        190,
+        72
+      ]
+    },
+    {
+      "id": "buck",
+      "type": "backend",
+      "label": "Pololu D36V50F5",
+      "sublabel": "5 V/5 A · 100 µF input cap",
+      "pos": [
+        1030,
+        230
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "tag": "VIN 0.89 / 1.66 A"
+    },
+    {
+      "id": "pi",
+      "type": "external",
+      "label": "Raspberry Pi 5",
+      "sublabel": "5.0 V · 1.30 A typ / 2.0 A pk",
+      "pos": [
+        1380,
+        230
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "tag": "keyed 2×2 / JST-XH"
+    },
+    {
+      "id": "camera",
+      "type": "frontend",
+      "label": "Camera Module 3",
+      "sublabel": "3.3 V · ~0.12 / ~0.2 A",
+      "pos": [
+        1380,
+        40
+      ],
+      "size": [
+        190,
+        72
+      ]
+    },
+    {
+      "id": "lidar",
+      "type": "frontend",
+      "label": "RPLIDAR C1",
+      "sublabel": "4.8–5.2 V · 0.23 / 0.30 A",
+      "pos": [
+        1380,
+        420
+      ],
+      "size": [
+        190,
+        72
+      ]
+    },
+    {
+      "id": "loads",
+      "type": "external",
+      "label": "5 V low-power loads",
+      "sublabel": "ESP32 VIN · 4 enc · HC-SR04",
+      "pos": [
+        1030,
+        420
+      ],
+      "size": [
+        190,
+        72
+      ],
+      "tag": "0.18 / 0.30 A"
+    },
+    {
+      "id": "imu",
+      "type": "frontend",
+      "label": "MPU-6050 + pull-ups",
+      "sublabel": "ESP32 3V3 · 0.01 / 0.02 A",
+      "pos": [
+        1030,
+        610
+      ],
+      "size": [
+        190,
+        72
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "p1",
+      "from": "battery",
+      "to": "fuse",
+      "label": "XT30 · 18 AWG",
+      "variant": "emphasis"
+    },
+    {
+      "id": "p2",
+      "from": "fuse",
+      "to": "switch",
+      "label": "18 AWG",
+      "variant": "emphasis"
+    },
+    {
+      "id": "p3",
+      "from": "switch",
+      "to": "split",
+      "label": "18 AWG",
+      "variant": "emphasis"
+    },
+    {
+      "id": "p4",
+      "from": "split",
+      "to": "mdd3a",
+      "label": "A · 20 AWG",
+      "variant": "emphasis"
+    },
+    {
+      "id": "p5",
+      "from": "split",
+      "to": "buck",
+      "label": "B · 20 AWG soldered",
+      "variant": "emphasis"
+    },
+    {
+      "id": "p6",
+      "from": "mdd3a",
+      "to": "motl",
+      "label": "ch 1 · 22–24 AWG"
+    },
+    {
+      "id": "p7",
+      "from": "mdd3a",
+      "to": "motr",
+      "label": "ch 2 · 22–24 AWG"
+    },
+    {
+      "id": "p8",
+      "from": "split",
+      "to": "divider",
+      "label": "sense tap"
+    },
+    {
+      "id": "p9",
+      "from": "buck",
+      "to": "pi",
+      "label": "pins 2/4 + 6/14",
+      "variant": "emphasis"
+    },
+    {
+      "id": "p10",
+      "from": "buck",
+      "to": "loads",
+      "label": "5 V · 22–24 AWG"
+    },
+    {
+      "id": "p11",
+      "from": "divider",
+      "to": "loads",
+      "label": "ESP32 ADC1",
+      "variant": "dashed"
+    },
+    {
+      "id": "p12",
+      "from": "pi",
+      "to": "camera",
+      "label": "CSI 22-pin FFC"
+    },
+    {
+      "id": "p13",
+      "from": "pi",
+      "to": "lidar",
+      "label": "5 V · XH2.54-5P"
+    },
+    {
+      "id": "p14",
+      "from": "loads",
+      "to": "imu",
+      "label": "3V3 · 26 AWG"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Protection",
+      "items": [
+        "7.5 A ATM fuse: carries 2.4 A continuous and <1 s 7.7 A bursts; blows on a pack short (≫20 A)",
+        "MDD3A: OCP / UVLO / thermal + firmware duty cap (V_cap/V_batt = 8.4 V)",
+        "D36V50F5: reverse-input, OCP, thermal, soft start; PG pin → ESP32",
+        "Pi GPIO 5 V bypasses input protection: keyed plug, polarity check, no hot-plug"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Battery cutoffs (ESP32 ADC1)",
+      "items": [
+        "Warn 10.5 V · motors stop 10.2 V · Pi shutdown 9.9 V · floor 9.0 V",
+        "2 s average, ignore dips <0.5 s, 0.3 V hysteresis",
+        "Divider calibrated against the multimeter (REQ-SCOUT-013)"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Wire and connectors",
+      "items": [
+        "Battery → fuse → switch → split: 18 AWG silicone, XT30",
+        "MDD3A VM 20 AWG (screw terminal); motors 22–24 AWG",
+        "Buck → Pi: 20 AWG pair ≤15 cm (0.03 V drop at peak); signals 26–28 AWG"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "Not yet verified",
+      "items": [
+        "Pack BMS / trip current unknown (M1); no BMS → add 3S buzzer alarm",
+        "Camera current is assumed (no official figure)",
+        "Sense-tap position after the switch is assumed"
+      ]
+    }
+  ]
+}

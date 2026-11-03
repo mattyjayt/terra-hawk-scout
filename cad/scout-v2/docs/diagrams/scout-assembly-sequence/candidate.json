@@ -1,0 +1,223 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Scout v2 — mechanical assembly sequence with checks",
+    "output": "diagrams/scout-assembly-sequence/scout-assembly-sequence.html",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "legend": {
+      "entries": {
+        "backend": {
+          "label": "Build step (✓ = check)"
+        },
+        "external": {
+          "label": "Payload step"
+        }
+      }
+    }
+  },
+  "lanes": [
+    {
+      "id": "base",
+      "label": "Drive base & lower deck"
+    },
+    {
+      "id": "stack",
+      "label": "Deck stack"
+    },
+    {
+      "id": "top",
+      "label": "Top deck"
+    },
+    {
+      "id": "tower",
+      "label": "LiDAR tower & payload"
+    }
+  ],
+  "mainPath": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "s6",
+    "s7",
+    "s8",
+    "s9"
+  ],
+  "nodes": [
+    {
+      "id": "s1",
+      "lane": "base",
+      "col": 0,
+      "type": "backend",
+      "label": "01 Base + 4 motors + wheels",
+      "sublabel": "✓ wheels spin free",
+      "tag": "plate · brackets · encoder motors"
+    },
+    {
+      "id": "s2",
+      "lane": "base",
+      "col": 1,
+      "type": "backend",
+      "label": "02 Battery, fuse, 5 V buck",
+      "sublabel": "✓ polarity check",
+      "tag": "battery on centre of rotation"
+    },
+    {
+      "id": "s3",
+      "lane": "base",
+      "col": 2,
+      "type": "backend",
+      "label": "03 ESP32 at rear",
+      "sublabel": "✓ clear of encoder plugs",
+      "tag": "lower deck, rear"
+    },
+    {
+      "id": "s4",
+      "lane": "stack",
+      "col": 2,
+      "type": "backend",
+      "label": "04 Deck pillars",
+      "sublabel": "✓ no wire pinched (A)",
+      "tag": "standoffs"
+    },
+    {
+      "id": "s5",
+      "lane": "stack",
+      "col": 3,
+      "type": "backend",
+      "label": "05 Top-plate bench pre-fit",
+      "sublabel": "✓ IMU ≤ 25 mm from CoR",
+      "tag": "MDD3A on nylon · IMU · switch"
+    },
+    {
+      "id": "s6",
+      "lane": "top",
+      "col": 3,
+      "type": "backend",
+      "label": "06 Top plate on + wiring",
+      "sublabel": "✓ 5.0 V at buck, Pi unplugged",
+      "tag": "harness routed"
+    },
+    {
+      "id": "s7",
+      "lane": "top",
+      "col": 4,
+      "type": "backend",
+      "label": "07 Pi 5 · camera · HC-SR04",
+      "sublabel": "✓ get_throttled = 0x0",
+      "tag": "cooler · cam 15° down"
+    },
+    {
+      "id": "s8",
+      "lane": "tower",
+      "col": 4,
+      "type": "backend",
+      "label": "08 LiDAR tower + C1",
+      "sublabel": "✓ scan plane ~150 mm",
+      "tag": "M2.5 standoffs + plate"
+    },
+    {
+      "id": "s9",
+      "lane": "tower",
+      "col": 5,
+      "type": "external",
+      "label": "09 Payload cup + fence",
+      "sublabel": "✓ ≤ 300 g, Ø75 × 80 mm",
+      "tag": "4 standoffs at x = −50 mm"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "from": "s1",
+      "to": "s2",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e2",
+      "from": "s2",
+      "to": "s3",
+      "variant": "default"
+    },
+    {
+      "id": "e3",
+      "from": "s3",
+      "to": "s4",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e4",
+      "from": "s4",
+      "to": "s5",
+      "variant": "default"
+    },
+    {
+      "id": "e5",
+      "from": "s5",
+      "to": "s6",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e6",
+      "from": "s6",
+      "to": "s7",
+      "variant": "default"
+    },
+    {
+      "id": "e7",
+      "from": "s7",
+      "to": "s8",
+      "variant": "emphasis"
+    },
+    {
+      "id": "e8",
+      "from": "s8",
+      "to": "s9",
+      "variant": "default"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "Steps (off-the-shelf parts only)",
+      "items": [
+        "01 Bottom plate + motor brackets + 4 Hiwonder encoder motors + wheels",
+        "02 Lower-deck power: battery on the centre of rotation, XT30, fuse holder, 5 V buck",
+        "03 ESP32 at the rear of the lower deck · 04 deck pillars",
+        "05 Top-plate bench pre-fit: MDD3A on nylon standoffs underneath, IMU near the CoR, switch",
+        "06 Top plate on + wiring · 07 Pi 5 + Active Cooler on standoffs, Camera Module 3 at the front tilted 15° down, HC-SR04 under the front edge",
+        "08 LiDAR tower (M2.5 standoffs + plate) with RPLIDAR C1, scan plane ~150 mm · 09 payload cup Ø75 × 80 mm with 4-standoff fence at x = −50 mm"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Checks, steps 01–04",
+      "items": [
+        "01 Wheels spin free; 1 mm nylon washer behind a wheel if it rubs (wheel–plate gap 1.57 mm)",
+        "02 Battery centred on the centre of rotation; XT30 polarity checked before the fuse goes in; ≥2.2 mm side clearance",
+        "03 ESP32 at the rear clears the encoder connectors and the XT30/fuse",
+        "04 Pillars square, no wire pinched under the top plate (assumed check)"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Checks, steps 05–07",
+      "items": [
+        "05 Bench pre-fit before mounting: MDD3A on nylon standoffs underneath, IMU within 25 mm of the CoR (x ≈ −25 mm), ≥10 A DC switch cut-out drilled",
+        "06 Polarity check, then multimeter: 5.0 V at the buck output with the Pi unplugged",
+        "07 Pi boots; vcgencmd get_throttled = 0x0; camera sees the floor ≤150 mm ahead; HC-SR04 does not block the camera FOV"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Checks, steps 08–09",
+      "items": [
+        "08 Scan plane ~150 mm, ≥5 mm above every robot part; tower–cooler gap (0.75 mm in CAD) checked on the real cooler",
+        "09 Cup + plant within Ø75 × 80 mm (else LiDAR rear-sector shadow); 4-standoff fence holds the 300 g cup; CoM x ≥ −22 mm"
+      ]
+    }
+  ]
+}
