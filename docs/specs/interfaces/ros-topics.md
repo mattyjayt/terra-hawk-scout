@@ -18,14 +18,14 @@ Namespace: `/scout` when multi-robot (Phase 4); single-robot runs use the root n
 | `/cmd_vel` | geometry_msgs/Twist (TwistStamped when Jazzy diff_drive requires it) | teleop / Nav2 → diff_drive_controller | 10–20 Hz | reliable, depth 10 |
 | `/joint_states` | sensor_msgs/JointState | joint_state_broadcaster | 50 Hz | best effort |
 | `/odom` (`diff_drive_controller/odom`) | nav_msgs/Odometry | diff_drive_controller → EKF | 50 Hz | best effort |
-| `/imu/data_raw` | sensor_msgs/Imu | ESP32 (micro-ROS) → EKF | 100 Hz | sensor data |
+| `/imu/data_raw` | sensor_msgs/Imu | base_bridge (R4) → EKF | 100 Hz | sensor data |
 | `/odometry/filtered` | nav_msgs/Odometry | EKF → slam_toolbox, Nav2 | 50 Hz | reliable |
 | `/scan` | sensor_msgs/LaserScan | LiDAR driver → slam_toolbox, Nav2 | 10 Hz | sensor data |
 | `/map` | nav_msgs/OccupancyGrid | slam_toolbox → Nav2, RViz | on change | transient local |
 | `/camera/image_raw`, `/camera/camera_info` | sensor_msgs/Image, CameraInfo | camera_ros → perception | 15–30 Hz | sensor data |
 | `/detections` | vision_msgs/Detection2DArray | perception → Nav2 / mission | ≥ 10 Hz | best effort |
-| `/range/front` | sensor_msgs/Range | ESP32 → safety | 20 Hz | sensor data |
-| `/battery` | sensor_msgs/BatteryState | ESP32 → mission, bridge | 1 Hz | reliable |
+| `/range/front` | sensor_msgs/Range | base_bridge (R4) → safety | 20 Hz | sensor data |
+| `/battery` | sensor_msgs/BatteryState | base_bridge (R4) → mission | 1 Hz | reliable |
 | `/mission/state` | std_msgs/String (custom msg later) | mission → bridge, UI | on change | transient local |
 
 ## Actions / services

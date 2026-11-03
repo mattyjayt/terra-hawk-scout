@@ -15,7 +15,7 @@ The design fits, carries the load and is power-consistent on paper.
 | Chassis | Elegoo Smart Robot Car V4.0 plates (drilled, 29 holes), 39.7 mm deck gap |
 | Drive | 4 × Hiwonder TT Hall-encoder 1:42, Cytron MDD3A on the 3S pack, PWM capped at 8.4 V |
 | Power | 3S pack → XT30 → 7.5 A fuse → 10 A DC rocker → MDD3A + Pololu D36V50F5 (5 V/5 A) → Pi 5 header |
-| Compute | Pi 5 8 GB + Active Cooler; classic ESP32 (micro-ROS) on Pi UART2 |
+| Compute | Pi 5 8 GB + Active Cooler; classic ESP32 (micro-ROS) on Pi UART2 — *superseded: UNO R4 + Elegoo shield on USB (ADR-0006)* |
 | Sensors | RPLIDAR C1 on Pi UART0 (scan plane 149 mm), Camera Module 3 at 15° down, MPU-6050 at the centre of rotation, HC-SR04 |
 | Mass | 0.998 kg empty, 1.298 kg with the 300 g cup (49/51 front/rear) |
 

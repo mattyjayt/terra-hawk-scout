@@ -7,9 +7,9 @@ IDs: `G-SCOUT-n` goals · `REQ-SCOUT-nnn` requirements · `IF-*` interfaces · `
 | [Product requirements](product/prd.md) | PRD-SCOUT | Draft |
 | [Software requirements spec](specs/srs.md) | SRS-SCOUT | Draft |
 | [ROS 2 topics, frames, QoS](specs/interfaces/ros-topics.md) | IF-ROS-TOPICS | Draft |
-| [ESP32 ↔ Pi micro-ROS contract](specs/interfaces/micro-ros.md) | IF-MICROROS | Draft |
+| [Pi ↔ R4 serial protocol v1](specs/interfaces/serial-r4-v1.md) | IF-SERIAL-R4-V1 | Implemented |
 | [Hardware: layout, power, wiring, pinout](design/DD-SCOUT-HW.md) | DD-SCOUT-HW | Draft |
-| [ESP32 base firmware](design/DD-SCOUT-FW.md) | DD-SCOUT-FW | Not started (Jaime writes the control-loop sections) |
+| [R4 base firmware](design/DD-SCOUT-FW.md) | DD-SCOUT-FW | Not started (Jaime writes it, issue #16) |
 | [ros2_control hardware interface](design/DD-SCOUT-HWIF.md) | DD-SCOUT-HWIF | Not started (learn) |
 | [Perception node](design/DD-SCOUT-PERC.md) | DD-SCOUT-PERC | Not started (learn) |
 | [Localisation (EKF)](design/DD-SCOUT-LOC.md) | DD-SCOUT-LOC | Not started (learn) |
