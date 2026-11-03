@@ -31,3 +31,8 @@ Each test case maps 1:1 to a requirement in the [SRS](../specs/srs.md) (`TC-SCOU
 | TC-SCOUT-018 | scope/log measurement | per REQ-SCOUT-018 | ⏳ | |
 | TC-SCOUT-019 | Nav2 goal in sim | per REQ-SCOUT-019 | ⏳ | |
 | TC-SCOUT-020 | release checklist | per REQ-SCOUT-020 | ⏳ | |
+| TC-SCOUT-021 | SIL + HITL: `cmd_vel` → `M` lines at 20 Hz; silence → `S` < 0.3 s (DD-SCOUT-BRIDGE §8) | per REQ-SCOUT-001/002/024 | ⏳ | |
+| TC-SCOUT-022 | SIL + HITL: `imu/data_raw` ≥ 18 Hz (v1), frame, covariance −1, \|a\| = 9.81 ± 0.3 | per REQ-SCOUT-005 | ⏳ | |
+| TC-SCOUT-023 | `pan/cmd` ±0.5 rad → `V` line + joint state; camera turns left for + | per REQ-SCOUT-021 | ⏳ | |
+| TC-SCOUT-024 | kill/restart fake R4, unplug R4, frozen IMU → diagnostics ERROR < 1 s, recover < 3 s | per REQ-SCOUT-016/022 | ⏳ | |
+| TC-SCOUT-025 | 20 s slow walk across the view: person centred (±10 %) in ≥ 80 % of frames | per REQ-SCOUT-023 | ⏳ | |
