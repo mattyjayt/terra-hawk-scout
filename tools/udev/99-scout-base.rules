@@ -1,0 +1,1 @@
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2341", ATTRS{idProduct}=="1002", ATTRS{serial}=="F412FA9FE1BC", SYMLINK+="scout_base", GROUP="dialout", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"

@@ -1,0 +1,10 @@
+base_bridge:
+  ros__parameters:
+    port: /dev/scout_base
+    track_width: 0.15
+    max_wheel_speed: 0.5
+    pwm_min: 70
+    pan_sign: 1             
+    pan_min: -1.5708
+    pan_max: 1.5708
+    cell_count: 2           
