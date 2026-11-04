@@ -1,0 +1,69 @@
+# ROS 2 CI: build + test every package in ros2_ws on each push and PR.
+# Same steps as on the Pi:  rosdep install -> colcon build -> colcon test -> colcon test-result
+name: ros-ci
+on:
+  push:
+    branches: [main]
+    paths: ["ros2_ws/**", "tools/**", "firmware/**", ".github/workflows/ros-ci.yml"]
+  pull_request:
+    paths: ["ros2_ws/**", "tools/**", "firmware/**", ".github/workflows/ros-ci.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: ros-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-24.04
+    container: ros:jazzy-ros-base   # Ubuntu 24.04 + ROS 2 Jazzy, same as the Pi
+    defaults:
+      run:
+        shell: bash
+        working-directory: ros2_ws
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies (rosdep reads every package.xml)
+        run: |
+          apt-get update -qq
+          rosdep update --rosdistro jazzy
+          rosdep install --from-paths src --ignore-src -y --rosdistro jazzy
+
+      - name: colcon build
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          colcon build --event-handlers console_cohesion+
+
+      - name: colcon test
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          source install/setup.bash
+          export SCOUT_REPO="$GITHUB_WORKSPACE"   # launch tests find tools/fake_r4.py here
+          colcon test --event-handlers console_cohesion+
+
+      - name: Test results (fails the job if any test failed)
+        if: always()
+        run: colcon test-result --verbose
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: ros2_ws/build/*/test_results/
+          if-no-files-found: ignore
+
+  firmware:
+    # Compile-check the R4 sketches (same board as on the bench)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/compile-sketches@v1
+        with:
+          fqbn: arduino:renesas_uno:unor4wifi
+          libraries: |
+            - name: Servo
+          sketch-paths: |
+            - firmware/r4_base
+            - firmware/r4_bench
