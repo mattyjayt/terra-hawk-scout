@@ -1,4 +1,5 @@
 # Lab 4 — Python bridge node + software-in-the-loop tests
+**Status (4 Nov):** Tasks 4.1–4.3 done; 4.0 and 4.4–4.6 rewritten step by step.
 **Objectives:** wrap the Lab 3 core in a ROS 2 node that implements IF-ROS-TOPICS P1 completely, and prove it against the fake R4 with an automated launch test.
 **Reading:** ROS 2 tutorials "Writing a simple publisher and subscriber (Python)", "Using parameters in a class (Python)", "Writing a simple service and client (Python)"; Concepts "About QoS settings" and "Executors"; DD-SCOUT-BRIDGE §3–§7; the launch_testing README (https://github.com/ros2/launch/tree/jazzy/launch_testing).
 
@@ -9,80 +10,258 @@
 
 ---
 
-## Task 4.1 — Node skeleton: parameters, publishers, subscribers 🧠
-Replace the generated `base_bridge.py` with a class `BaseBridge(Node)`, node name **`base_bridge`**.
-1. Declare **every** parameter in IF-ROS-TOPICS §8, with its type and default (`self.declare_parameter('track_width', 0.0)`). Refuse to start with a clear error if `track_width`, `max_wheel_speed` or `pwm_min` is still 0.
-2. Publishers, with names **without a leading slash**:
-   | name | type | QoS |
-   |---|---|---|
-   | `imu/data_raw` | `sensor_msgs.msg.Imu` | `qos_profile_sensor_data` |
-   | `battery` | `sensor_msgs.msg.BatteryState` | 10 (reliable) |
-   | `joint_states` | `sensor_msgs.msg.JointState` | 10 |
-   | `diagnostics` | `diagnostic_msgs.msg.DiagnosticArray` | 10 |
-   | `base/debug/yaw` | `std_msgs.msg.Float64` | `qos_profile_sensor_data` |
-3. Subscriptions: `cmd_vel` (`geometry_msgs.msg.Twist`, 10) and `pan/cmd` (`std_msgs.msg.Float64`, 10). For now the callbacks only **store** the value and the time (`self.get_clock().now()`).
-4. Timers: `send` at `send_rate` and `diagnostics` at 1 Hz (empty bodies for now).
+## How this lab is written
+Each task lists the **state** to add in `__init__`, every **method** with its exact signature, the **steps** inside each method, and a **test** with pass criteria.
+- Write the methods as empty stubs first, so the node starts. Then fill in one method at a time and test after each one.
+- Build once with `colcon build --symlink-install`. After that, Python edits take effect without rebuilding.
+- Use absolute paths in commands. Paths below assume the repo is at `~/Projects/terra-hawk-scout`.
 
-**Check:** `ros2 run scout_base_py base_bridge --ros-args --params-file <config/base.yaml>`, then `ros2 node info /base_bridge` lists exactly the topics above, and `ros2 param dump /base_bridge` shows your values.
-
-## Task 4.2 — Serial link, reader thread, state machine 🧠
-1. `open_port()`: `serial.Serial(port, baud, timeout=0.1)`, then `reset_input_buffer()`, then write `S\n` (DD-SCOUT-BRIDGE §4).
-2. Reader thread (`daemon=True`), loop while `self._running`:
-   - not connected → try `open_port()` every 1 s and catch `serial.SerialException` / `OSError`
-   - connected → `readline()`, decode with `errors="replace"`, `parse_line()`, then dispatch: `ImuSample` → publish (Task 4.4); `Ack` → store the text, `self._ack_event.set()`; `WatchdogStop` → counter++
-   - any exception from the port → close, state = DISCONNECTED, log **one** warning (not one per loop)
-3. `write_line(text)`: under `self._write_lock`; if not connected, do nothing and return False.
-4. States DISCONNECTED → SYNCING → RUNNING exactly as in DD-SCOUT-BRIDGE §4. Log each transition once.
-
-**Check:** with no device at the port, the node runs and logs "waiting for /tmp/fake_r4". Start `python3 tools/fake_r4.py` and within 1 s the log shows SYNCING → RUNNING.
-
-## Task 4.3 — Drive: `cmd_vel` → `M l r`, with the timeout 🧠
-In the `send` timer:
-- the command is fresh (age < `cmd_timeout`) → `twist_to_pwm(...)` → `write_line(format_drive(l, r))`
-- it has just gone stale → write `S\n` **once**, then stay quiet
-
-Clamp `v` and `ω` to `max_linear`/`max_angular` first.
-
-**Check (fake R4):**
+**Three-terminal test setup** (used by every task):
 ```bash
-# T1: python3 tools/fake_r4.py --log /tmp/r4.jsonl
-# T2: ros2 run scout_base_py base_bridge --ros-args --params-file .../base.yaml -p port:=/tmp/fake_r4
-# T3: ros2 topic pub -r 10 -t 20 /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.1}}"
-# T4: tail -f /tmp/r4.jsonl
+# T1 — fake R4 (logs every line it receives)
+python3 ~/Projects/terra-hawk-scout/tools/fake_r4.py --log /tmp/r4.jsonl
+# T2 — your bridge
+ros2 run scout_base_py base_bridge --ros-args \
+  --params-file ~/Projects/terra-hawk-scout/ros2_ws/src/scout_bringup/config/base.yaml -p port:=/tmp/fake_r4
+# T3 — what the R4 received
+tail -f /tmp/r4.jsonl
 ```
-You see `M l l` lines at about 20 Hz with the value you computed by hand, then one `S` about 0.25 s after T3 ends.
 
-## Task 4.4 — Telemetry: IMU, battery, joint state, debug yaw 🧠
-For every `ImuSample`:
-- `Imu`: field by field from IF-ROS-TOPICS T3 (stamp = now, `frame_id`, `orientation_covariance[0] = -1.0`, unit conversions, covariance diagonals). Then feed the `StaleDetector`.
-- `JointState`: `name=['pan_joint']`, `position=[servo_deg_to_pan_rad(...)]`.
-- `base/debug/yaw`: radians.
-- Battery: append to a deque of 20 samples; a 1 Hz timer publishes `BatteryState` (T4). Use `float('nan')` for unknown fields.
+---
 
-**Check:** `ros2 topic hz /imu/data_raw` ≈ 20; `ros2 topic echo --once /imu/data_raw` shows `frame_id: imu_link`, `orientation_covariance[0] = -1.0` and `linear_acceleration.z ≈ 9.81` (fake). `ros2 topic echo /battery` → 7.6 V, `present: true`.
+## Task 4.0: Lab 3 fixes first (do this before 4.4) 🧠
+Tasks 4.4–4.6 call these functions, and their tests will fail until they're fixed. The full list is in PR #19.
+| Fix | Caught again by |
+|---|---|
+| `servo_deg_to_pan_rad`: subtract 90 first (90° → 0 rad) | 4.4 (joint state at centre must be 0.0) |
+| `pan_rad_to_servo_deg`: convert only once; clamp **radians** to `pan_min/pan_max`, then convert (0 rad → 90, 0.5 rad → 119) | 4.5 |
+| `StaleDetector`: compare with the **previous** tuple, not with zeros | 4.6 (`--freeze-imu`) |
+| `RateMeter`: a true sliding window (keep timestamps, drop the old ones) | 4.6 (rate must stay ~20) |
+| `parse_line`: `line = line.strip()` first (the R4 sends `\r\n`) | 4.6 (watchdog stops counted) |
+| rename `gravity_x/y/z` → `gyro_x/y/z` | 4.4 |
+| `scout_bringup`: add `launch/.gitkeep` and `foxglove/.gitkeep`; fix the pep257 docstrings | CI (PR #20) |
+Add a unit test for each fix (RED first), then commit: `fix(scout_base_py): Lab 3 review fixes`.
 
-## Task 4.5 — Pan command and services 🧠
-- `pan/cmd` → `pan_rad_to_servo_deg` → `V` only if it changed by ≥ 1°, at most 20 Hz.
-- Services `base/stop`, `imu/calibrate`, `imu/zero_yaw` (`std_srvs.srv.Trigger`): clear the event, write the command, `wait(timeout)`, then fill `success` and `message` (IF-ROS-TOPICS §6). This only works because the reader runs in its own thread: try it in the main thread once and watch it hang. That's the lesson.
+---
 
-**Check:** `ros2 topic pub --once /pan/cmd std_msgs/msg/Float64 "{data: 0.5}"` → the fake log shows `V 119`; `ros2 service call /base/stop std_srvs/srv/Trigger` → `success=True`; with the fake stopped → `success=False, message='link down'`.
+## Task 4.1: Node skeleton ✅ (done 3–4 Nov)
+Parameters from IF-ROS-TOPICS §8 (the defaults must match that table), five publishers, two subscriptions (relative names: `cmd_vel`, `pan/cmd`), and the refuse-to-start check for `track_width`, `max_wheel_speed` and `pwm_min`.
 
-## Task 4.6 — Diagnostics and shutdown 🧠
-- The 1 Hz timer builds one `DiagnosticStatus` (name `base_bridge: R4 link`, `level` from `link_level()`, `values` from IF-ROS-TOPICS T6) as `KeyValue` pairs (strings!). In Python, `level` is a `bytes` field: `DiagnosticStatus.OK` etc. are already the right type.
-- Shutdown in `main()`:
-  ```python
-  from rclpy.executors import ExternalShutdownException
-  try:
-      rclpy.spin(node)
-  except (KeyboardInterrupt, ExternalShutdownException):
-      pass
-  finally:
-      node.close()          # your method: write 'S', stop the thread, join it, close the port
-      node.destroy_node()
-      rclpy.try_shutdown()
-  ```
+## Task 4.2: Serial link and reader thread ✅ (done 4 Nov)
+Methods `_open_port() -> bool`, `_close_port() -> None`, `_write_line(text) -> bool`, `_reader_loop() -> None`.
+Verified: waits once for the port, sends `S` on connect, reads 20 I lines/s, logs "R4 link lost" and reconnects.
 
-**Check:** stop the fake → `/diagnostics` goes to level 2 within 1 s → restart it → back to 0 within 3 s. Run the fake with `--freeze-imu` → `imu_frozen: true`, level 2. Ctrl-C the bridge → the last line in the fake log is `S`.
+## Task 4.3: Drive with timeout ✅ (done 4 Nov)
+`cmd_vel_callback` stores `(v, w)` plus `time.monotonic()`. `_send_tick()` sends `M l r` at 20 Hz while the command is fresh, else one `S`.
+Verified: `M 70 70` at 20.0 Hz, a single `S` after the timeout, and a left turn gives `M -70 70`.
+
+---
+
+## Task 4.4: Telemetry, turning `I` lines into ROS messages 🧠
+**Goal:** every `I` line becomes an `Imu` and a `JointState` message plus a debug yaw; the battery voltage is averaged and published at 1 Hz. Field-by-field rules: IF-ROS-TOPICS §5.2 (T3, T4, T5, T7).
+
+**New imports**
+```python
+import collections
+import math
+from scout_base_py.conversions import dps_to_radps, g_to_mps2, RateMeter, StaleDetector
+from scout_base_py.kinematics import servo_deg_to_pan_rad
+from scout_base_py.protocol import Ack, WatchdogStop    # used in 4.5 / 4.6
+```
+
+**State in `__init__`** (read parameters once):
+```python
+self._frame_imu = self.get_parameter('frame_id_imu').value
+self._frame_base = self.get_parameter('frame_id_base').value
+self._gyro_var = self.get_parameter('gyro_var').value
+self._accel_var = self.get_parameter('accel_var').value
+self._pan_sign = self.get_parameter('pan_sign').value
+self._cell_count = self.get_parameter('cell_count').value
+self._battery_present_v = self.get_parameter('battery_present_v').value
+self._batt_samples = collections.deque(maxlen=20)       # last 20 voltages = 1 s
+self._stale = StaleDetector(self.get_parameter('imu_stale_count').value)
+self._imu_frozen = False
+self._imu_rate = RateMeter(1.0)
+self._last_sample_time = None                            # monotonic time of last I line
+self._battery_timer = self.create_timer(1.0, self._publish_battery)
+```
+
+**Method 1: `_handle_line(self, msg) -> None`** (the dispatcher, called by the reader thread)
+1. `ImuSample` → `self._on_imu(msg)`
+2. `Ack` → `self._on_ack(msg)` (an empty stub for now; written in 4.5)
+3. `WatchdogStop` → `self._on_watchdog()` (an empty stub for now; written in 4.6)
+4. anything else (`None`) → ignore for now (4.6 counts it)
+
+In `_reader_loop`, replace the `i_count` block with `self._handle_line(parse_line(raw.decode(errors='replace')))`. The new `RateMeter` replaces your per-second "I lines" log.
+
+**Method 2: `_on_imu(self, s: ImuSample) -> None`**
+1. `stamp = self.get_clock().now().to_msg()`. All three messages use the same stamp.
+2. **Imu** (`m = Imu()`):
+   - `m.header.stamp = stamp`; `m.header.frame_id = self._frame_imu`
+   - `m.orientation.w = 1.0`; `m.orientation_covariance[0] = -1.0` (REP-145: "no orientation")
+   - `m.angular_velocity.x/y/z = dps_to_radps(s.gyro_x / _y / _z)`
+   - `m.linear_acceleration.x/y/z = g_to_mps2(s.accel_x / _y / _z)`
+   - covariances: a 9-element list, the diagonal at indices 0, 4 and 8:
+     `m.angular_velocity_covariance = [g, 0.0, 0.0, 0.0, g, 0.0, 0.0, 0.0, g]` with `g = self._gyro_var` (the same pattern with `self._accel_var`)
+   - `self.imu_publisher.publish(m)`
+3. **JointState**: `header.stamp = stamp`, `name = ['pan_joint']`, `position = [servo_deg_to_pan_rad(s.servo_deg, self._pan_sign)]`, then publish.
+4. **Debug yaw**: `Float64(data=math.radians(s.yaw_deg))`, then publish on `base_debug_yaw_publisher`.
+5. **Bookkeeping**:
+   - `self._batt_samples.append(s.batt_voltage)`
+   - `self._imu_frozen = self._stale.update((s.accel_x, s.accel_y, s.accel_z, s.gyro_x, s.gyro_y, s.gyro_z))`
+   - `now = time.monotonic()`; `self._imu_rate.tick(now)`; `self._last_sample_time = now`
+
+Publishing from the reader thread is allowed in rclpy.
+
+**Method 3: `_publish_battery(self) -> None`** (1 Hz timer)
+1. If `self._batt_samples` is empty: return.
+2. `v = sum(...) / len(...)`
+3. `b = BatteryState()`, then set:
+   - `header.stamp` (now) and `header.frame_id = self._frame_base`
+   - `voltage = v`; `present = v > self._battery_present_v`
+   - `power_supply_technology = BatteryState.POWER_SUPPLY_TECHNOLOGY_LION`; status and health stay `UNKNOWN` (0)
+   - `current`, `charge`, `capacity`, `design_capacity`, `percentage`, `temperature` = `float('nan')`
+   - `cell_voltage = [v / self._cell_count] * self._cell_count`; `location = 'base'`
+4. Publish.
+
+**Test 4.4** (setup above, plus a T4):
+```bash
+ros2 topic hz /imu/data_raw                         # ≈ 20
+ros2 topic echo --once /imu/data_raw                # frame_id imu_link, orientation_covariance[0] -1.0,
+                                                    # linear_acceleration.z ≈ 9.81 (fake R4: 1 g on z)
+ros2 topic echo --once /joint_states                # name [pan_joint], position [0.0]  (1.571 = Lab 3 bug)
+ros2 topic echo --once /battery                     # voltage ≈ 7.6, present true, percentage .nan
+ros2 topic echo --once /base/debug/yaw
+```
+Commit: `feat(scout_base_py): telemetry publishers (Lab 4.4)`.
+
+---
+
+## Task 4.5: Pan command and services 🧠
+**Goal:** `pan/cmd` moves the servo; three `std_srvs/Trigger` services send `S`, `C` and `Z` and **wait for the R4's acknowledgement**. Contract: IF-ROS-TOPICS T2 and §6.
+
+**Background: why waiting works here.** A service callback runs in the ROS executor. The `A … ok` reply arrives in your **reader thread**. A `threading.Event` lets one thread sleep until another one wakes it: the service calls `event.wait(timeout)` and the reader calls `event.set()`. That only works because reading happens in a *different* thread. If you read the port inside the service callback instead, nothing reads while it waits, and it hangs. Try that once, to see it.
+
+**New imports:** `from std_srvs.srv import Trigger` and `from scout_base_py.kinematics import pan_rad_to_servo_deg`; `format_servo` from protocol.
+
+**State in `__init__`**
+```python
+self._pan_min = self.get_parameter('pan_min').value
+self._pan_max = self.get_parameter('pan_max').value
+self._last_servo_deg = None
+self._last_servo_time = 0.0
+self._ack_event = threading.Event()
+self._last_ack = ''
+self.create_service(Trigger, 'base/stop', self._srv_stop)
+self.create_service(Trigger, 'imu/calibrate', self._srv_calibrate)
+self.create_service(Trigger, 'imu/zero_yaw', self._srv_zero_yaw)
+```
+
+**Method 1: `pan_cmd_callback(self, msg) -> None`** (replace the logging version)
+1. `deg = pan_rad_to_servo_deg(msg.data, self._pan_sign, self._pan_min, self._pan_max)`
+2. If `self._last_servo_deg is not None` and `abs(deg - self._last_servo_deg) < 1`: return (no change).
+3. If `time.monotonic() - self._last_servo_time < 0.05`: return (max 20 Hz; hobby servos jitter when flooded).
+4. If `self._write_line(format_servo(deg))`: store `deg` and the time.
+
+**Method 2: `_on_ack(self, ack: Ack) -> None`** (called by `_handle_line`)
+`self._last_ack = ack.text`, then `self._ack_event.set()`.
+
+**Method 3: `_send_and_wait(self, line: str, expect: str, timeout: float) -> tuple[bool, str]`**
+1. If `self._ser is None`: return `(False, 'link down')`.
+2. `self._ack_event.clear()`
+3. If not `self._write_line(line)`: return `(False, 'write failed')`.
+4. `deadline = time.monotonic() + timeout`. Loop while time remains:
+   - `if not self._ack_event.wait(deadline - time.monotonic()): break` (timed out)
+   - `if self._last_ack == expect: return (True, expect)`
+   - otherwise `self._ack_event.clear()` and keep waiting. Other acks arrive first, e.g. `C calibrating 2 s` before `C ok`.
+5. Return `(False, f'no "{expect}" within {timeout} s')`.
+
+**Methods 4–6: the service callbacks.** The signature is always `(self, request, response)`, and they **return** `response`:
+| Method | Calls | Extra |
+|---|---|---|
+| `_srv_stop` | `_send_and_wait('S\n', 'S ok', 0.5)` | first set `self._cmd_time = None`, so `_send_tick` doesn't start driving again |
+| `_srv_calibrate` | `_send_and_wait('C\n', 'C ok', 3.0)` | the motors stop and the car must stay still for 2 s |
+| `_srv_zero_yaw` | `_send_and_wait('Z\n', 'Z ok', 0.5)` | |
+In each: `ok, text = ...`, then `response.success = ok`, `response.message = text`, `return response`.
+
+**Test 4.5**
+```bash
+ros2 topic pub --once /pan/cmd std_msgs/msg/Float64 "{data: 0.5}"     # T3 shows V 119
+ros2 topic pub --once /pan/cmd std_msgs/msg/Float64 "{data: 0.0}"     # V 90
+ros2 service call /base/stop std_srvs/srv/Trigger                     # success=True, message='S ok'
+                                                                      # (False, 'no "S ok"…'? → the \r\n fix in Task 4.0)
+ros2 service call /imu/calibrate std_srvs/srv/Trigger                 # takes ~2 s, success=True
+ros2 service call /imu/zero_yaw std_srvs/srv/Trigger                  # success=True
+# stop T1 (fake R4), then:
+ros2 service call /base/stop std_srvs/srv/Trigger                     # success=False, message='link down'
+```
+Commit: `feat(scout_base_py): pan command and services (Lab 4.5)`.
+
+---
+
+## Task 4.6: Diagnostics and clean shutdown 🧠
+**Goal:** one `DiagnosticStatus` per second reporting the link's health (IF-ROS-TOPICS T6), and on Ctrl+C the R4 always receives a final `S`.
+
+**New imports:** `from diagnostic_msgs.msg import DiagnosticStatus, KeyValue`; `from scout_base_py.conversions import link_level`; `from rclpy.executors import ExternalShutdownException`.
+
+**State in `__init__`**
+```python
+self._port = self.get_parameter('port').value
+self._lines_rx = 0
+self._parse_errors = 0
+self._watchdog_stops = 0
+self._diag_timer = self.create_timer(1.0, self._publish_diagnostics)
+```
+
+**Small additions**
+- In `_handle_line`: `self._lines_rx += 1` for every line. If `msg is None`, `self._parse_errors += 1`. The reader loop already skips empty reads, so `None` here means a garbled or unknown line.
+- `_on_watchdog(self) -> None`: `self._watchdog_stops += 1`.
+- `_on_ack`: also store the text for the diagnostics (`last_ack`).
+
+**Method 1: `_publish_diagnostics(self) -> None`** (1 Hz timer)
+1. `now = time.monotonic()`; `rate = self._imu_rate.rate(now)`
+2. `since = now - self._last_sample_time if self._last_sample_time is not None else float('inf')`
+3. `level = link_level(self._ser is not None, rate, 20.0, self._imu_frozen, since)` (20.0 = the serial-v1 telemetry rate)
+4. `message`: pick a short text per level, e.g. `'ok'`, `'low rate'`, `'link down'` / `'no data'` / `'IMU frozen'`.
+5. `st = DiagnosticStatus()`, then set:
+   - `st.level = bytes([level])` (the message field is a `bytes`; `DiagnosticStatus.OK/WARN/ERROR` are `b'\x00'/b'\x01'/b'\x02'`)
+   - `st.name = 'base_bridge: R4 link'`; `st.message = message`; `st.hardware_id = self._port`
+   - `st.values = [KeyValue(key='port', value=self._port), KeyValue(key='connected', value=str(self._ser is not None)), ...]` with **all values as strings**: `line_rate_hz` (e.g. `f'{rate:.1f}'`), `lines_rx`, `parse_errors`, `watchdog_stops`, `imu_frozen`, `last_ack`, `protocol` = `'serial-r4-v1'`
+6. `arr = DiagnosticArray()`; `arr.header.stamp = self.get_clock().now().to_msg()`; `arr.status = [st]`; publish.
+
+**Method 2: `close(self) -> None`** (called from `main`)
+1. `self._write_line('S\n')`: stop the motors **first**
+2. `self._running = False`
+3. `self._reader.join(timeout=1.0)`: wait for the thread to finish its current `readline()` (≤ 0.1 s)
+4. `self._close_port()`
+
+**`main()`**
+```python
+def main(args=None):
+    rclpy.init(args=args)
+    node = BaseBridge()
+    try:
+        rclpy.spin(node)
+    except (KeyboardInterrupt, ExternalShutdownException):
+        pass
+    finally:
+        node.close()
+        node.destroy_node()
+        rclpy.try_shutdown()
+```
+
+**Test 4.6**
+```bash
+ros2 topic echo /diagnostics          # level b'\x00', message 'ok', line_rate_hz ≈ 20.0
+# stop T1           → within 1 s: level b'\x02', connected 'False'
+# start T1 again    → within 3 s: back to b'\x00'
+# restart T1 with:  python3 ~/Projects/terra-hawk-scout/tools/fake_r4.py --log /tmp/r4.jsonl --freeze-imu
+#                   → imu_frozen 'True', level b'\x02'   (stays OK? → StaleDetector, Task 4.0)
+# Ctrl+C on T2      → the last line in T3 is {"rx": "S"}
+```
+Commit: `feat(scout_base_py): diagnostics and clean shutdown (Lab 4.6)`.
+
+---
 
 ## Task 4.7 — Automated SIL contract test (launch_testing) 🔧 + 🧠
 The harness is boilerplate (🔧, given below); the test cases are yours (🧠). It lives in `scout_bringup/test/test_base_contract.py`, so the **same file** later tests the C++ bridge (`SCOUT_BRIDGE_IMPL=cpp`).
