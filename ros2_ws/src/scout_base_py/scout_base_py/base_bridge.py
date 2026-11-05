@@ -4,15 +4,16 @@ import math
 import threading
 import time
 
-from diagnostic_msgs.msg import DiagnosticArray
+from diagnostic_msgs.msg import DiagnosticArray, DiagnosticStatus, KeyValue
 
 from geometry_msgs.msg import Twist
 
 import rclpy
+from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 
-from scout_base_py.conversions import (dps_to_radps, g_to_mps2,
+from scout_base_py.conversions import (dps_to_radps, g_to_mps2, link_level,
                                        RateMeter, StaleDetector)
 from scout_base_py.kinematics import (pan_rad_to_servo_deg,
                                       servo_deg_to_pan_rad, twist_to_pwm)
@@ -87,6 +88,10 @@ class BaseBridge(Node):
         self._last_servo_time = 0.0
         self._ack_event = threading.Event()
         self._last_ack = ''
+        self._lines_rx = 0
+        self._parse_errors = 0
+        self._watchdog_stops = 0
+        self._diag_timer = self.create_timer(1.0, self._publish_diagnostics)
 
         self.create_service(Trigger, 'base/stop', self._srv_stop)
         self.create_service(Trigger, 'imu/calibrate', self._srv_calibrate)
@@ -258,10 +263,15 @@ class BaseBridge(Node):
         """Send one parsed line to the handler for its type."""
         if isinstance(msg, ImuSample):
             self._on_imu(msg)
+            self._lines_rx += 1
         elif isinstance(msg, Ack):
             self._on_ack(msg)
+            self._lines_rx += 1
         elif isinstance(msg, WatchdogStop):
             self._on_watchdog()
+            self._lines_rx += 1
+        else:
+            self._parse_errors += 1
         # None (garbled/unknown line): ignored for now, counted in 4.6
 
     def _on_imu(self, s: ImuSample) -> None:
@@ -306,6 +316,7 @@ class BaseBridge(Node):
         self._ack_event.set()
 
     def _on_watchdog(self) -> None:
+        self._watchdog_stops += 1
         pass
 
     def _publish_battery(self) -> None:
@@ -382,14 +393,64 @@ class BaseBridge(Node):
             'Z\n', 'Z ok', 0.5)
         return response
 
+    def _publish_diagnostics(self) -> None:
+        now = time.monotonic()
+        rate = self._imu_rate.rate(now)
+        since = (now - self._last_sample_time if
+                 self._last_sample_time is not None else float('inf'))
+        level = link_level(self._ser is not None, rate,
+                           20.0, self._imu_frozen, since)
+        if self._ser is None:
+            message = 'link down'
+        elif self._imu_frozen:
+            message = 'IMU frozen'
+        elif level != 0:
+            message = f'telemetry {rate:.1f} Hz (expected 20)'
+        else:
+            message = 'ok'
+
+        st = DiagnosticStatus()
+        st.level = bytes([level])
+        st.name = 'base_bridge: R4 link'
+        st.message = message
+        st.hardware_id = self._port
+        st.values = [KeyValue(key='port', value=self._port),
+                     KeyValue(key='connected',
+                              value=str(self._ser is not None)),
+                     KeyValue(key='line_rate_hz', value=f'{rate:.1f}'),
+                     KeyValue(key='lines_rx', value=str(self._lines_rx)),
+                     KeyValue(key='parse_errors',
+                              value=str(self._parse_errors)),
+                     KeyValue(key='watchdog_stops',
+                              value=str(self._watchdog_stops)),
+                     KeyValue(key='imu_frozen', value=str(self._imu_frozen)),
+                     KeyValue(key='last_ack', value=str(self._last_ack)),
+                     KeyValue(key='protocol', value='serial-r4-v1')]
+        arr = DiagnosticArray()
+        arr.header.stamp = self.get_clock().now().to_msg()
+        arr.status = [st]
+        self.diagnostic_publisher.publish(arr)
+
+    def close(self) -> None:
+        """Close the connection to node."""
+        self._write_line('S\n')
+        self._running = False
+        self._reader.join(timeout=1.0)
+        self._close_port()
+
 
 def main(args=None):
     """Start Base Bridge Node."""
     rclpy.init(args=args)
     base_bridge = BaseBridge()
-    rclpy.spin(base_bridge)
-    base_bridge.destroy_node()
-    rclpy.shutdown()
+    try:
+        rclpy.spin(base_bridge)
+    except (KeyboardInterrupt, ExternalShutdownException):
+        pass
+    finally:
+        base_bridge.close()
+        base_bridge.destroy_node()
+        rclpy.try_shutdown()
 
 
 if __name__ == '__main__':
