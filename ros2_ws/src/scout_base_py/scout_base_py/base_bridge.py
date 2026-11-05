@@ -5,14 +5,19 @@ from rclpy.qos import qos_profile_sensor_data
 import threading
 import serial
 import time
+import collections
+import math
 
 from std_msgs.msg import Float64
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Imu, BatteryState, JointState
 from diagnostic_msgs.msg import DiagnosticArray
 
-from scout_base_py.protocol import format_drive, parse_line, ImuSample
-from scout_base_py.kinematics import twist_to_pwm
+from scout_base_py.protocol import (format_drive, parse_line,
+                                    Ack, ImuSample, WatchdogStop)
+from scout_base_py.kinematics import twist_to_pwm, servo_deg_to_pan_rad
+from scout_base_py.conversions import (dps_to_radps, g_to_mps2,
+                                       RateMeter, StaleDetector)
 
 
 class BaseBridge(Node):
@@ -44,11 +49,49 @@ class BaseBridge(Node):
         self.declare_parameter('frame_id_imu', 'imu_link')
         self.declare_parameter('frame_id_base', 'base_link')
 
+        self._port = self.get_parameter('port').value
+        self._baud = self.get_parameter('baud').value
+        self._track_width = self.get_parameter('track_width').value
+        self._max_wheel_speed = self.get_parameter('max_wheel_speed').value
+        self._pwm_min = self.get_parameter('pwm_min').value
+        self._max_linear = self.get_parameter('max_linear').value
+        self._max_angular = self.get_parameter('max_angular').value
+        self._cmd_timeout = self.get_parameter('cmd_timeout').value
+        self._send_rate = self.get_parameter('send_rate').value
+        self._gyro_var = self.get_parameter('gyro_var').value
+        self._accel_var = self.get_parameter('accel_var').value
+        self._pan_sign = self.get_parameter('pan_sign').value
+        self._pan_min = self.get_parameter('pan_min').value
+        self._pan_max = self.get_parameter('pan_max').value
+        self._cell_count = self.get_parameter('cell_count').value
+        self._battery_present_v = self.get_parameter('battery_present_v').value
+        self._batt_samples = collections.deque(maxlen=20)
+        self._stale = StaleDetector(
+            self.get_parameter('imu_stale_count').value)
+        self._imu_frozen = False
+        self._imu_rate = RateMeter(1.0)
+        self._last_sample_time = None
+        self._battery_timer = self.create_timer(1.0, self._publish_battery)
+        self._frame_id_imu = self.get_parameter('frame_id_imu').value
+        self._frame_id_base = self.get_parameter('frame_id_base').value
+
         for name in ('track_width', 'max_wheel_speed', 'pwm_min'):
             if self.get_parameter(name).value <= 0:
                 raise ValueError(
                     f'Parameter {name} must be set (> 0), see config/base.yaml'
                 )
+
+        self._ser = None
+        self._write_lock = threading.Lock()
+        self._running = True
+        self._cmd = (0.0, 0.0)
+        self._cmd_time = None
+        self._cmd_timeout = self.get_parameter('cmd_timeout').value
+        self._stop_sent = True
+        self._send_timer = self.create_timer(
+            1.0 / self.get_parameter('send_rate').value,
+            self._send_tick)
+        self._reader = threading.Thread(target=self._reader_loop, daemon=True)
 
         # Create Publishers
         self.imu_publisher = self.create_publisher(
@@ -76,18 +119,6 @@ class BaseBridge(Node):
             'base/debug/yaw',
             qos_profile_sensor_data
         )
-
-        self._ser = None
-        self._write_lock = threading.Lock()
-        self._running = True
-        self._cmd = (0.0, 0.0)
-        self._cmd_time = None
-        self._cmd_timeout = self.get_parameter('cmd_timeout').value
-        self._stop_sent = True
-        self._send_timer = self.create_timer(
-            1.0 / self.get_parameter('send_rate').value,
-            self._send_tick)
-        self._reader = threading.Thread(target=self._reader_loop, daemon=True)
 
         # Create Subscribers
         self.cmd_vel_subscriber = self.create_subscription(
@@ -152,8 +183,6 @@ class BaseBridge(Node):
     def _reader_loop(self) -> None:
         """Run in the reader thread: (re)connect, read lines, parse them."""
         waiting_logged = False
-        i_count = 0
-        last_report = time.monotonic()
 
         while self._running:
             if self._ser is None:
@@ -171,13 +200,7 @@ class BaseBridge(Node):
                     raw = self._ser.readline()
                     if not raw:
                         continue
-                    msg = parse_line(raw.decode(errors='replace'))
-                    if isinstance(msg, ImuSample):
-                        i_count += 1
-                    if time.monotonic() - last_report >= 1.0:
-                        self.get_logger().info(f'I lines: {i_count}')
-                        i_count = 0
-                        last_report = time.monotonic()
+                    self._handle_line(parse_line(raw.decode(errors='replace')))
                 except (serial.SerialException, OSError):
                     self.get_logger().info('R4 link lost')
                     self._close_port()
@@ -211,6 +234,77 @@ class BaseBridge(Node):
                                    )
         self._write_line(format_drive(left, right))
         self._stop_sent = False
+
+    def _handle_line(self, msg) -> None:
+        """Send one parsed line to the handler for its type."""
+        if isinstance(msg, ImuSample):
+            self._on_imu(msg)
+        elif isinstance(msg, Ack):
+            self._on_ack(msg)
+        elif isinstance(msg, WatchdogStop):
+            self._on_watchdog()
+        # None (garbled/unknown line): ignored for now, counted in 4.6
+
+    def _on_imu(self, s: ImuSample) -> None:
+        stamp = self.get_clock().now().to_msg()
+        m = Imu()
+        m.header.stamp = stamp
+        m.header.frame_id = self._frame_id_imu
+        m.orientation.w = 1.0
+        m.orientation_covariance[0] = -1.0
+        m.angular_velocity.x = dps_to_radps(s.gyro_x)
+        m.angular_velocity.y = dps_to_radps(s.gyro_y)
+        m.angular_velocity.z = dps_to_radps(s.gyro_z)
+        m.linear_acceleration.x = g_to_mps2(s.accel_x)
+        m.linear_acceleration.y = g_to_mps2(s.accel_y)
+        m.linear_acceleration.z = g_to_mps2(s.accel_z)
+        g = self._gyro_var
+        x = self._accel_var
+        m.angular_velocity_covariance = [g, 0.0, 0.0, 0.0, g, 0.0, 0.0, 0.0, g]
+        m.linear_acceleration_covariance = [
+            x, 0.0, 0.0, 0.0, x, 0.0, 0.0, 0.0, x]
+        self.imu_publisher.publish(m)
+
+        j = JointState()
+        j.header.stamp = stamp
+        j.name = ['pan_joint']
+        j.position = [servo_deg_to_pan_rad(s.servo_deg, self._pan_sign)]
+        self.joint_state_publisher.publish(j)
+
+        self.base_debug_yaw_publisher.publish(
+            Float64(data=math.radians(s.yaw_deg)))
+
+        self._batt_samples.append(s.batt_voltage)
+        self._imu_frozen = self._stale.update(
+            (s.accel_x, s.accel_y, s.accel_z,
+             s.gyro_x, s.gyro_y, s.gyro_z))
+        now = time.monotonic()
+        self._imu_rate.tick(now)
+        self._last_sample_time = now
+
+    def _on_ack(self, msg) -> None:
+        pass
+
+    def _on_watchdog(self) -> None:
+        pass
+
+    def _publish_battery(self) -> None:
+        """Publish the mean battery voltage of the last ~1 s."""
+        if not self._batt_samples:
+            return
+        v = sum(self._batt_samples) / len(self._batt_samples)
+        nan = float('nan')
+        b = BatteryState()
+        b.header.stamp = self.get_clock().now().to_msg()
+        b.header.frame_id = self._frame_id_base
+        b.voltage = v
+        b.present = v > self._battery_present_v
+        b.power_supply_technology = BatteryState.POWER_SUPPLY_TECHNOLOGY_LION
+        b.current = b.charge = b.capacity = b.design_capacity = nan
+        b.percentage = b.temperature = nan
+        b.cell_voltage = [v / self._cell_count] * self._cell_count
+        b.location = 'base'
+        self.battery_publisher.publish(b)
 
     def cmd_vel_callback(self, msg):
         """Listen to incoming cmd_vel topic."""

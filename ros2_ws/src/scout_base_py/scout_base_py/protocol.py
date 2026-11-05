@@ -11,9 +11,9 @@ class ImuSample:
     accel_x: float
     accel_y: float
     accel_z: float
-    gravity_x: float
-    gravity_y: float
-    gravity_z: float
+    gyro_x: float
+    gyro_y: float
+    gyro_z: float
     yaw_deg: float
     servo_deg: int
     batt_voltage: float
@@ -45,9 +45,9 @@ def parse_line(line: str) -> ImuSample | Ack | WatchdogStop | None:
                 accel_x=float(parts[2]),
                 accel_y=float(parts[3]),
                 accel_z=float(parts[4]),
-                gravity_x=float(parts[5]),
-                gravity_y=float(parts[6]),
-                gravity_z=float(parts[7]),
+                gyro_x=float(parts[5]),
+                gyro_y=float(parts[6]),
+                gyro_z=float(parts[7]),
                 yaw_deg=float(parts[8]),
                 servo_deg=int(parts[9]),
                 batt_voltage=float(parts[10])
