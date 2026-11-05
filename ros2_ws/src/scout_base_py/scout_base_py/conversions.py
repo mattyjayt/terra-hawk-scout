@@ -1,4 +1,5 @@
-"""Algorithmic conversions between Scout base bridge (Python).
+"""
+Algorithmic conversions between Scout base bridge (Python).
 
 protocol and ROS2 messages.
 """
@@ -19,7 +20,8 @@ def dps_to_radps(w_dps: float) -> float:
 
 
 class StaleDetector:
-    """Detect a frozen sensor: the same values repeated `limit` times in a row.
+    """
+    Detect a frozen sensor: the same values repeated `limit` times in a row.
 
     A real MEMS sensor always has noise in its last digit, so identical
     consecutive samples mean the reading has stopped updating.
@@ -63,7 +65,8 @@ class RateMeter:
 
 def link_level(connected: bool, rate_hz: float, expected_hz: float,
                imu_frozen: bool, s_since_line: float) -> int:
-    """Determine the link level based on connection status.
+    """
+    Determine the link level based on connection status.
 
     message rate, and IMU status.
     """

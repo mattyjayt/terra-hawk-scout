@@ -1,23 +1,28 @@
 """Base Bridge Node for Scout Base ROS2 package."""
+import collections
+import math
+import threading
+import time
+
+from diagnostic_msgs.msg import DiagnosticArray
+
+from geometry_msgs.msg import Twist
+
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
-import threading
-import serial
-import time
-import collections
-import math
 
-from std_msgs.msg import Float64
-from geometry_msgs.msg import Twist
-from sensor_msgs.msg import Imu, BatteryState, JointState
-from diagnostic_msgs.msg import DiagnosticArray
-
-from scout_base_py.protocol import (format_drive, parse_line,
-                                    Ack, ImuSample, WatchdogStop)
-from scout_base_py.kinematics import twist_to_pwm, servo_deg_to_pan_rad
 from scout_base_py.conversions import (dps_to_radps, g_to_mps2,
                                        RateMeter, StaleDetector)
+from scout_base_py.kinematics import servo_deg_to_pan_rad, twist_to_pwm
+from scout_base_py.protocol import (Ack, format_drive, ImuSample,
+                                    parse_line, WatchdogStop)
+
+from sensor_msgs.msg import BatteryState, Imu, JointState
+
+import serial
+
+from std_msgs.msg import Float64
 
 
 class BaseBridge(Node):
@@ -200,6 +205,7 @@ class BaseBridge(Node):
                     raw = self._ser.readline()
                     if not raw:
                         continue
+                    raw = raw.strip()
                     self._handle_line(parse_line(raw.decode(errors='replace')))
                 except (serial.SerialException, OSError):
                     self.get_logger().info('R4 link lost')
@@ -207,7 +213,8 @@ class BaseBridge(Node):
                     continue
 
     def _send_tick(self) -> None:
-        """Run 20x per second: send M l r while a command is fresh.
+        """
+        Run 20x per second: send M l r while a command is fresh.
 
         else S once.
         """

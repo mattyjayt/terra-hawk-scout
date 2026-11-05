@@ -64,7 +64,8 @@ def parse_line(line: str) -> ImuSample | Ack | WatchdogStop | None:
 
 
 def format_drive(left: int, right: int) -> str:
-    """Format a drive command for the Scout base bridge (Python) protocol.
+    """
+    Format a drive command for the Scout base bridge (Python) protocol.
 
     Clamped to [-255, 255] and rounded to nearest integer.
     """
@@ -74,7 +75,8 @@ def format_drive(left: int, right: int) -> str:
 
 
 def format_servo(servo_deg: int) -> str:
-    """Format a servo command for the Scout base bridge (Python) protocol.
+    """
+    Format a servo command for the Scout base bridge (Python) protocol.
 
     Clamped to [0, 180] and rounded to nearest integer.
     """
