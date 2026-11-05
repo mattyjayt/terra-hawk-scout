@@ -48,6 +48,10 @@ def test_pan_rad_to_servo_deg():
     assert isinstance(servo_deg, int)
     assert servo_deg == 90
 
+    assert pan_rad_to_servo_deg(0.5, 1, -1.5708, 1.5708) == 119
+    assert pan_rad_to_servo_deg(0.5, -1, -1.5708, 1.5708) == 61
+    assert pan_rad_to_servo_deg(3.0, 1, -1.5708, 1.5708) == 180
+
 
 def test_servo_deg_to_pan_rad():
     """Test the servo_deg_to_pan_rad function."""

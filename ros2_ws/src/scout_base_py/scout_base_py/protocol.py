@@ -35,6 +35,7 @@ class WatchdogStop:
 
 def parse_line(line: str) -> ImuSample | Ack | WatchdogStop | None:
     """Parse a line from the Scout base bridge (Python) protocol."""
+    line = line.strip()
     if line.startswith('I '):
         parts = line.split()
         if len(parts) != 11:

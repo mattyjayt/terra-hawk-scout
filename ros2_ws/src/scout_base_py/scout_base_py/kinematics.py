@@ -42,7 +42,7 @@ def pan_rad_to_servo_deg(rad: float, pan_sign: int, pan_min: float,
                          pan_max: float) -> int:
     """Convert a pan angle in radians to a servo position in degrees."""
     rad = max(pan_min, min(pan_max, rad))
-    deg = round(90 + pan_sign * math.degrees(rad) * 180 / math.pi)
+    deg = round(90 + pan_sign * math.degrees(rad))
     return int(deg)
 
 

@@ -14,8 +14,9 @@ from rclpy.qos import qos_profile_sensor_data
 
 from scout_base_py.conversions import (dps_to_radps, g_to_mps2,
                                        RateMeter, StaleDetector)
-from scout_base_py.kinematics import servo_deg_to_pan_rad, twist_to_pwm
-from scout_base_py.protocol import (Ack, format_drive, ImuSample,
+from scout_base_py.kinematics import (pan_rad_to_servo_deg,
+                                      servo_deg_to_pan_rad, twist_to_pwm)
+from scout_base_py.protocol import (Ack, format_drive, format_servo, ImuSample,
                                     parse_line, WatchdogStop)
 
 from sensor_msgs.msg import BatteryState, Imu, JointState
@@ -23,6 +24,9 @@ from sensor_msgs.msg import BatteryState, Imu, JointState
 import serial
 
 from std_msgs.msg import Float64
+from std_srvs.srv import Trigger
+from std_srvs.srv._trigger import Trigger_Request as Request
+from std_srvs.srv._trigger import Trigger_Response as Response
 
 
 class BaseBridge(Node):
@@ -66,8 +70,6 @@ class BaseBridge(Node):
         self._gyro_var = self.get_parameter('gyro_var').value
         self._accel_var = self.get_parameter('accel_var').value
         self._pan_sign = self.get_parameter('pan_sign').value
-        self._pan_min = self.get_parameter('pan_min').value
-        self._pan_max = self.get_parameter('pan_max').value
         self._cell_count = self.get_parameter('cell_count').value
         self._battery_present_v = self.get_parameter('battery_present_v').value
         self._batt_samples = collections.deque(maxlen=20)
@@ -79,6 +81,16 @@ class BaseBridge(Node):
         self._battery_timer = self.create_timer(1.0, self._publish_battery)
         self._frame_id_imu = self.get_parameter('frame_id_imu').value
         self._frame_id_base = self.get_parameter('frame_id_base').value
+        self._pan_min = self.get_parameter('pan_min').value
+        self._pan_max = self.get_parameter('pan_max').value
+        self._last_servo_deg = None
+        self._last_servo_time = 0.0
+        self._ack_event = threading.Event()
+        self._last_ack = ''
+
+        self.create_service(Trigger, 'base/stop', self._srv_stop)
+        self.create_service(Trigger, 'imu/calibrate', self._srv_calibrate)
+        self.create_service(Trigger, 'imu/zero_yaw', self._srv_zero_yaw)
 
         for name in ('track_width', 'max_wheel_speed', 'pwm_min'):
             if self.get_parameter(name).value <= 0:
@@ -289,8 +301,9 @@ class BaseBridge(Node):
         self._imu_rate.tick(now)
         self._last_sample_time = now
 
-    def _on_ack(self, msg) -> None:
-        pass
+    def _on_ack(self, ack: Ack) -> None:
+        self._last_ack = ack.text
+        self._ack_event.set()
 
     def _on_watchdog(self) -> None:
         pass
@@ -318,9 +331,56 @@ class BaseBridge(Node):
         self._cmd = (msg.linear.x, msg.angular.z)
         self._cmd_time = time.monotonic()
 
-    def pan_cmd_callback(self, msg):
+    def pan_cmd_callback(self, msg) -> None:
         """Listen to incoming pan_cmd topic."""
-        self.get_logger().info('I heard: "%s' % msg.data)
+        deg = pan_rad_to_servo_deg(msg.data, self._pan_sign, self._pan_min,
+                                   self._pan_max)
+        if (self._last_servo_deg is not None and
+                abs(deg - self._last_servo_deg) < 1):
+            return
+
+        if time.monotonic() - self._last_servo_time < 0.05:
+            return
+
+        if self._write_line(format_servo(deg)):
+            self._last_servo_deg = deg
+            self._last_servo_time = time.monotonic()
+
+    def _send_and_wait(self, line: str,
+                       expect: str, timeout: float) -> tuple[bool, str]:
+        if self._ser is None:
+            return (False, 'link down')
+
+        self._ack_event.clear()
+        if not self._write_line(line):
+            return (False, 'write failed')
+
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            if not self._ack_event.wait(deadline - time.monotonic()):
+                break
+            if self._last_ack == expect:
+                return (True, expect)
+            else:
+                self._ack_event.clear()
+
+        return (False, f'no "{expect}" within {timeout} s')
+
+    def _srv_stop(self, request: Request, response: Response) -> Response:
+        self._cmd_time = None
+        (response.success, response.message) = self._send_and_wait(
+            'S\n', 'S ok', 0.5)
+        return response
+
+    def _srv_calibrate(self, request: Request, response: Response) -> Response:
+        (response.success, response.message) = self._send_and_wait(
+            'C\n', 'C ok', 3.0)
+        return response
+
+    def _srv_zero_yaw(self, request: Request, response: Response) -> Response:
+        (response.success, response.message) = self._send_and_wait(
+            'Z\n', 'Z ok', 0.5)
+        return response
 
 
 def main(args=None):
