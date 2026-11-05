@@ -3,6 +3,8 @@
 protocol and ROS2 messages.
 """
 
+import collections
+
 G = 9.80665  # m/s^2, standard gravity
 
 
@@ -17,54 +19,46 @@ def dps_to_radps(w_dps: float) -> float:
 
 
 class StaleDetector:
-    """Detects if a stream of values has been stale for a.
+    """Detect a frozen sensor: the same values repeated `limit` times in a row.
 
-    certain number of updates.
+    A real MEMS sensor always has noise in its last digit, so identical
+    consecutive samples mean the reading has stopped updating.
     """
 
     def __init__(self, limit: int = 10):
-        """Initialize the stale detector."""
+        """Create a detector that trips after `limit` identical samples."""
         self.limit = limit
-        self.counter = 0
+        self.counter = 0        # how many times in a row we've seen _last
+        self._last = None       # the previous sample (None = nothing seen yet)
 
     def update(self, values: tuple) -> bool:
-        """Update the stale detector with new values."""
-        if all(v == 0 for v in values):
+        """Feed one sample; return True while the stream is stale."""
+        if values == self._last:
             self.counter += 1
         else:
-            self.counter = 0
+            self._last = values
+            self.counter = 1    # a new value has now been seen once
         return self.counter >= self.limit
 
 
 class RateMeter:
-    """Measures the rate of incoming messages."""
+    """Messages per second over a sliding time window."""
 
     def __init__(self, window_s: float = 1.0):
-        """Initialize the rate meter."""
-        self.last_time = None
-        self.count = 0
+        """Create a meter that counts ticks in the last `window_s` seconds."""
         self.window_s = window_s
+        self._times = collections.deque()   # timestamps of recent ticks
 
     def tick(self, now: float) -> None:
-        """Record a new tick at the given time."""
-        if self.last_time is None:
-            self.last_time = now
-            self.count = 1
-        else:
-            if now - self.last_time > self.window_s:
-                # Reset count if outside the window
-                self.count = 1
-                self.last_time = now
-            else:
-                self.count += 1
+        """Record one message arriving at time `now` (seconds)."""
+        self._times.append(now)
 
     def rate(self, now: float) -> float:
-        """Calculate the rate of ticks per second."""
-        if self.last_time is None:
-            return 0.0
-        if now - self.last_time > self.window_s:
-            return 0.0
-        return self.count / self.window_s
+        """Return ticks per second in the window (now - window_s, now]."""
+        cutoff = now - self.window_s
+        while self._times and self._times[0] < cutoff:
+            self._times.popleft()           # forget ticks older than the window
+        return len(self._times) / self.window_s
 
 
 def link_level(connected: bool, rate_hz: float, expected_hz: float,

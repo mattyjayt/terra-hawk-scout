@@ -39,7 +39,7 @@ def test_stale_detector():
 
     # Reset counter when a non-zero value is seen
     assert not stale_detector.update((0, 1, 0, 0, 0, 0))
-    assert stale_detector.counter == 0
+    assert stale_detector.counter == 1
 
 
 def test_rate_meter():
@@ -80,3 +80,50 @@ def test_link_level():
 
     # Case 5: rate 19Hz, no I line for 0.6s -> Error
     assert link_level(True, 19.0, 20.0, False, 0.6) == 2
+
+
+def test_stale_detector_real_frozen_sample():
+    """The frozen sample seen on the robot (3 Nov) trips on the 10th repeat."""
+    frozen = (0.054, 0.0, 1.061, 0.24, 0.57, 0.03)
+    sd = StaleDetector(limit=10)
+    results = [sd.update(frozen) for _ in range(12)]
+    assert results[:9] == [False] * 9
+    assert results[9:] == [True] * 3
+
+
+def test_stale_detector_live_noise_never_trips():
+    """Changing values (a live sensor) never count as stale."""
+    sd = StaleDetector(limit=10)
+    for i in range(100):
+        assert not sd.update((0.05, 0.0, 1.06 + i * 1e-3, 0.1, 0.5, 0.0))
+
+
+def test_stale_detector_recovers():
+    """One new value after a freeze clears the flag."""
+    sd = StaleDetector(limit=3)
+    for _ in range(5):
+        sd.update((1, 2, 3))
+    assert sd.update((1, 2, 4)) is False
+
+
+def test_rate_meter_sliding_across_window_boundary():
+    """A steady 20 Hz stream reads ~20 Hz at any moment, not only at 1 s."""
+    rm = RateMeter(window_s=1.0)
+    t = 0.0
+    readings = []
+    for i in range(200):          # 10 s at 20 Hz
+        t = i * 0.05
+        rm.tick(t)
+        if t >= 1.0:
+            readings.append(rm.rate(t))
+    assert min(readings) >= 19.0
+    assert max(readings) <= 21.0
+
+
+def test_rate_meter_drops_to_zero_when_silent():
+    """If the R4 goes quiet, the rate falls to 0 without new ticks."""
+    rm = RateMeter(window_s=1.0)
+    for i in range(20):
+        rm.tick(i * 0.05)
+    assert rm.rate(0.95) == 20.0
+    assert rm.rate(3.0) == 0.0
