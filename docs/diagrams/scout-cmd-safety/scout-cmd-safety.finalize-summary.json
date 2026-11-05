@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "sequence",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-cmd-safety/candidate.json",
+    "sha256": "1db702e9a52a34a8bce90cc4bf67a15a4c828599a207117c58d24b69d9e7d4e1",
+    "bytes": 4867
+  },
+  "artifact": {
+    "path": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-cmd-safety/scout-cmd-safety.html",
+    "sha256": "8aa51c95520a93fc637ed9cdb992824a5fce54126715ce27850f88d11b231d11",
+    "bytes": 841947
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-cmd-safety/scout-cmd-safety.finalize.json",
+    "summaryReceipt": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-cmd-safety/scout-cmd-safety.finalize-summary.json",
+    "browserCheckReceipt": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-cmd-safety/scout-cmd-safety.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-03T10:43:35.043Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 15850,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

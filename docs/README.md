@@ -21,4 +21,4 @@ IDs: `G-SCOUT-n` goals · `REQ-SCOUT-nnn` requirements · `IF-*` interfaces · `
 | [Runbook](ops/runbook.md) | RB-SCOUT | Stub |
 | [ADRs](adr/README.md) | ADR-0001… | Accepted |
 
-**Visual artifacts:** [ROS 2 graph (archify)](diagrams/scout-ros2-graph/scout-ros2-graph.html) · [Sensor-fusion figure (anatomy)](figures/sensor-fusion/sensor-fusion.html) · [Layout fit check (CAD)](../cad/scout-layout/README.md)
+**Visual artifacts:** [P1/P2 ROS 2 graph (archify)](diagrams/scout-p1-graph/scout-p1-graph.html) · [cmd_vel safety sequence (archify)](diagrams/scout-cmd-safety/scout-cmd-safety.html) · [Twist → PWM figure (anatomy)](figures/twist-to-pwm/twist-to-pwm.html) · [Target ROS 2 graph (archify)](diagrams/scout-ros2-graph/scout-ros2-graph.html) · [Sensor-fusion figure (anatomy)](figures/sensor-fusion/sensor-fusion.html) · [Layout fit check (CAD)](../cad/scout-layout/README.md)

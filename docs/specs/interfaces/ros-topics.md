@@ -47,7 +47,7 @@ camera_ros ──camera/image_raw──▶ person_detector ──detections─�
                                                               imu/data_raw, joint_states ──▶ pan_tracker
 foxglove_bridge ◀── all of the above (ws://ghorman:8765)
 ```
-Diagram (archify): `docs/diagrams/scout-p1-graph/` (added with this contract).
+Diagram (archify): [`docs/diagrams/scout-p1-graph/scout-p1-graph.html`](../../diagrams/scout-p1-graph/scout-p1-graph.html) (download and open in a browser).
 
 ## 5. Topics
 

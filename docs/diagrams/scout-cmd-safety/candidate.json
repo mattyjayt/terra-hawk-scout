@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "diagram_type": "sequence",
+  "meta": {
+    "title": "Scout base \u2014 cmd_vel \u2192 M lines \u2192 command timeout \u2192 R4 watchdog",
+    "output": "scout-cmd-safety/scout-cmd-safety.html",
+    "locale": "en",
+    "quality_profile": "showcase"
+  },
+  "participants": [
+    {
+      "id": "teleop",
+      "type": "external",
+      "label": "teleop",
+      "sublabel": "cmd_vel publisher"
+    },
+    {
+      "id": "node",
+      "type": "backend",
+      "label": "base_bridge",
+      "sublabel": "on_cmd_vel \u00b7 shutdown"
+    },
+    {
+      "id": "timer",
+      "type": "backend",
+      "label": "base_bridge",
+      "sublabel": "send timer 20 Hz"
+    },
+    {
+      "id": "reader",
+      "type": "backend",
+      "label": "base_bridge",
+      "sublabel": "reader thread"
+    },
+    {
+      "id": "r4",
+      "type": "messagebus",
+      "label": "UNO R4",
+      "sublabel": "firmware r4_base"
+    },
+    {
+      "id": "motors",
+      "type": "external",
+      "label": "motors",
+      "sublabel": "TB6612 \u00b7 TT motors"
+    }
+  ],
+  "segments": [
+    {
+      "from": 160,
+      "to": 370,
+      "label": "1 \u00b7 command fresh"
+    },
+    {
+      "from": 385,
+      "to": 560,
+      "label": "2 \u00b7 teleop stops \u2192 cmd_timeout"
+    },
+    {
+      "from": 575,
+      "to": 760,
+      "label": "3 \u00b7 USB unplugged \u2192 R4 watchdog"
+    },
+    {
+      "from": 775,
+      "to": 880,
+      "label": "4 \u00b7 shutdown"
+    }
+  ],
+  "messages": [
+    {
+      "id": "cmd",
+      "from": "teleop",
+      "to": "node",
+      "y": 175,
+      "label": "cmd_vel \u00b7 Twist \u00b7 10 Hz",
+      "variant": "emphasis",
+      "note": "on_cmd_vel stores (v, \u03c9, t)"
+    },
+    {
+      "id": "latest",
+      "from": "node",
+      "to": "timer",
+      "y": 225,
+      "label": "latest (v, \u03c9, t)",
+      "variant": "dashed",
+      "note": "read on each 20 Hz tick"
+    },
+    {
+      "id": "mlr",
+      "from": "timer",
+      "to": "r4",
+      "y": 270,
+      "label": "M l r \u00b7 20 Hz",
+      "variant": "emphasis",
+      "note": "twist_to_pwm(); re-sent even if unchanged, under write_lock \u2014 feeds the watchdog"
+    },
+    {
+      "id": "pwm",
+      "from": "r4",
+      "to": "motors",
+      "y": 330,
+      "label": "PWM left / right",
+      "variant": "default"
+    },
+    {
+      "id": "iline",
+      "from": "r4",
+      "to": "reader",
+      "y": 355,
+      "label": "I \u2026 \u00b7 20 Hz",
+      "variant": "return"
+    },
+    {
+      "id": "stop",
+      "from": "teleop",
+      "to": "node",
+      "y": 400,
+      "label": "(no cmd_vel)",
+      "variant": "dashed",
+      "note": "teleop stops publishing"
+    },
+    {
+      "id": "s1",
+      "from": "timer",
+      "to": "r4",
+      "y": 450,
+      "label": "S (once)",
+      "variant": "security",
+      "note": "no cmd_vel for cmd_timeout 0.25 s \u2192 S once, then nothing until a new command"
+    },
+    {
+      "id": "off1",
+      "from": "r4",
+      "to": "motors",
+      "y": 510,
+      "label": "stop now",
+      "variant": "default"
+    },
+    {
+      "id": "ack",
+      "from": "r4",
+      "to": "reader",
+      "y": 540,
+      "label": "A S ok",
+      "variant": "return"
+    },
+    {
+      "id": "last",
+      "from": "timer",
+      "to": "r4",
+      "y": 590,
+      "label": "last M l r before unplug",
+      "variant": "default",
+      "note": "USB unplugged \u2192 no more M lines arrive"
+    },
+    {
+      "id": "wd",
+      "from": "r4",
+      "to": "motors",
+      "y": 650,
+      "label": "motors off",
+      "variant": "security",
+      "note": "no M line for 300 ms \u2192 hardware watchdog"
+    },
+    {
+      "id": "wstop",
+      "from": "r4",
+      "to": "reader",
+      "y": 710,
+      "label": "W stop",
+      "variant": "dashed",
+      "note": "printed on serial; bridge counts watchdog_stops when the link is up"
+    },
+    {
+      "id": "sd",
+      "from": "node",
+      "to": "r4",
+      "y": 790,
+      "label": "S",
+      "variant": "security",
+      "note": "node destructor / SIGINT: send S, then close port"
+    },
+    {
+      "id": "off3",
+      "from": "r4",
+      "to": "motors",
+      "y": 850,
+      "label": "stop now",
+      "variant": "default"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "rose",
+      "title": "Three safety layers (DD-SCOUT-BRIDGE \u00a75.4)",
+      "items": [
+        "1 \u00b7 bridge send timer: cmd_timeout 0.25 s \u2192 S once",
+        "2 \u00b7 R4 firmware watchdog: 300 ms without M \u2192 motors off, W stop",
+        "3 \u00b7 shutdown: S, close port"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Threads inside base_bridge",
+      "items": [
+        "subscription callback stores the latest command",
+        "send timer and service calls write through one write_lock",
+        "reader thread parses I / A / W lines (A \u2192 ack Event, W \u2192 counter)"
+      ]
+    }
+  ]
+}

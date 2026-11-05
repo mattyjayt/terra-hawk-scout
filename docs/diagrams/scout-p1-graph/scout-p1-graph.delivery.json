@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "21796216-b46d-4893-b10c-7e2006a5a062",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-p1-graph/candidate.json",
+  "output": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-p1-graph/scout-p1-graph.html",
+  "specification": {
+    "sha256": "51aaf1479c4c35deef5719e5ebdfd9bdd3896f108171db1387d573da4ff97fcd",
+    "bytes": 6180
+  },
+  "artifact": {
+    "sha256": "d21313d71988bd94cbcca65a53c051c67990fa918ae10a65725fb6baa17a3fab",
+    "bytes": 853029
+  }
+}
