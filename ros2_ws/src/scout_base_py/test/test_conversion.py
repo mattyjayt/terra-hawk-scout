@@ -67,19 +67,19 @@ def test_rate_meter():
 def test_link_level():
     """Test the link_level function."""
     # Case 1: rate 19Hz -> Ok
-    assert link_level(True, 19.0, 20.0, False, 0.05) == 0
+    assert link_level(True, 19.0, 20.0, False, 0.05, 3.0, 2.0) == 0
 
     # Case 2: rate 15Hz -> Warning
-    assert link_level(True, 15.0, 20.0, False, 0.05) == 1
+    assert link_level(True, 15.0, 20.0, False, 0.05, 3.0, 2.0) == 1
 
     # Case 3: link down -> Error
-    assert link_level(False, 0.0, 20.0, False, 0.05) == 2
+    assert link_level(False, 0.0, 20.0, False, 0.05, 3.0, 2.0) == 2
 
     # Case 4: rate 19Hz, IMU frozen -> Error
-    assert link_level(True, 19.0, 20.0, True, 0.05) == 2
+    assert link_level(True, 19.0, 20.0, True, 0.05, 3.0, 2.0) == 2
 
     # Case 5: rate 19Hz, no I line for 0.6s -> Error
-    assert link_level(True, 19.0, 20.0, False, 0.6) == 2
+    assert link_level(True, 19.0, 20.0, False, 0.6, 3.0, 2.0) == 2
 
 
 def test_stale_detector_real_frozen_sample():
