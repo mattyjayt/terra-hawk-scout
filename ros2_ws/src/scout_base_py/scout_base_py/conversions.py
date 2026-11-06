@@ -59,12 +59,13 @@ class RateMeter:
         """Return ticks per second in the window (now - window_s, now]."""
         cutoff = now - self.window_s
         while self._times and self._times[0] < cutoff:
-            self._times.popleft()           # forget ticks older than the window
+            self._times.popleft()
         return len(self._times) / self.window_s
 
 
 def link_level(connected: bool, rate_hz: float, expected_hz: float,
-               imu_frozen: bool, s_since_line: float) -> int:
+               imu_frozen: bool, s_since_line: float,
+               battery_v, battery_present_v) -> int:
     """
     Determine the link level based on connection status.
 
@@ -73,6 +74,7 @@ def link_level(connected: bool, rate_hz: float, expected_hz: float,
     # 0 OK / 1 WARN / 2 ERROR
     if not connected or s_since_line > 0.5 or imu_frozen:
         return 2
-    if rate_hz < expected_hz * 0.9:
+    battery_missing = battery_v is not None and battery_v <= battery_present_v
+    if rate_hz < expected_hz * 0.9 or battery_missing:
         return 1
     return 0

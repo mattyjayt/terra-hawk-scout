@@ -1,0 +1,134 @@
+{
+  "configById": {
+    "Plot!crgg96": {
+      "paths": [
+        {
+          "value": "/imu/data_raw.angular_velocity.z",
+          "enabled": true,
+          "timestampMethod": "receiveTime",
+          "color": "#4e98e2",
+          "id": "96f2b231-0c9b-45ca-98fb-be826c5bd4a5"
+        },
+        {
+          "value": "/base/debug/yaw.data",
+          "enabled": true,
+          "timestampMethod": "receiveTime",
+          "color": "#f5774d",
+          "id": "a4e56f1c-f7a9-494f-a7cf-fb75e3ffb0f1"
+        }
+      ]
+    },
+    "Plot!3vqbgu3": {
+      "paths": [
+        {
+          "value": "/imu/data_raw.linear_acceleration.x",
+          "enabled": true,
+          "timestampMethod": "receiveTime",
+          "color": "#4e98e2",
+          "id": "6935c154-a7ba-490f-bc60-ae22fea9b6b2"
+        },
+        {
+          "value": "/imu/data_raw.linear_acceleration.y",
+          "enabled": true,
+          "timestampMethod": "receiveTime",
+          "color": "#f5774d",
+          "id": "13f25cd8-55a2-4587-954a-eed39c3b0395"
+        },
+        {
+          "value": "/imu/data_raw.linear_acceleration.z",
+          "enabled": true,
+          "timestampMethod": "receiveTime",
+          "color": "#f7df71",
+          "id": "ce42da8c-5f04-4739-b7bd-9613eb7dcbf6"
+        }
+      ]
+    },
+    "RawMessages!2b57rn": {
+      "defaultExpanded": false,
+      "topicPath": "/diagnostics"
+    },
+    "Gauge!23uwh5m": {
+      "path": "/battery.voltage",
+      "style": "dial",
+      "minValue": 1,
+      "maxValue": 9,
+      "tickInterval": 0.1,
+      "showTicks": false,
+      "colorMap": "red-yellow-green",
+      "colorMode": "colormap",
+      "gradient": [
+        "#0000ff",
+        "#ff00ff"
+      ],
+      "reverse": false,
+      "reverseDirection": false
+    },
+    "Teleop!bf2hhe": {
+      "topic": "/cmd_vel",
+      "publishRate": 1,
+      "autoSendStopOnRelease": false,
+      "upButton": {
+        "field": "linear-x",
+        "value": 1
+      },
+      "downButton": {
+        "field": "linear-x",
+        "value": -1
+      },
+      "leftButton": {
+        "field": "angular-z",
+        "value": 1
+      },
+      "rightButton": {
+        "field": "angular-z",
+        "value": -1
+      },
+      "stopButton": {
+        "field": "linear-x",
+        "value": 0
+      }
+    },
+    "Publish!3djughx": {
+      "value": "{\n  \"data\": 0.0\n}",
+      "topicName": "/pan/cmd",
+      "datatype": "std_msgs/msg/Float64"
+    },
+    "Publish!3z6s8pw": {
+      "value": "{\n  \"data\": 1.0\n}",
+      "topicName": "/pan/cmd",
+      "datatype": "std_msgs/msg/Float64"
+    }
+  },
+  "globalVariables": {},
+  "userNodes": {},
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "first": "Plot!crgg96",
+    "second": {
+      "first": "Plot!3vqbgu3",
+      "second": {
+        "first": {
+          "first": "RawMessages!2b57rn",
+          "second": {
+            "first": "Gauge!23uwh5m",
+            "second": "Teleop!bf2hhe",
+            "direction": "row"
+          },
+          "direction": "column"
+        },
+        "second": {
+          "first": "Publish!3djughx",
+          "second": "Publish!3z6s8pw",
+          "direction": "row"
+        },
+        "direction": "column"
+      },
+      "direction": "column",
+      "splitPercentage": 21.773399014778324
+    },
+    "direction": "column",
+    "splitPercentage": 17.546709991876522
+  }
+}

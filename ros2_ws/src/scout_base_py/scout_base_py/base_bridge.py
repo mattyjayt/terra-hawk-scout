@@ -72,6 +72,7 @@ class BaseBridge(Node):
         self._accel_var = self.get_parameter('accel_var').value
         self._pan_sign = self.get_parameter('pan_sign').value
         self._cell_count = self.get_parameter('cell_count').value
+        self._last_battery_v = None
         self._battery_present_v = self.get_parameter('battery_present_v').value
         self._batt_samples = collections.deque(maxlen=20)
         self._stale = StaleDetector(
@@ -329,6 +330,7 @@ class BaseBridge(Node):
         b.header.stamp = self.get_clock().now().to_msg()
         b.header.frame_id = self._frame_id_base
         b.voltage = v
+        self._last_battery_v = v
         b.present = v > self._battery_present_v
         b.power_supply_technology = BatteryState.POWER_SUPPLY_TECHNOLOGY_LION
         b.current = b.charge = b.capacity = b.design_capacity = nan
@@ -399,13 +401,17 @@ class BaseBridge(Node):
         since = (now - self._last_sample_time if
                  self._last_sample_time is not None else float('inf'))
         level = link_level(self._ser is not None, rate,
-                           20.0, self._imu_frozen, since)
+                           20.0, self._imu_frozen, since,
+                           self._last_battery_v, self._battery_present_v)
         if self._ser is None:
             message = 'link down'
         elif self._imu_frozen:
             message = 'IMU frozen'
         elif level != 0:
-            message = f'telemetry {rate:.1f} Hz (expected 20)'
+            if self._last_battery_v <= self._battery_present_v:
+                message = 'battery not present'
+            else:
+                message = f'telemetry {rate:.1f} Hz (expected 20)'
         else:
             message = 'ok'
 
