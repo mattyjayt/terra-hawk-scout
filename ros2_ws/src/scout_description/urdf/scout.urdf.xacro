@@ -81,5 +81,50 @@
     <xacro:wheel name="rear_left" x="${-wheel_x}" y="${wheel_y}" />
     <xacro:wheel name="rear_right" x="${-wheel_x}" y="${-wheel_y}" />
 
+    <!-- ===== Pan servo and camera (defaults above: replace with measurements later) ===== -->
+    <link name="pan_base_link">
+        <visual>
+            <geometry>
+                <box size="0.023 0.012 0.022" />
+            </geometry>
+            <material name="blue" />
+        </visual>
+    </link>
+    <joint name="pan_base_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="pan_base_link" />
+        <origin xyz="${pan_x} ${pan_y} ${pan_z}" />
+    </joint>
+
+    <link name="pan_link" />
+    <joint name="pan_joint" type="revolute">   <!-- name must match /joint_states from the bridge -->
+        <parent link="pan_base_link" />
+        <child link="pan_link" />
+        <origin xyz="0 0 0.011" />              <!-- top of the servo horn -->
+        <axis xyz="0 0 1" />                     <!-- + = left (REP-103) -->
+        <limit lower="${-pan_limit}" upper="${pan_limit}" effort="0.2" velocity="10.0" />
+    </joint>
+
+    <link name="camera_link">
+        <visual>
+            <geometry>
+                <box size="0.012 0.025 0.024" />
+            </geometry>
+            <material name="dark" />
+        </visual>
+    </link>
+    <joint name="camera_joint" type="fixed">
+        <parent link="pan_link" />
+        <child link="camera_link" />
+        <origin xyz="${cam_x} 0 ${cam_z}" />
+    </joint>
+
+    <!-- image convention: z forward, x right, y down (used by vision in Lab 8) -->
+    <link name="camera_optical_frame" />
+    <joint name="camera_optical_joint" type="fixed">
+        <parent link="camera_link" />
+        <child link="camera_optical_frame" />
+        <origin rpy="${-pi/2} 0 ${-pi/2}" />
+    </joint>
 
 </robot>
