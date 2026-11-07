@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<robot name="scout" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- ===== Measurements (metres, radians). Source in each comment. ===== -->
+    <!-- Chassis: Elegoo V4 plate, from the kit STL -->
+    <xacro:property name="plate_x" value="0.2308" />
+    <xacro:property name="plate_y" value="0.1325" />
+    <xacro:property name="plate_t" value="0.0045" />
+    <xacro:property name="deck_z" value="0.045" />   <!-- MEASURE: floor to top of the lower plate -->
+    <!-- Wheels: Elegoo TT wheel -->
+    <xacro:property name="wheel_r" value="0.0325" />
+    <xacro:property name="wheel_w" value="0.026" />
+    <xacro:property name="wheel_x" value="0.068" />   <!-- MEASURE: chassis centre to axle, forward -->
+    <xacro:property name="wheel_y" value="0.080" />   <!-- MEASURE: half the track width -->
+    <!-- IMU (MPU-6050): position MEASURE; rotation from Lab 2.2 (chip axes = robot axes) -->
+    <xacro:property name="imu_x" value="0.020" />
+    <xacro:property name="imu_y" value="0.000" />
+    <xacro:property name="imu_z" value="0.060" />
+    <!-- Pan servo: MEASURE from chassis centre to the servo's rotation axis -->
+    <xacro:property name="pan_x" value="0.090" />
+    <xacro:property name="pan_y" value="0.000" />
+    <xacro:property name="pan_z" value="0.085" />
+    <xacro:property name="pan_limit" value="${pi/2}" />  <!-- base.yaml pan_min/pan_max -->
+    <!-- Camera: MEASURE from the servo axis to the lens -->
+    <xacro:property name="cam_x" value="0.015" />
+    <xacro:property name="cam_z" value="0.020" />
+
+    <!-- ===== Materials ===== -->
+    <material name="dark">
+        <color rgba="0.15 0.15 0.15 1" />
+    </material>
+    <material name="green">
+        <color rgba="0.2 0.6 0.3 1" />
+    </material>
+    <material name="blue">
+        <color rgba="0.2 0.4 0.8 1" />
+    </material>
+
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 ${deck_z}" />               <!-- the plate sits deck_z above the floor -->
+            <geometry>
+                <box size="${plate_x} ${plate_y} ${plate_t}" />
+            </geometry>
+            <material name="green" />
+        </visual>
+    </link>
+
+    <link name="imu_link">
+        <visual>
+            <geometry>
+                <box size="0.02 0.016 0.003" />
+            </geometry>
+            <material name="blue" />
+        </visual>
+    </link>
+    <joint name="imu_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="imu_link" />
+        <origin xyz="${imu_x} ${imu_y} ${imu_z}" rpy="0 0 0" />
+    </joint>
+
+    <xacro:macro name="wheel" params="name x y">
+        <link name="${name}_wheel_link">
+            <visual>
+                <origin rpy="${pi/2} 0 0" />                <!-- a cylinder stands along z; roll it onto its side -->
+                <geometry>
+                    <cylinder radius="${wheel_r}" length="${wheel_w}" />
+                </geometry>
+                <material name="dark" />
+            </visual>
+        </link>
+        <joint name="${name}_wheel_joint" type="fixed"> <!-- fixed: no encoders, see Background -->
+            <parent link="base_link" />
+            <child link="${name}_wheel_link" />
+            <origin xyz="${x} ${y} ${wheel_r}" />         <!-- axle height = wheel radius -->
+        </joint>
+    </xacro:macro>
+    <xacro:wheel name="front_left" x="${wheel_x}" y="${wheel_y}" />
+    <xacro:wheel name="front_right" x="${wheel_x}" y="${-wheel_y}" />
+    <xacro:wheel name="rear_left" x="${-wheel_x}" y="${wheel_y}" />
+    <xacro:wheel name="rear_right" x="${-wheel_x}" y="${-wheel_y}" />
+
+    <!-- ===== Pan servo and camera (defaults above: replace with measurements later) ===== -->
+    <link name="pan_base_link">
+        <visual>
+            <geometry>
+                <box size="0.023 0.012 0.022" />
+            </geometry>
+            <material name="blue" />
+        </visual>
+    </link>
+    <joint name="pan_base_joint" type="fixed">
+        <parent link="base_link" />
+        <child link="pan_base_link" />
+        <origin xyz="${pan_x} ${pan_y} ${pan_z}" />
+    </joint>
+
+    <link name="pan_link" />
+    <joint name="pan_joint" type="revolute">   <!-- name must match /joint_states from the bridge -->
+        <parent link="pan_base_link" />
+        <child link="pan_link" />
+        <origin xyz="0 0 0.011" />              <!-- top of the servo horn -->
+        <axis xyz="0 0 1" />                     <!-- + = left (REP-103) -->
+        <limit lower="${-pan_limit}" upper="${pan_limit}" effort="0.2" velocity="10.0" />
+    </joint>
+
+    <link name="camera_link">
+        <visual>
+            <geometry>
+                <box size="0.012 0.025 0.024" />
+            </geometry>
+            <material name="dark" />
+        </visual>
+    </link>
+    <joint name="camera_joint" type="fixed">
+        <parent link="pan_link" />
+        <child link="camera_link" />
+        <origin xyz="${cam_x} 0 ${cam_z}" />
+    </joint>
+
+    <!-- image convention: z forward, x right, y down (used by vision in Lab 8) -->
+    <link name="camera_optical_frame" />
+    <joint name="camera_optical_joint" type="fixed">
+        <parent link="camera_link" />
+        <child link="camera_optical_frame" />
+        <origin rpy="${-pi/2} 0 ${-pi/2}" />
+    </joint>
+
+</robot>
