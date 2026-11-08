@@ -26,3 +26,4 @@ guide/vendor/glb/
 # rosbags (evidence lives on Drive, not in git)
 bags/
 ros2_ws/src/external/
+~
