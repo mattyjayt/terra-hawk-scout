@@ -1,0 +1,6 @@
+# Third-party source packages for ros2_ws/src/external (not committed; see README)
+repositories:
+  camera_ros:
+    type: git
+    url: https://github.com/christianrauch/camera_ros.git
+    version: 3760b11   # + tools/patches/camera_ros_controlinfomap.patch
