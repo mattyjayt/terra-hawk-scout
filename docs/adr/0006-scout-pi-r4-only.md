@@ -9,6 +9,6 @@
 - **Consequences:**
   - Removed: `firmware/esp32_base/` and the IF-MICROROS contract (never implemented).
   - `DD-SCOUT-FW` now designs the R4 firmware: modules, standard libraries, protocol v2 (issue #16).
-  - **Encoder motors (ADR-0003) must be read by the R4.** The UNO R4 has a limited set of interrupt-capable pins and the Elegoo shield already uses several. Before buying encoder motors, map the free interrupt pins and decide between 2 encoders (one per side) and 4. If the R4 can't do it, reopen this ADR rather than adding a board silently.
-  - `cad/scout-v2` places a classic ESP32 on Pi UART2. In that layout the R4 + shield takes its place (68.6 × 53.4 mm vs. ~52 × 28 mm) on USB. Re-check the fit when the v2 deck is built.
-  - The Garden keeps its ESP32 nodes (vault ADR-010); this decision is Scout-only.
+  - **Encoder motors (ADR-0003, deferred) must be read by the R4 if they are ever added.** The UNO R4 has a limited set of interrupt-capable pins and the Elegoo shield already uses several. Before buying encoder motors, map the free interrupt pins and decide between 2 encoders (one per side) and 4. If the R4 can't do it, reopen this ADR rather than adding a board silently.
+  - `cad/scout-v2` (a design study for a future revision) places a classic ESP32 on Pi UART2. In that layout the R4 + shield takes its place (68.6 × 53.4 mm vs. ~52 × 28 mm) on USB. Re-check the fit when the v2 deck is built.
+  - The TerraHawk garden keeps its ESP32 sensor nodes; this decision is Scout-only.

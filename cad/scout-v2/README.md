@@ -1,5 +1,7 @@
 # Scout v2 — detailed mechanical, electrical and physics design
 
+> **Design study for a future revision.** The robot as built today is the Elegoo chassis + Raspberry Pi 5 + Arduino UNO R4 described in the [root README](../../README.md): stock TT motors without encoders, the Elegoo shield as motor driver, no ESP32.
+
 **Status:** design complete for review (rounds 1–4, 1–2 Nov 2026). Nothing bought yet.
 **Start here:** open [`guide/index.html`](guide/index.html) in Chrome (double-click). It has the 3D model (assembled / exploded / animated assembly), the 9 build steps with checks, the wiring and power diagrams, the how-it-works figure, the sim videos, the BOM and the drilling table.
 
