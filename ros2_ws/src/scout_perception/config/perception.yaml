@@ -1,0 +1,5 @@
+person_detector:
+  ros__parameters:
+    model_path: /home/kleya/models/yolo11n.pt
+    imgsz: 320
+    debug_image: False   

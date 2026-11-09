@@ -4,7 +4,6 @@ Anatomy figure (Figure tier). It shows how the Scout base bridge turns a ROS `cm
 
 - `twist-to-pwm.html` / `twist-to-pwm-light.html`: standalone interactive pages. The pointer steers: left/right sets ω, up/down sets v. Arrow keys work too. When nobody touches it, it loops through six presets: straight, gentle left, saturated left, spin in place, right turn, deadband creep.
 - Add `#v=0.45&w=2` to the URL to freeze the figure at a given twist, for screenshots.
-- `twist-to-pwm.png`: desktop screenshot. `shots/` holds the turn, spin and light-theme states and the line-check images.
 - `model.mjs`: the pure model. The page inlines this same code, so every number it shows comes from the model. Rebuild with `node build.mjs && node build.mjs --light`.
 
 ## Values and their sources

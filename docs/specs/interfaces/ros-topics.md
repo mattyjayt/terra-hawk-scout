@@ -80,7 +80,7 @@ Fields not listed are left at their default (zero / empty) and must be ignored b
 | `angular.z` | rad/s | yaw rate, + = left (CCW). Clamped to ± `max_angular` |
 | all other fields | — | ignored (a differential drive can't move sideways, roll or pitch) |
 **Timeout rule:** if no message arrives for `cmd_timeout` (0.25 s), base_bridge stops the motors (sends `S` once). The R4's own 300 ms watchdog is the second layer.
-*Note: plain `Twist` for P1 (simple, works with `teleop_twist_keyboard` and the Foxglove Teleop panel). Move to `TwistStamped` when ros2_control / Nav2 arrive; that change is a contract version bump (§10).*
+*Note: plain `Twist` for P1 (simple, works with `teleop_twist_keyboard` and the Foxglove Teleop panel). Move to `TwistStamped` when Nav2 arrives; that change is a contract version bump (§10).*
 
 **T2 `/pan/cmd` — `std_msgs/Float64`** (subscribed by base_bridge)
 | Field | Unit | Meaning / rule |
@@ -186,7 +186,7 @@ base_link ─┬─ imu_link            (fixed; carries the chip's mounting rota
 ## 9. Planned interfaces (P3–P4, not yet binding)
 | Topic | Type | Publisher → subscriber | Rate | QoS |
 |---|---|---|---|---|
-| `/odom` | `nav_msgs/msg/Odometry` | odometry source (commanded-velocity + gyro now; LiDAR odometry later) → EKF | 20–50 Hz | SENSOR |
+| `/odom` | `nav_msgs/msg/Odometry` | LiDAR scan matching (`rf2o_laser_odometry`) → EKF (fused with the gyro) | 20–50 Hz | SENSOR |
 | `/odometry/filtered` | `nav_msgs/msg/Odometry` | robot_localization EKF → slam_toolbox, Nav2 | 30–50 Hz | STATE |
 | `/scan` | `sensor_msgs/msg/LaserScan` | `sllidar_ros2` (RPLIDAR C1) → slam_toolbox, Nav2 | 10 Hz | SENSOR |
 | `/map` | `nav_msgs/msg/OccupancyGrid` | slam_toolbox → Nav2, Foxglove | on change | LATCHED |

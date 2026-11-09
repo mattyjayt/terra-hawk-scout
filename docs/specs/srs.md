@@ -3,7 +3,7 @@ id: SRS-SCOUT
 title: Scout — software requirements specification
 status: Draft
 owner: Argos (draft) · Jaime (approver)
-updated: 2026-10-30
+updated: 2026-11-09
 ---
 
 # SRS-SCOUT — Scout requirements
@@ -13,10 +13,10 @@ Priority: **M**ust · **S**hould · **C**ould (MoSCoW). Each requirement traces 
 |---|---|---|---|---|---|
 | REQ-SCOUT-001 | Drive | The robot shall accept `geometry_msgs/Twist` on `/cmd_vel` and drive as a differential drive base. | M | Robot follows linear 0.3 m/s and angular 1 rad/s commands | TC-SCOUT-001 |
 | REQ-SCOUT-002 | Drive | Motor commands shall stop within 300 ms if `/cmd_vel` is not received (watchdog). | M | Unplug teleop: wheels stop < 300 ms | TC-SCOUT-002 |
-| REQ-SCOUT-003 | Drive | Wheel encoders shall be read at ≥ 50 Hz and published as joint states. | M | `/joint_states` rate ≥ 50 Hz | TC-SCOUT-003 |
-| REQ-SCOUT-004 | Odometry | The base shall publish wheel odometry on `/odom` and the `odom → base_link` transform (REP-105). | M | tf tree valid in RViz | TC-SCOUT-004 |
+| REQ-SCOUT-003 | Drive | *Deferred (ADR-0003): the robot has no wheel encoders.* Wheel encoders shall be read at ≥ 50 Hz and published as joint states. | C | `/joint_states` rate ≥ 50 Hz | TC-SCOUT-003 |
+| REQ-SCOUT-004 | Odometry | The robot shall publish odometry on `/odom` (LiDAR scan matching, since there are no wheel encoders) and the `odom → base_link` transform (REP-105). | M | tf tree valid in RViz | TC-SCOUT-004 |
 | REQ-SCOUT-005 | IMU | The MPU-6050 shall be published as `sensor_msgs/Imu` on `/imu/data_raw` at ≥ 100 Hz with covariances set. | M | rate + calibration check | TC-SCOUT-005 |
-| REQ-SCOUT-006 | Fusion | An EKF (robot_localization) shall fuse wheel odometry and IMU yaw rate into `/odometry/filtered`. | M | heading drift < 5° / 10 m on carpet | TC-SCOUT-006 |
+| REQ-SCOUT-006 | Fusion | An EKF (robot_localization) shall fuse LiDAR odometry and IMU yaw rate into `/odometry/filtered`. | M | heading drift < 5° / 10 m on carpet | TC-SCOUT-006 |
 | REQ-SCOUT-007 | SLAM | The robot shall build a 2D occupancy map with slam_toolbox from `/scan` at 5 cm resolution. | M | map of the living area saved | TC-SCOUT-007 |
 | REQ-SCOUT-008 | Nav | The robot shall navigate to a goal pose with Nav2, avoiding static and dynamic obstacles. | M | 9/10 runs arrive within 10 cm / 10° | TC-SCOUT-008 |
 | REQ-SCOUT-009 | Safety | An obstacle closer than 15 cm in front (LiDAR or ultrasonic) shall stop forward motion. | M | box test at 3 speeds | TC-SCOUT-009 |

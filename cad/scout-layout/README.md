@@ -1,5 +1,7 @@
 # Scout layout: fit check v1 (cad skill, build123d / cadgen 0.8.4)
 
+> Early fit check (30 Oct). It modelled an LD19 LiDAR and an ESP32 DevKit; both were dropped (RPLIDAR C1 chosen; no ESP32 on the Scout, [ADR-0006](../../docs/adr/0006-scout-pi-r4-only.md)). The later v2 design study is in [`cad/scout-v2`](../scout-v2/README.md).
+
 **Question:** does the planned hardware fit on the Elegoo Smart Robot Car V4.0 plates, and where should each part go?
 
 **Answer: yes, if the battery is flat (about 20 mm tall).** A 40 mm tall 3S pack collides with the top plate, because the gap between the decks is only 39.7 mm.
@@ -36,7 +38,7 @@ Rebuild: `~/.local/bin/cadgen +0.8.4 run src/scout_layout.py`, then `cadgen +0.8
 **Tall-battery variant (70 × 55 × 40):** overlaps the top plate (1133 mm³) and the IMU (1344 mm³). **It does not fit.**
 
 ## Open questions for Jaime
-1. Measure the blue 3S pack (L × W × H). If it's taller than ~34 mm, it can't go between the decks: mount it on top, or use the Elegoo 2S box for the motors.
+1. ~~Measure the blue 3S pack.~~ Measured 70 × 50 × 15 mm: it fits between the decks.
 2. Buck converter choice: its size decides the lower-deck layout.
-3. Which LiDAR (LD19 or RPLIDAR C1)? The C1 is taller (41 mm) and would raise the scan plane.
+3. ~~Which LiDAR?~~ Decided: RPLIDAR C1 (41 mm tall, raises the scan plane; see `cad/scout-v2`).
 4. Payload bay: is 80 × 60 × 60 mm right for a water bottle or a seedling cup?

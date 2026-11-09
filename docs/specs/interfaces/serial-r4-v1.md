@@ -4,7 +4,7 @@ status: implemented (firmware/r4_base, 2026-11-02)
 ---
 # Serial protocol v1: Pi ↔ Arduino UNO R4 base controller
 
-**Link:** USB CDC, 115200 baud, ASCII lines ending in `\n` (a `\r` is ignored). Pi side: `/dev/ttyACM0` (plan: udev rule → `/dev/scout_base`).
+**Link:** USB CDC, 115200 baud, ASCII lines ending in `\n` (a `\r` is ignored). Pi side: `/dev/scout_base` (udev rule [`tools/udev/99-scout-base.rules`](../../../tools/udev/99-scout-base.rules); raw device `/dev/ttyACM0`).
 
 ## Commands (Pi → R4)
 | Line | Meaning |

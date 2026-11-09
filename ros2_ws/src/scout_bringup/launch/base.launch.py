@@ -3,11 +3,13 @@
 import os
 
 from ament_index_python.packages import get_package_share_directory
+
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
+
 from launch_ros.actions import Node
 
 
@@ -18,6 +20,7 @@ def generate_launch_description():
     """
     bringup = get_package_share_directory('scout_bringup')
     description = get_package_share_directory('scout_description')
+    perception = get_package_share_directory('scout_perception')
     params = os.path.join(bringup, 'config', 'base.yaml')
 
     impl = LaunchConfiguration('impl')
@@ -28,8 +31,11 @@ def generate_launch_description():
                   executable='base_bridge',
                   parameters=[params, {'port': port}])
 
-    model = IncludeLaunchDescription(PythonLaunchDescriptionSource(
-        os.path.join(description, 'launch', 'description_launch.py')))
+    urdf = IncludeLaunchDescription(PythonLaunchDescriptionSource(
+        os.path.join(description, 'launch', 'description.launch.py')))
+
+    vision = IncludeLaunchDescription(PythonLaunchDescriptionSource(
+            os.path.join(perception, 'launch', 'perception.launch.py')))
 
     fox = Node(package='foxglove_bridge',
                executable='foxglove_bridge',
@@ -44,5 +50,5 @@ def generate_launch_description():
         DeclareLaunchArgument('foxglove', default_value='true',
                               description='start foxglove_bridge'),
         DeclareLaunchArgument('foxglove_port', default_value='8765'),
-        bridge, model, fox,
+        bridge, urdf, fox, vision
     ])

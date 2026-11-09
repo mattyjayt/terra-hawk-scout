@@ -1,0 +1,17 @@
+diff --git a/src/CameraNode.cpp b/src/CameraNode.cpp
+index b4e1dd5..45c1491 100644
+--- a/src/CameraNode.cpp
++++ b/src/CameraNode.cpp
+@@ -740,7 +740,11 @@ CameraNode::setupCamera()
+   camera->requestCompleted.connect(this, &CameraNode::requestComplete);
+ 
+   // start camera with initial controls
+-  switch (camera->start(&parameter_handler.get_control_values())) {
++  // TerraHawk patch: a ControlList without the camera's ControlInfoMap makes the
++  // Raspberry Pi IPA proxy abort ('A list of V4L2 controls requires a ControlInfoMap').
++  libcamera::ControlList start_controls(camera->controls());
++  start_controls.merge(parameter_handler.get_control_values());
++  switch (camera->start(&start_controls)) {
+   case 0:
+     // OK
+     break;

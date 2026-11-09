@@ -1,9 +1,9 @@
 ---
 id: DD-SCOUT-NAV
 title: SLAM and Nav2
-status: Not started
+status: Planned
 owner: Argos (draft) · Jaime (approver)
-updated: 2026-10-30
+updated: 2026-11-09
 ---
 # DD-SCOUT-NAV — SLAM and Nav2
 

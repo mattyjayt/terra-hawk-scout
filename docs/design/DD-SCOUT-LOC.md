@@ -1,13 +1,13 @@
 ---
 id: DD-SCOUT-LOC
 title: Localisation (EKF)
-status: Not started
+status: Planned
 owner: Argos (draft) · Jaime (approver)
-updated: 2026-10-30
+updated: 2026-11-09
 ---
 # DD-SCOUT-LOC — Localisation (EKF)
 
-**Learning-critical.** robot_localization config, covariances, the drift measurement method. See the [sensor-fusion figure](../figures/sensor-fusion/sensor-fusion.html).
+**Learning-critical.** robot_localization config, covariances, the drift measurement method. See the [sensor-fusion figure](../figures/sensor-fusion/sensor-fusion.html) (a concept figure drawn with wheel encoders; the Scout has none, so LiDAR scan matching takes that role).
 
 ## Context and requirements
 _TBD_

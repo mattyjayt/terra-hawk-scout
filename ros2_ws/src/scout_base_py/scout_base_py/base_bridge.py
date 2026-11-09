@@ -408,7 +408,8 @@ class BaseBridge(Node):
         elif self._imu_frozen:
             message = 'IMU frozen'
         elif level != 0:
-            if self._last_battery_v <= self._battery_present_v:
+            if self._last_battery_v is not None and (
+                    self._last_battery_v <= self._battery_present_v):
                 message = 'battery not present'
             else:
                 message = f'telemetry {rate:.1f} Hz (expected 20)'

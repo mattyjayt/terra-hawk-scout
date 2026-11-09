@@ -3,7 +3,7 @@ id: PRD-SCOUT
 title: Scout — product requirements
 status: Draft
 owner: Argos (draft) · Jaime (approver)
-updated: 2026-10-30
+updated: 2026-11-09
 ---
 
 # PRD-SCOUT — Scout product requirements
@@ -34,16 +34,16 @@ The TerraHawk home farm needs a mobile robot that moves resources and seedlings 
 ## Constraints
 - One Pi 5 (8 GB); the Pi moves to the tower arm after the Scout demo.
 - Elegoo plates 132.5 × 230.8 mm with a **39.7 mm** gap between the decks (measured).
-- Budget: LiDAR + encoder motors + 5 V/5 A buck (~€120–150).
+- Budget: LiDAR + 5 V/5 A regulator for the Pi (~€120–150). Encoder motors are deferred (ADR-0003).
 - About 40 h/week; learning-critical code is written by Jaime.
 
 ## Milestones
-S1 teardown/rewire → S2 teleop → S3 URDF + perception → S4 odometry + EKF → S5 SLAM → S6 Nav2 → S7 digital twin. Dates: the project plan in the TerraHawk vault, mirrored as GitHub milestones.
+S1 teardown/rewire → S2 teleop → S3 URDF + perception → S4 odometry + EKF → S5 SLAM → S6 Nav2 → S7 digital twin. Dates: GitHub milestones.
 
 ## Risks
 | ID | Risk | Mitigation |
 |---|---|---|
-| RISK-01 | Encoder-less TT motors make odometry useless | buy encoder motors (ADR-0003) |
+| RISK-01 | Encoder-less TT motors make wheel odometry useless | LiDAR scan matching fused with the gyro in an EKF; encoder motors deferred (ADR-0003) |
 | RISK-02 | Pi brown-outs on battery | dedicated 5 V/5 A buck, power budget in DD-SCOUT-HW |
 | RISK-03 | 3S pack (12.6 V) over-volts the TT motors and is near the TB6612 VM limit | PWM duty cap or separate motor supply (DD-SCOUT-HW §4) |
 | RISK-04 | A tall battery doesn't fit between the decks | measure it; flat pack or top mount |
