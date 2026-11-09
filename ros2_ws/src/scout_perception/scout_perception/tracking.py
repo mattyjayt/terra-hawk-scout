@@ -1,4 +1,5 @@
-"""Pan tracking control law: pure functions.
+"""
+Pan tracking control law: pure functions.
 
 no ROS (tested in test/test_tracking.py).
 """
@@ -31,7 +32,8 @@ class PanParams:
 
 
 def fx_from_hfov(width: int, hfov_rad: float) -> float:
-    """Return the focal length in px.
+    """
+    Return the focal length in px.
 
     from the image width and the horizontal FOV.
     """
@@ -39,7 +41,8 @@ def fx_from_hfov(width: int, hfov_rad: float) -> float:
 
 
 def select_target(targets: list[Target], last_id: str | None) -> Target | None:
-    """Return the target to follow: keep last_id.
+    """
+    Return the target to follow: keep last_id.
 
     if present, else the highest score.
     """
@@ -53,7 +56,8 @@ def select_target(targets: list[Target], last_id: str | None) -> Target | None:
 
 
 def bearing_error(cx: float, cx0: float, fx: float) -> float:
-    """Return the bearing of the target in rad.
+    """
+    Return the bearing of the target in rad.
 
     positive when it is RIGHT of cx0.
     """
@@ -62,7 +66,8 @@ def bearing_error(cx: float, cx0: float, fx: float) -> float:
 
 def yaw_rate_in_base(q: tuple[float, float, float, float],
                      w: tuple[float, float, float]) -> float:
-    """Return the z component of angular velocity w.
+    """
+    Return the z component of angular velocity w.
 
     after rotating it by q = (x, y, z, w).
     """

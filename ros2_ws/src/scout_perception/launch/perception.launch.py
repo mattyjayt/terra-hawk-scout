@@ -12,7 +12,8 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    """Start base_bridge, robot_state_publisher and optionally.
+    """
+    Start base_bridge, robot_state_publisher and optionally.
 
     foxglove_bridge.
     """

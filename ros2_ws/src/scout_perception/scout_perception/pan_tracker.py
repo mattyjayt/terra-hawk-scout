@@ -1,4 +1,5 @@
-"""pan_tracker: keep the selected person centred.
+"""
+pan_tracker: keep the selected person centred.
 
 with the pan servo (visual servoing + gyro FF).
 """
@@ -12,7 +13,7 @@ from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 from rclpy.time import Time
 from scout_perception.tracking import (
-    bearing_error, fx_from_hfov, next_pan, PanParams, select_target,
+    bearing_error, fx_from_hfov, PanParams, select_target,
     step_toward, Target,
     yaw_rate_in_base)
 from sensor_msgs.msg import CameraInfo, Imu, JointState

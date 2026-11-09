@@ -1,14 +1,10 @@
-"""Tests for the pan control law (Lab 8.5).
+"""
+Tests for the pan control law (Lab 8.5).
 
 Two worked examples; you write the rest.
 """
-import math
-
 import pytest
-from scout_perception.tracking import (
-    bearing_error, fx_from_hfov, next_pan, PanParams,
-    select_target, step_toward, Target,
-    yaw_rate_in_base)
+from scout_perception.tracking import bearing_error, next_pan, PanParams
 
 FX = 492.76
 P = PanParams()
