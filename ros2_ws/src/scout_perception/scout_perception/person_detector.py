@@ -89,7 +89,7 @@ class PersonDetector(Node):
             hyp.hypothesis.class_id = 'person'
             hyp.hypothesis.score = float(box.conf[0])
             d.results.append(hyp)
-            d.id = '' if box.id is None else str(box.id[0])
+            d.id = '' if box.id is None else str(int(box.id[0]))
             out.detections.append(d)
 
         return out
