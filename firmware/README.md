@@ -11,4 +11,4 @@ Build/upload: Arduino IDE, board *Arduino UNO R4 WiFi* (core `arduino:renesas_un
 Motors need the battery switched on; USB alone runs the logic.
 
 Bench teleop (Mac or Pi): `python3 tools/serial_teleop.py /dev/ttyACM0` (needs `pyserial`).
-Verified 2026-11-02: wheels, IMU and Pi ↔ R4 over USB working; servo/battery lines added the same evening (to verify).
+Verified on the robot: wheels, IMU, pan servo, battery and the watchdog, driven from the ROS 2 base bridge over USB.

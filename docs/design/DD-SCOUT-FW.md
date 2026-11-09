@@ -1,9 +1,9 @@
 ---
 id: DD-SCOUT-FW
 title: R4 base firmware (UNO R4 WiFi + Elegoo shield)
-status: Not started
+status: Planned (firmware v1 in `firmware/r4_base` is in use; this doc designs v2)
 owner: Jaime (author) · Argos (review)
-updated: 2026-11-03
+updated: 2026-11-09
 ---
 # DD-SCOUT-FW — R4 base firmware
 

@@ -2,9 +2,9 @@
 id: DD-SCOUT-BRIDGE
 title: Base bridge node (Pi ↔ UNO R4), Python and C++
 version: 0.9
-status: Draft (for Jaime's approval)
+status: Draft · Python implementation (`scout_base_py`) merged and tested; C++ implementation in progress
 owner: Argos (draft) · Jaime (approver, implementer)
-updated: 2026-11-03
+updated: 2026-11-09
 ---
 
 # DD-SCOUT-BRIDGE — base bridge node
@@ -24,7 +24,7 @@ Requirements served: REQ-SCOUT-001 (drive from `cmd_vel`), 002 (stop on silence)
 **Non-goals**
 - Closed-loop wheel speed control (no encoders yet, ADR-0003). The drive is **open loop**: the bridge assumes PWM ∝ speed.
 - Odometry (`/odom`) and orientation estimation: P3 (EKF).
-- `ros2_control`. This bridge is the learning step before a `ros2_control` hardware interface (DD-SCOUT-HWIF), which can reuse the same core code.
+- `ros2_control`. A `ros2_control` hardware interface (DD-SCOUT-HWIF, deferred) could reuse the same core code later.
 
 ## 3. Architecture: functional core, I/O shell
 ```
@@ -134,7 +134,7 @@ The fake R4 creates a pty at `/tmp/fake_r4`, speaks serial-r4-v1 and logs every 
 | TC-SCOUT-022 | `imu/data_raw` | ≥ 18 Hz, `frame_id imu_link`, `orientation_covariance[0] == −1`, accel magnitude 9.81 ± 0.3 |
 | TC-SCOUT-023 | `pan/cmd` 0.5 rad | fake log gets `V 119` (pan_sign +1) and `joint_states` shows 0.5 ± 0.02 rad |
 | TC-SCOUT-024 | kill the fake R4, restart it | `/diagnostics` ERROR within 1 s; OK again within 3 s; services succeed again |
-| TC-SCOUT-024b | fake R4 with frozen IMU (`--freeze-imu` option, to add) | `imu_frozen = true`, level ERROR |
+| TC-SCOUT-024b | fake R4 with frozen IMU (`--freeze-imu`) | `imu_frozen = true`, level ERROR |
 | — | services | `/base/stop` → `success=true` and `S` in the log |
 
 ### 8.3 Level 3 — hardware in the loop (real R4, wheels off the ground)
@@ -160,7 +160,7 @@ Both bridges install an executable `base_bridge`. `scout_bringup/launch/base.lau
 ## 10. Alternatives considered
 | Option | Why not (now) |
 |---|---|
-| `ros2_control` hardware interface straight away (`diffdrive_arduino` pattern) | It's the right end state (DD-SCOUT-HWIF), but it hides the ROS basics (topics, QoS, timers, threads) behind a framework. Bridge first, then port the core into a hardware interface. |
+| `ros2_control` hardware interface straight away (`diffdrive_arduino` pattern) | A possible end state (DD-SCOUT-HWIF, deferred), but it hides the ROS basics (topics, QoS, timers, threads) behind a framework. Bridge first, then port the core into a hardware interface. |
 | micro-ROS on the R4 | Community-supported on the R4, tight on RAM, and it moves ROS onto the microcontroller, against the "thin hardware layer" decision (ADR-0005/0006). |
 | Polling timer instead of a reader thread | Deadlocks while a service waits for an ack (§3). Only works with a multi-threaded executor + callback groups, which is more to learn at once. |
 | Binary protocol | ASCII stays readable in `miniterm`. A checksum comes with serial v2. |
@@ -168,7 +168,7 @@ Both bridges install an executable `base_bridge`. `scout_bringup/launch/base.lau
 ## 11. Risks
 | Risk | Mitigation |
 |---|---|
-| Open-loop speed differs per side, with battery level and on carpet | accept for P1; LiDAR odometry + EKF in P3; encoder motors if needed (ADR-0003) |
+| Open-loop speed differs per side, with battery level and on carpet | accept for P1; LiDAR odometry + EKF in P3; encoder motors only if needed (ADR-0003, deferred) |
 | Frozen IMU (seen 3 Nov) | stale detector → diagnostics ERROR; firmware v2 reports I²C failures |
 | `/dev/ttyACM0` changes number after a replug | udev symlink `/dev/scout_base` on USB ID 2341:1002 + serial number |
 | ModemManager probing the port | the udev rule sets `ENV{ID_MM_DEVICE_IGNORE}="1"` |

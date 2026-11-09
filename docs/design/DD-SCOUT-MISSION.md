@@ -1,9 +1,9 @@
 ---
 id: DD-SCOUT-MISSION
 title: Mission (patrol, go-to-station, deliver)
-status: Not started
+status: Planned
 owner: Argos (draft) · Jaime (approver)
-updated: 2026-10-30
+updated: 2026-11-09
 ---
 # DD-SCOUT-MISSION — Mission (patrol, go-to-station, deliver)
 
