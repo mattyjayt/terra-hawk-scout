@@ -2,6 +2,7 @@
 
 with the pan servo (visual servoing + gyro FF).
 """
+import bisect
 import math
 import time
 
@@ -36,7 +37,7 @@ class PanTracker(Node):
         self.declare_parameter('rate_hz', 20.0)
         self.declare_parameter('lost_hold_s', 1.0)
         self.declare_parameter('return_rate', 0.3)
-        self.declare_parameter('use_gyro_ff', True)
+        self.declare_parameter('use_gyro_ff', False)
         self.declare_parameter('base_frame', 'base_link')
         width = self.get_parameter('image_width').value
         self._p = PanParams(
@@ -53,6 +54,8 @@ class PanTracker(Node):
         self._return_rate = self.get_parameter('return_rate').value
         self._base_frame = self.get_parameter('base_frame').value
         self._pan_cmd = None
+        self._pan_meas = None        # latest measured pan angle (joint_states)
+        self._pan_hist = []          # (stamp_s, pan) from joint_states, last ~2 s
         self._target_id = None
         self._pan_target = None
         self._err = None
@@ -92,17 +95,39 @@ class PanTracker(Node):
 
         self._target_id = t.track_id
         self._err = bearing_error(t.cx, self._cx0, self._fx)
-        if self._pan_cmd is not None:
-            self._pan_target = min(max(
-                self._pan_cmd - self._err, self._p.pan_min), self._p.pan_max)
         self._last_seen = time.monotonic()
+        if self._pan_meas is None:
+            return
+        if abs(self._err) < self._p.deadband:
+            # 2.1: close enough to centre; aim at where we already are
+            if self._pan_target is None:
+                self._pan_target = self._pan_cmd
+            return
+        # 2.2: aim from where the camera pointed when this image was taken
+        stamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
+        pan_then = self._pan_at(stamp)
+        self._pan_target = min(max(
+            pan_then - self._err, self._p.pan_min), self._p.pan_max)
+
+    def _pan_at(self, t: float) -> float:
+        """Return the measured pan angle at time t (s), else the latest."""
+        if not self._pan_hist or t <= 0.0:
+            return self._pan_meas
+        i = bisect.bisect_right([h[0] for h in self._pan_hist], t) - 1
+        return self._pan_hist[max(i, 0)][1]
 
     def _on_joint_states(self, msg: JointState) -> None:
-        if self._pan_cmd is not None or 'pan_joint' not in msg.name:
+        if 'pan_joint' not in msg.name:
             return
-
-        self._pan_cmd = msg.position[msg.name.index('pan_joint')]
-        # self.get_logger().info(f'pan seeded at {...:.3f} rad')
+        self._pan_meas = msg.position[msg.name.index('pan_joint')]
+        t = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
+        if t <= 0.0:
+            t = self.get_clock().now().nanoseconds * 1e-9
+        self._pan_hist.append((t, self._pan_meas))
+        while self._pan_hist and self._pan_hist[0][0] < t - 2.0:
+            self._pan_hist.pop(0)
+        if self._pan_cmd is None:
+            self._pan_cmd = self._pan_meas     # seed the command once
 
     def _on_imu(self, msg: Imu) -> None:
         if self._imu_q is None:
@@ -132,16 +157,17 @@ class PanTracker(Node):
             return
         age = now - self._last_seen if (
             self._last_seen is not None) else float('inf')
-        if age < self._lost_hold_s:
-            err = self._err if self._err is not None else 0.0
-            self._pan_cmd = next_pan(self._pan_cmd, err,
-                                     self._gyro_z, dt, self._p)
-        else:
-            self._target_id = None
+        if age < self._lost_hold_s and self._pan_target is not None:
             if self._p.use_gyro_ff:
                 self._pan_target -= self._gyro_z * dt
-            self._pan_cmd = step_toward(self._pan_cmd, 0.0,
-                                        self._return_rate * dt)
+            self._pan_cmd = step_toward(
+                self._pan_cmd, self._pan_target, self._p.max_rate * dt)
+        else:
+            self._target_id = None
+            self._pan_target = None
+            self._pan_cmd = step_toward(
+                self._pan_cmd, 0.0, self._return_rate * dt)
+
         self._pub.publish(Float64(data=self._pan_cmd))
 
 
