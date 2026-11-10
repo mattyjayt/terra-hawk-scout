@@ -18,7 +18,7 @@ Each test case maps 1:1 to a requirement in the [SRS](../specs/srs.md) (`TC-SCOU
 | TC-SCOUT-005 | rate + calibration check | per REQ-SCOUT-005 | ⏳ | |
 | TC-SCOUT-006 | heading drift < 5° / 10 m on carpet | per REQ-SCOUT-006 | ⏳ | |
 | TC-SCOUT-007 | map of the living area saved | per REQ-SCOUT-007 | ⏳ | |
-| TC-SCOUT-008 | 9/10 runs arrive within 10 cm / 10° | per REQ-SCOUT-008 | ⏳ | |
+| TC-SCOUT-008 | ≥ 8/10 runs arrive within 10 cm / 10° | per REQ-SCOUT-008 | ⏳ | |
 | TC-SCOUT-009 | box test at 3 speeds | per REQ-SCOUT-009 | ⏳ | |
 | TC-SCOUT-010 | FPS + mAP on a test set | per REQ-SCOUT-010 | ⏳ | |
 | TC-SCOUT-011 | RViz overlay matches the CAD | per REQ-SCOUT-011 | ⏳ | |

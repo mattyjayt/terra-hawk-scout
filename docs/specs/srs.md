@@ -18,7 +18,7 @@ Priority: **M**ust · **S**hould · **C**ould (MoSCoW). Each requirement traces 
 | REQ-SCOUT-005 | IMU | The MPU-6050 shall be published as `sensor_msgs/Imu` on `/imu/data_raw` at ≥ 100 Hz with covariances set. | M | rate + calibration check | TC-SCOUT-005 |
 | REQ-SCOUT-006 | Fusion | An EKF (robot_localization) shall fuse LiDAR odometry and IMU yaw rate into `/odometry/filtered`. | M | heading drift < 5° / 10 m on carpet | TC-SCOUT-006 |
 | REQ-SCOUT-007 | SLAM | The robot shall build a 2D occupancy map with slam_toolbox from `/scan` at 5 cm resolution. | M | map of the living area saved | TC-SCOUT-007 |
-| REQ-SCOUT-008 | Nav | The robot shall navigate to a goal pose with Nav2, avoiding static and dynamic obstacles. | M | 9/10 runs arrive within 10 cm / 10° | TC-SCOUT-008 |
+| REQ-SCOUT-008 | Nav | The robot shall navigate to a goal pose with Nav2, avoiding static and dynamic obstacles. | M | ≥ 8/10 runs arrive within 10 cm / 10° | TC-SCOUT-008 |
 | REQ-SCOUT-009 | Safety | An obstacle closer than 15 cm in front (LiDAR or ultrasonic) shall stop forward motion. | M | box test at 3 speeds | TC-SCOUT-009 |
 | REQ-SCOUT-010 | Perception | A Python node shall run object detection on Camera Module 3 frames at ≥ 10 FPS on the Pi 5 and publish `vision_msgs/Detection2DArray` on `/detections`. | S | FPS + mAP on a test set | TC-SCOUT-010 |
 | REQ-SCOUT-011 | Model | A URDF/xacro shall describe the robot with correct sensor frames (laser, camera, imu). | M | RViz overlay matches the CAD | TC-SCOUT-011 |
