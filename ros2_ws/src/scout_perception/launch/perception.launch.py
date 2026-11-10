@@ -23,6 +23,7 @@ def generate_launch_description():
     model_path = LaunchConfiguration('model_path')
     imgsz = LaunchConfiguration('imgsz')
     debug_image = LaunchConfiguration('debug_image')
+    use_tracking = LaunchConfiguration('use_tracking')
 
     tracker = Node(package='scout_perception',
                    executable='pan_tracker')
@@ -32,7 +33,8 @@ def generate_launch_description():
                     parameters=[params, {
                         'model_path': model_path,
                         'imgsz': imgsz,
-                        'debug_image': debug_image}])
+                        'debug_image': debug_image,
+                        'use_tracking': use_tracking}])
 
     return LaunchDescription([
         DeclareLaunchArgument(
@@ -43,5 +45,7 @@ def generate_launch_description():
                               description='image size'),
         DeclareLaunchArgument('debug_image', default_value='true',
                               description='display compressed image'),
+        DeclareLaunchArgument('use_tracking', default_value='true',
+                              description='enable tracking'),
         tracker, detector
     ])
