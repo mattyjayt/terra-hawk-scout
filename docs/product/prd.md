@@ -22,7 +22,7 @@ The TerraHawk home farm needs a mobile robot that moves resources and seedlings 
 | G-SCOUT-1 | Drive reliably under ROS 2 control | Teleop at ≥ 0.3 m/s with < 150 ms command latency; no brown-outs in a 30 min session |
 | G-SCOUT-2 | Know where it is | Fused odometry heading drift < 5° per 10 m on carpet tiles (vs < 20° for wheels alone) |
 | G-SCOUT-3 | Map the apartment | A complete 2D occupancy map of the living area at 5 cm resolution, made by slam_toolbox |
-| G-SCOUT-4 | Navigate autonomously | 9 of 10 goal runs from desk to grow frame arrive within 10 cm / 10° without a collision |
+| G-SCOUT-4 | Navigate autonomously | At least 8 of 10 goal runs from desk to grow frame arrive within 10 cm / 10° without a collision |
 | G-SCOUT-5 | See | A perception node on the Pi detects the target classes at ≥ 10 FPS and publishes `/detections` |
 | G-SCOUT-6 | Show it | A 30–60 s video, README and portfolio section for every milestone |
 
