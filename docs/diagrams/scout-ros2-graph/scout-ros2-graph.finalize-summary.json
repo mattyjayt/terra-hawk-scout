@@ -6,14 +6,14 @@
   "type": "architecture",
   "quality": "showcase",
   "specification": {
-    "path": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/candidate.json",
-    "sha256": "7f4e4573b717051479a438e849becbfd3231849bff3458970e6e033c4c28379f",
-    "bytes": 4443
+    "path": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/candidate.json",
+    "sha256": "8bda510ff85d2d9f4a67ce0e6d703f380fde0febe5cf39a71a520ca66cbbdf93",
+    "bytes": 6692
   },
   "artifact": {
-    "path": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.html",
-    "sha256": "2d71be76bd1d85b45fe7e197c5b600b34129f0177759c1b9be63dff79e2ef922",
-    "bytes": 854878
+    "path": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.html",
+    "sha256": "a24e6f98e1350a71abcc943c956ef5392e0626efdbcaf9957f3be12d843b13bd",
+    "bytes": 857883
   },
   "gates": {
     "validate": "pass",
@@ -28,22 +28,22 @@
     "truncated": false
   },
   "evidence": {
-    "receipt": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.finalize.json",
-    "summaryReceipt": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.finalize-summary.json",
-    "browserCheckReceipt": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.browser-check.json"
+    "receipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.finalize.json",
+    "summaryReceipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.finalize-summary.json",
+    "browserCheckReceipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.browser-check.json"
   },
   "update": {
     "status": "current",
     "installedVersion": "3.2.0",
     "availableVersion": "3.2.0",
     "releaseNotes": null,
-    "checkedAt": "2026-10-30T20:21:24.461Z",
+    "checkedAt": "2026-11-10T11:08:34.413Z",
     "source": "cache",
     "noticeRequired": false,
     "noticeText": null
   },
   "visualReview": "not-requested",
-  "durationMs": 3659,
+  "durationMs": 10167,
   "browserCheck": {
     "requested": true,
     "ran": true
@@ -51,8 +51,7 @@
   "visualReviewRecommendation": {
     "action": "inspect-route-readability",
     "signals": {
-      "routesOverSuggestedBends": 1,
-      "routesOverSuggestedStretch": 1
+      "routesOverSuggestedBends": 1
     },
     "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
     "affectedRoutes": {
@@ -60,21 +59,21 @@
       "detours": [
         {
           "relationship": {
-            "id": "pwm-down",
-            "from": "rc",
-            "to": "esp32",
-            "label": "wheel cmd → PWM",
-            "collectionIndex": 9,
-            "artifactIndex": 10
+            "id": "serial-down",
+            "from": "bridge",
+            "to": "r4",
+            "label": "M l r · V · S (serial-r4-v1)",
+            "collectionIndex": 10,
+            "artifactIndex": 11
           },
           "bends": 4,
-          "stretch": 2.031
+          "stretch": 1.276
         }
       ],
       "truncated": false
     },
     "hints": [
-      "rc → esp32 needs 4 bends: move node rc or esp32 so they share a row or column with matching centers, or sit diagonally with a clear corner."
+      "bridge → r4 needs 4 bends: move node bridge or r4 so they share a row or column with matching centers, or sit diagonally with a clear corner."
     ],
     "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
   }

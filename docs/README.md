@@ -31,4 +31,4 @@ Interactive HTML pages: download and open them in a browser.
 | [Twist → PWM figure](figures/twist-to-pwm/twist-to-pwm.html) | how the bridge turns `cmd_vel` into wheel PWM |
 | [Sensor-fusion figure](figures/sensor-fusion/sensor-fusion.html) | concept: why fusing a gyro with odometry fixes heading drift (drawn with wheel encoders; on the Scout, LiDAR odometry takes that role) |
 | [Layout fit check (CAD)](../cad/scout-layout/README.md) | v1 fit check on the Elegoo plates |
-| [Early target graph](diagrams/scout-ros2-graph/scout-ros2-graph.html) | **superseded**: the pre-ADR-0006 design with an ESP32 and micro-ROS. Kept as history only |
+| [Target ROS 2 graph](diagrams/scout-ros2-graph/scout-ros2-graph.html) | where the Scout is going: Pi 5 + UNO R4, LiDAR odometry (rf2o) + gyro EKF, slam_toolbox, Nav2, mission node; status per node |

@@ -2,8 +2,8 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "TerraHawk Scout — ROS 2 graph and Pi 5 / ESP32 split",
-    "subtitle": "Target design: 2D LiDAR and encoder motors not yet bought",
+    "title": "TerraHawk Scout — target ROS 2 graph (Pi 5 + Arduino UNO R4)",
+    "subtitle": "Working now: camera, person tracking, base bridge, R4. Next: LiDAR odometry, EKF, SLAM, Nav2, delivery mission",
     "output": "diagrams/scout-ros2-graph/scout-ros2-graph.html",
     "locale": "en",
     "quality_profile": "showcase"
@@ -13,58 +13,61 @@
       "id": "camera",
       "type": "frontend",
       "label": "camera_ros",
-      "sublabel": "Pi Camera Module 3",
+      "sublabel": "Pi Camera Module 3 · 30 FPS",
       "pos": [
         40,
         60
       ],
       "size": [
-        160,
+        170,
         64
-      ]
+      ],
+      "tag": "working"
     },
     {
       "id": "mission",
       "type": "backend",
       "label": "mission node",
-      "sublabel": "patrol · deliver · dock",
+      "sublabel": "home → pickup → wait → tower",
       "pos": [
         300,
         60
       ],
       "size": [
-        160,
+        170,
         64
-      ]
+      ],
+      "tag": "planned"
     },
     {
       "id": "lidar",
       "type": "frontend",
-      "label": "LiDAR driver",
-      "sublabel": "2D LiDAR · /scan",
+      "label": "sllidar_ros2",
+      "sublabel": "RPLIDAR C1 · /scan",
       "pos": [
-        560,
+        820,
         60
       ],
       "size": [
-        160,
+        170,
         64
       ],
-      "tag": "not bought"
+      "tag": "arriving"
     },
     {
       "id": "perception",
       "type": "backend",
-      "label": "perception node",
-      "sublabel": "C++ · YOLO",
+      "label": "person_detector + pan_tracker",
+      "sublabel": "YOLO26n · NCNN · ~19 FPS",
       "pos": [
         40,
         230
       ],
       "size": [
-        160,
+        200,
         64
-      ]
+      ],
+      "tag": "working"
     },
     {
       "id": "nav2",
@@ -76,9 +79,10 @@
         230
       ],
       "size": [
-        160,
+        170,
         64
-      ]
+      ],
+      "tag": "planned"
     },
     {
       "id": "slam",
@@ -90,86 +94,90 @@
         230
       ],
       "size": [
-        160,
+        170,
         64
-      ]
-    },
-    {
-      "id": "devmac",
-      "type": "external",
-      "label": "Dev Mac",
-      "sublabel": "RViz · Foxglove",
-      "pos": [
-        880,
-        230
       ],
-      "size": [
-        150,
-        64
-      ]
+      "tag": "planned"
     },
     {
-      "id": "rc",
+      "id": "bridge",
       "type": "backend",
-      "label": "ros2_control",
-      "sublabel": "diff_drive_controller",
+      "label": "base_bridge",
+      "sublabel": "Python now · C++ in progress",
       "pos": [
         300,
         400
       ],
       "size": [
-        160,
+        170,
         64
-      ]
+      ],
+      "tag": "working"
     },
     {
       "id": "ekf",
       "type": "backend",
       "label": "robot_localization",
-      "sublabel": "EKF · wheel odom + IMU",
+      "sublabel": "EKF · LiDAR odom + gyro",
       "pos": [
         560,
         400
       ],
       "size": [
-        160,
+        170,
         64
-      ]
-    },
-    {
-      "id": "hcsr04",
-      "type": "external",
-      "label": "HC-SR04",
-      "sublabel": "ultrasonic backup",
-      "pos": [
-        40,
-        570
       ],
-      "size": [
-        160,
-        64
-      ]
+      "tag": "planned"
     },
     {
-      "id": "esp32",
-      "type": "messagebus",
-      "label": "ESP32 WROOM-32",
-      "sublabel": "micro-ROS · TB6612 · MPU-6050",
+      "id": "rf2o",
+      "type": "backend",
+      "label": "rf2o_laser_odometry",
+      "sublabel": "scan matching → odom",
       "pos": [
-        295,
-        570
+        820,
+        400
       ],
       "size": [
         170,
         64
       ],
-      "tag": "encoder motors not bought"
+      "tag": "planned"
+    },
+    {
+      "id": "devmac",
+      "type": "external",
+      "label": "Foxglove on the Mac",
+      "sublabel": "WebSocket · layouts",
+      "pos": [
+        40,
+        570
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "r4",
+      "type": "messagebus",
+      "label": "Arduino UNO R4 WiFi",
+      "sublabel": "r4_base · TB6612 · MPU-6050 · servo",
+      "pos": [
+        300,
+        570
+      ],
+      "size": [
+        190,
+        64
+      ],
+      "tag": "working"
     }
   ],
   "boundaries": [
     {
       "kind": "region",
-      "label": "Raspberry Pi 5 (8 GB) · ROS 2 Jazzy",
+      "label": "Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy",
       "wraps": [
         "camera",
         "mission",
@@ -177,43 +185,69 @@
         "perception",
         "nav2",
         "slam",
-        "rc",
-        "ekf"
+        "bridge",
+        "ekf",
+        "rf2o"
       ]
     },
     {
       "kind": "security-group",
-      "label": "ESP32 MCU · real-time I/O",
+      "label": "Microcontroller · USB serial",
       "wraps": [
-        "hcsr04",
-        "esp32"
+        "r4"
       ]
     }
   ],
   "connections": [
     {
-      "id": "image-stream",
+      "id": "img",
       "from": "camera",
       "to": "perception",
-      "label": "/image_raw"
+      "label": "camera/image_raw"
     },
     {
-      "id": "detections",
+      "id": "pan",
       "from": "perception",
-      "to": "nav2",
-      "label": "/detections"
+      "to": "bridge",
+      "label": "pan/cmd"
     },
     {
-      "id": "mission-goals",
+      "id": "goals",
       "from": "mission",
       "to": "nav2",
       "label": "nav goals"
     },
     {
-      "id": "scan",
+      "id": "scan-odom",
+      "from": "lidar",
+      "to": "rf2o",
+      "label": "/scan",
+      "variant": "emphasis"
+    },
+    {
+      "id": "scan-slam",
       "from": "lidar",
       "to": "slam",
       "label": "/scan",
+      "variant": "emphasis"
+    },
+    {
+      "id": "lidar-odom",
+      "from": "rf2o",
+      "to": "ekf",
+      "label": "odom (scan matching)"
+    },
+    {
+      "id": "imu",
+      "from": "bridge",
+      "to": "ekf",
+      "label": "imu/data_raw (gyro)"
+    },
+    {
+      "id": "filtered",
+      "from": "ekf",
+      "to": "slam",
+      "label": "odometry/filtered · tf",
       "variant": "emphasis"
     },
     {
@@ -224,91 +258,67 @@
       "variant": "emphasis"
     },
     {
-      "id": "cmd-vel",
+      "id": "cmdvel",
       "from": "nav2",
-      "to": "rc",
-      "label": "/cmd_vel",
+      "to": "bridge",
+      "label": "cmd_vel",
       "variant": "emphasis"
     },
     {
-      "id": "wheel-odom",
-      "from": "rc",
-      "to": "ekf",
-      "label": "/odom"
+      "id": "serial-down",
+      "from": "bridge",
+      "to": "r4",
+      "label": "M l r · V · S (serial-r4-v1)"
     },
     {
-      "id": "filtered-odom",
-      "from": "ekf",
-      "to": "slam",
-      "label": "/odometry/filtered",
-      "variant": "emphasis"
+      "id": "serial-up",
+      "from": "r4",
+      "to": "bridge",
+      "label": "I 20 Hz · acks · watchdog"
     },
     {
-      "id": "ticks-up",
-      "from": "esp32",
-      "to": "rc",
-      "label": "wheel ticks"
-    },
-    {
-      "id": "pwm-down",
-      "from": "rc",
-      "to": "esp32",
-      "label": "wheel cmd → PWM"
-    },
-    {
-      "id": "imu",
-      "from": "esp32",
-      "to": "ekf",
-      "label": "/imu (USB serial)",
-      "fromSide": "right",
-      "toSide": "bottom"
-    },
-    {
-      "id": "range",
-      "from": "hcsr04",
-      "to": "esp32",
-      "label": "echo pulse"
-    },
-    {
-      "id": "dds-viz",
-      "from": "slam",
+      "id": "fox",
+      "from": "bridge",
       "to": "devmac",
-      "label": "DDS over Wi-Fi",
+      "label": "all topics over Wi-Fi",
       "variant": "dashed"
     }
   ],
   "cards": [
     {
-      "dot": "amber",
-      "title": "Status: target design",
+      "dot": "emerald",
+      "title": "Working now (Nov 2026)",
       "items": [
-        "2D LiDAR and encoder motors are not yet bought",
-        "Graph follows System Architecture §3; nothing here is measured"
+        "Teleop over cmd_vel with a 0.25 s timeout in the bridge and a 300 ms watchdog on the R4",
+        "IMU 20 Hz, battery, pan servo, diagnostics; URDF + TF; Foxglove layout",
+        "Camera 30 FPS; YOLO26n person detection ~19 FPS on the CPU; pan tracking"
       ]
     },
     {
       "dot": "violet",
-      "title": "Pi 5 / ESP32 boundary",
+      "title": "Two compute parts (ADR-0006)",
       "items": [
-        "ESP32 runs micro-ROS over USB serial; a micro-ROS agent on the Pi bridges it to DDS",
-        "ESP32 owns encoder ticks, MPU-6050 /imu and TB6612 motor PWM",
-        "HC-SR04 is a near-field backup read by the ESP32"
+        "Every ROS node runs on the Pi 5; the UNO R4 holds no robot logic",
+        "The R4 speaks the plain-text serial-r4-v1 protocol: motor PWM, servo, MPU-6050, battery, watchdog",
+        "No ESP32, no micro-ROS (superseded ADR-0002)"
       ]
     },
     {
-      "dot": "emerald",
-      "title": "Localization and navigation",
+      "dot": "amber",
+      "title": "Odometry without wheel encoders",
       "items": [
-        "EKF fuses wheel /odom with /imu into /odometry/filtered for slam_toolbox",
-        "Nav2 plans on /map and /detections and publishes /cmd_vel",
-        "mission node sends patrol, deliver and dock goals to Nav2"
+        "The TT motors have no encoders and skid-steer wheels slide when turning",
+        "rf2o matches consecutive LiDAR scans; the EKF fuses that with the R4 gyro",
+        "slam_toolbox maps on the fused odometry; Nav2 plans on the map"
       ]
     },
     {
       "dot": "slate",
-      "title": "Dev Mac",
+      "title": "Status tags",
       "items": [
-        "RViz / Foxglove subscribe to /map, /scan, /tf and other topics over Wi-Fi DDS"
+        "working = running on the robot today",
+        "arriving = hardware ordered, not mounted",
+        "planned = designed, not built yet"
       ]
     }
   ]

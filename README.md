@@ -5,23 +5,15 @@
 
 A small ROS 2 robot built from an Elegoo Smart Robot Car: a Raspberry Pi 5 runs the ROS 2 stack, an Arduino UNO R4 drives the motors, and a camera on a pan servo finds and follows people.
 
-<!--
-  MEDIA SLOT. To publish the demo:
-  1. Add the GIF as docs/media/scout-tracking.gif
-  2. Replace VIDEO_ID (twice) in the block below with the YouTube video ID
-  3. Delete the "Demo video coming soon" line and uncomment the <p> block
--->
-> 🎥 Demo video coming soon.
-
-<!--
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=VIDEO_ID">
-    <img src="docs/media/scout-tracking.gif" alt="Scout detects a person and pans its camera to keep them centred" width="640">
+  <a href="https://youtu.be/UF68RhrAjy4">
+    <img src="docs/media/scout-tracking.gif" alt="Scout detects a person on the Pi 5 and pans its camera to keep them centred; left the Foxglove camera view with detections, right the robot" width="720">
   </a>
   <br>
-  <a href="https://www.youtube.com/watch?v=VIDEO_ID">▶ Watch the full demo on YouTube</a>
+  <sub>Person tracking on the Pi 5 CPU: YOLO26n (NCNN, 320 px) at about 19 FPS. Left: what the robot sees in Foxglove. Right: the robot.</sub>
 </p>
--->
+
+**Videos:** [▶ Person tracking (0:33)](https://youtu.be/UF68RhrAjy4) · [▶ Teleop and telemetry in Foxglove (1:00)](https://youtu.be/RkYV_hwotlY) · [▶ Build timelapse (1:09)](https://youtu.be/KVtj6qZaDFg)
 
 Scout is the mobile part of **TerraHawk**, a home-farm robotics project. The end goal: map the flat, drive to a pickup point, wait for cargo and deliver it to the grow tower.
 
@@ -34,7 +26,8 @@ Scout is the mobile part of **TerraHawk**, a home-farm robotics project. The end
 | | `/diagnostics`: link state, line rates, frozen-IMU detection (ERROR), battery not present (WARN) |
 | | URDF + TF tree; one-command bringup with Foxglove and a saved Foxglove layout |
 | | Camera in ROS 2 at 30 FPS (`camera_ros`, built from source with a Pi 5 patch) |
-| | Person detection (YOLO + ByteTrack) and pan tracking: the camera follows a person. Gains are still being tuned |
+| | Person detection on the Pi 5 CPU: YOLO26n exported to NCNN at 320 px, **about 19 FPS** measured on the robot (from 3 FPS after profiling: export size, runtime, and skipping ByteTrack, which cost about 75 ms per frame) |
+| | Pan tracking: each detection sets a goal angle from the measured servo angle at the image's timestamp, with a deadband; the servo steps toward it at a limited rate |
 | | CI on every PR: `colcon build` + `colcon test` in `ros:jazzy`, and an R4 firmware compile check |
 | 🟡 **In progress** | C++ base bridge (`rclcpp`) that passes the same contract tests as the Python one |
 | | RPLIDAR C1: arriving this week, not mounted yet |
@@ -43,7 +36,17 @@ Scout is the mobile part of **TerraHawk**, a home-farm robotics project. The end
 | | Delivery mission: drive to pickup, wait for cargo, drive to the grow tower |
 | | R4 firmware v2: modules and protocol v2 ([DD-SCOUT-FW](docs/design/DD-SCOUT-FW.md)) |
 
+## Demos
+
+| Teleop and live telemetry in Foxglove | Build timelapse |
+|---|---|
+| [<img src="docs/media/scout-foxglove.gif" alt="Driving Scout from Foxglove with live IMU, battery and diagnostics" width="380">](https://youtu.be/RkYV_hwotlY) | [<img src="docs/media/scout-assembly.gif" alt="Timelapse of rebuilding the Elegoo car with a Pi 5, UNO R4, IMU and camera" width="380">](https://youtu.be/KVtj6qZaDFg) |
+| Python bridge ↔ UNO R4 over USB serial, two safety layers, IMU at 20 Hz. The permanent battery WARN in the video was a real bug, fixed afterwards. | Elegoo Smart Robot Car V4.0 rebuilt with a Raspberry Pi 5, Arduino UNO R4, MPU-6050 and a Pi Camera Module 3 on a pan servo. |
+
 ## Hardware
+
+<p align="center"><img src="docs/media/scout-hero.jpg" alt="TerraHawk Scout: Elegoo chassis with a Raspberry Pi 5, Arduino UNO R4 and motor shield, and a Pi Camera Module 3 on a pan servo" width="720"></p>
+
 
 | Part | Role |
 |---|---|
@@ -61,7 +64,7 @@ The Scout has exactly two compute parts: the Pi 5 and the UNO R4 ([ADR-0006](doc
 ```mermaid
 flowchart LR
   subgraph Pi5["Raspberry Pi 5 · ROS 2 Jazzy"]
-    cam["camera_ros"] -- camera/image_raw --> det["person_detector<br/>YOLO + ByteTrack"]
+    cam["camera_ros"] -- camera/image_raw --> det["person_detector<br/>YOLO26n · NCNN"]
     det -- detections --> trk["pan_tracker"]
     trk -- pan/cmd --> br["base_bridge"]
     tel["teleop / Foxglove"] -- cmd_vel --> br
@@ -74,6 +77,7 @@ flowchart LR
 
 - Every topic, type, unit, frame and QoS is fixed in the ROS 2 contract: [IF-ROS-TOPICS](docs/specs/interfaces/ros-topics.md).
 - Interactive version of this graph: [docs/diagrams/scout-p1-graph/scout-p1-graph.html](docs/diagrams/scout-p1-graph/scout-p1-graph.html) (download and open in a browser).
+- Where it is going: [the target graph](docs/diagrams/scout-ros2-graph/scout-ros2-graph.html) with LiDAR odometry, the EKF, SLAM, Nav2 and the mission node.
 - Base bridge design (threading, link state machine, safety layers, tests): [DD-SCOUT-BRIDGE](docs/design/DD-SCOUT-BRIDGE.md).
 
 ## Repository layout
@@ -129,6 +133,8 @@ ros2 launch scout_bringup base.launch.py              # foxglove:=false to skip 
 # Perception on its own
 ros2 launch scout_perception perception.launch.py model_path:=<path to a YOLO model>
 ```
+
+The ~19 FPS was measured with `use_tracking:=false` (the default `true` runs Ultralytics' ByteTrack and gives about 8 FPS). The model must be an NCNN export made at the same `imgsz`, for example `yolo export model=yolo26n.pt format=ncnn imgsz=320`.
 
 Connect Foxglove to `ws://<pi-hostname>:8765` and import the layout `ros2_ws/src/scout_bringup/foxglove/scout.json`.
 
