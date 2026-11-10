@@ -146,7 +146,7 @@ colcon test
 colcon test-result --verbose
 ```
 
-About 35 tests: unit tests for the protocol parser, kinematics, conversions and the tracker maths; the ament linters; and a `launch_testing` contract suite that runs the real bridge against a fake R4 (command rate, stop on timeout, IMU shape, pan, services, link loss and recovery, frozen IMU).
+44 tests in CI (42 pass, 2 copyright checks skipped): unit tests for the protocol parser, kinematics, conversions and the tracker maths; the ament linters; and a `launch_testing` contract suite that runs the real bridge against a fake R4 (command rate, stop on timeout, IMU shape, pan, services, link loss and recovery, frozen IMU).
 
 The fake R4 emulates the board on a pseudo-terminal, so the bridge runs without hardware (software in the loop):
 
