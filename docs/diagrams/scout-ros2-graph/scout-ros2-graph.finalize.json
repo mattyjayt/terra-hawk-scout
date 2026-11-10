@@ -5,16 +5,16 @@
   "status": "pass",
   "type": "architecture",
   "quality": "showcase",
-  "startedAt": "2026-10-30T20:22:16.058Z",
+  "startedAt": "2026-11-10T11:08:42.317Z",
   "specification": {
-    "path": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/candidate.json",
-    "sha256": "7f4e4573b717051479a438e849becbfd3231849bff3458970e6e033c4c28379f",
-    "bytes": 4443
+    "path": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/candidate.json",
+    "sha256": "8bda510ff85d2d9f4a67ce0e6d703f380fde0febe5cf39a71a520ca66cbbdf93",
+    "bytes": 6692
   },
   "artifact": {
-    "path": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.html",
-    "sha256": "2d71be76bd1d85b45fe7e197c5b600b34129f0177759c1b9be63dff79e2ef922",
-    "bytes": 854878
+    "path": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.html",
+    "sha256": "a24e6f98e1350a71abcc943c956ef5392e0626efdbcaf9957f3be12d843b13bd",
+    "bytes": 857883
   },
   "stages": {
     "validate": {
@@ -27,8 +27,8 @@
         "/Users/jaimetellie/.agents/skills/archify/bin/archify.mjs",
         "deliver",
         "architecture",
-        "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/candidate.json",
-        "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.html",
+        "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/candidate.json",
+        "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.html",
         "--quality",
         "showcase",
         "--json"
@@ -38,8 +38,8 @@
         "ok": true,
         "command": "validate",
         "specification": {
-          "sha256": "7f4e4573b717051479a438e849becbfd3231849bff3458970e6e033c4c28379f",
-          "bytes": 4443
+          "sha256": "8bda510ff85d2d9f4a67ce0e6d703f380fde0febe5cf39a71a520ca66cbbdf93",
+          "bytes": 6692
         },
         "validation": {
           "checksPassed": 9,
@@ -54,33 +54,33 @@
     "deliver": {
       "status": "pass",
       "exitCode": 0,
-      "durationMs": 379,
+      "durationMs": 395,
       "command": [
         "/usr/local/bin/node",
         "/Users/jaimetellie/.agents/skills/archify/bin/archify.mjs",
         "deliver",
         "architecture",
-        "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/candidate.json",
-        "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.html",
+        "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/candidate.json",
+        "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.html",
         "--quality",
         "showcase",
         "--json"
       ],
       "receipt": {
         "schemaVersion": 1,
-        "receiptId": "5bba5e45-f9e1-46c2-88ff-11c6c5105aad",
+        "receiptId": "2cf52568-79f6-4563-9293-c93874c6847c",
         "ok": true,
         "command": "deliver",
         "type": "architecture",
-        "input": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/candidate.json",
-        "output": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.html",
+        "input": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/candidate.json",
+        "output": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.html",
         "specification": {
-          "sha256": "7f4e4573b717051479a438e849becbfd3231849bff3458970e6e033c4c28379f",
-          "bytes": 4443
+          "sha256": "8bda510ff85d2d9f4a67ce0e6d703f380fde0febe5cf39a71a520ca66cbbdf93",
+          "bytes": 6692
         },
         "artifact": {
-          "sha256": "2d71be76bd1d85b45fe7e197c5b600b34129f0177759c1b9be63dff79e2ef922",
-          "bytes": 854878
+          "sha256": "a24e6f98e1350a71abcc943c956ef5392e0626efdbcaf9957f3be12d843b13bd",
+          "bytes": 857883
         },
         "validation": {
           "checksPassed": 9,
@@ -106,20 +106,20 @@
     "check": {
       "status": "pass",
       "exitCode": 0,
-      "durationMs": 174,
+      "durationMs": 169,
       "command": [
         "/usr/local/bin/node",
         "/Users/jaimetellie/.agents/skills/archify/bin/archify.mjs",
         "check",
-        "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.html",
+        "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.html",
         "--require-provenance"
       ],
       "receipt": {
         "ok": true,
-        "file": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.html",
+        "file": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.html",
         "artifact": {
-          "sha256": "2d71be76bd1d85b45fe7e197c5b600b34129f0177759c1b9be63dff79e2ef922",
-          "bytes": 854878
+          "sha256": "a24e6f98e1350a71abcc943c956ef5392e0626efdbcaf9957f3be12d843b13bd",
+          "bytes": 857883
         },
         "checks": [
           {
@@ -186,16 +186,16 @@
             "containerBorderRuns": 0,
             "labelRouteClearanceIssues": 0,
             "labelCanvasOverflowIssues": 0,
-            "minLabelRouteClearance": 6.6,
+            "minLabelRouteClearance": 20,
             "desktopReadabilityIssues": 0,
             "viewportHeightIssues": 0,
-            "minProjectedNodeTextPx": 6.953271028037383,
+            "minProjectedNodeTextPx": 7.018867924528302,
             "maxBends": 4,
             "routesOverSuggestedBends": 1,
-            "maxStretch": 2.031,
-            "routesOverSuggestedStretch": 1,
-            "minSegmentPx": 24,
-            "minInteriorSegmentPx": 57.2,
+            "maxStretch": 1.276,
+            "routesOverSuggestedStretch": 0,
+            "minSegmentPx": 16,
+            "minInteriorSegmentPx": 16,
             "shortSegmentCount": 0,
             "shortEndpointSegmentCount": 0,
             "shortInteriorSegmentCount": 0,
@@ -212,15 +212,15 @@
             "detours": [
               {
                 "relationship": {
-                  "id": "pwm-down",
-                  "from": "rc",
-                  "to": "esp32",
-                  "label": "wheel cmd → PWM",
-                  "collectionIndex": 9,
-                  "artifactIndex": 10
+                  "id": "serial-down",
+                  "from": "bridge",
+                  "to": "r4",
+                  "label": "M l r · V · S (serial-r4-v1)",
+                  "collectionIndex": 10,
+                  "artifactIndex": 11
                 },
                 "bends": 4,
-                "stretch": 2.031
+                "stretch": 1.276
               }
             ]
           },
@@ -246,29 +246,29 @@
             "hardFloorMet": true,
             "minimumOwner": {
               "kind": "edge",
-              "id": "image-stream",
+              "id": "img",
               "from": "camera",
               "to": "perception"
             },
             "minimumSourceTextPx": 8,
-            "minimumProjectedTextPx": 6.953271028037383,
+            "minimumProjectedTextPx": 7.018867924528302,
             "semanticTextCount": 37
           },
           "issues": []
         },
         "provenance": "current",
-        "deliveryReceiptId": "5bba5e45-f9e1-46c2-88ff-11c6c5105aad"
+        "deliveryReceiptId": "2cf52568-79f6-4563-9293-c93874c6847c"
       }
     },
     "browser-check": {
       "status": "pass",
       "exitCode": 0,
-      "durationMs": 2860,
+      "durationMs": 9443,
       "command": [
         "/usr/local/bin/node",
         "/Users/jaimetellie/.agents/skills/archify/bin/archify.mjs",
         "browser-check",
-        "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.html",
+        "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.html",
         "--json",
         "--require-provenance"
       ],
@@ -281,11 +281,11 @@
         "status": "pass",
         "visualReview": "not-requested",
         "provenance": "current",
-        "deliveryReceiptId": "5bba5e45-f9e1-46c2-88ff-11c6c5105aad",
+        "deliveryReceiptId": "2cf52568-79f6-4563-9293-c93874c6847c",
         "artifact": {
-          "path": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.html",
-          "sha256": "2d71be76bd1d85b45fe7e197c5b600b34129f0177759c1b9be63dff79e2ef922",
-          "bytes": 854878
+          "path": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.html",
+          "sha256": "a24e6f98e1350a71abcc943c956ef5392e0626efdbcaf9957f3be12d843b13bd",
+          "bytes": 857883
         },
         "state": {
           "detail": "read",
@@ -316,25 +316,25 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1097,
-              "diagramWidth": 1067,
+              "readerWidth": 1032,
+              "diagramWidth": 1002,
               "pageComposition": {
                 "bodyPaddingPx": 12,
-                "headerPx": 78,
+                "headerPx": 115,
                 "diagramChromePx": 78,
-                "svgPx": 720,
+                "svgPx": 682,
                 "cardsPx": 0,
                 "viewBoxHeight": 722
               },
-              "viewBoxWidth": 1070,
-              "minimumProjectedNodeTextPx": 7.977570093457944,
-              "minimumProjectedNonEdgeTextPx": 8.974766355140186,
-              "minimumProjectedEdgeTextPx": 7.977570093457944,
-              "minimumProjectedNodeText": "/image_raw",
+              "viewBoxWidth": 1060,
+              "minimumProjectedNodeTextPx": 7.562264150943396,
+              "minimumProjectedNonEdgeTextPx": 8.12943396226415,
+              "minimumProjectedEdgeTextPx": 7.562264150943396,
+              "minimumProjectedNodeText": "camera/image_raw",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "image-stream",
+                "id": "img",
                 "from": "camera",
                 "to": "perception"
               },
@@ -368,25 +368,25 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1148,
-              "diagramWidth": 1118,
+              "readerWidth": 1082,
+              "diagramWidth": 1052,
               "pageComposition": {
                 "bodyPaddingPx": 64,
-                "headerPx": 86,
+                "headerPx": 123,
                 "diagramChromePx": 84,
-                "svgPx": 754,
+                "svgPx": 717,
                 "cardsPx": 0,
                 "viewBoxHeight": 722
               },
-              "viewBoxWidth": 1070,
-              "minimumProjectedNodeTextPx": 8,
-              "minimumProjectedNonEdgeTextPx": 9,
-              "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "/image_raw",
+              "viewBoxWidth": 1060,
+              "minimumProjectedNodeTextPx": 7.939622641509434,
+              "minimumProjectedNonEdgeTextPx": 8.535094339622642,
+              "minimumProjectedEdgeTextPx": 7.939622641509434,
+              "minimumProjectedNodeText": "camera/image_raw",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "image-stream",
+                "id": "img",
                 "from": "camera",
                 "to": "perception"
               },
@@ -420,8 +420,8 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1266,
-              "diagramWidth": 1236,
+              "readerWidth": 1255,
+              "diagramWidth": 1225,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 86,
@@ -430,15 +430,15 @@
                 "cardsPx": 0,
                 "viewBoxHeight": 722
               },
-              "viewBoxWidth": 1070,
+              "viewBoxWidth": 1060,
               "minimumProjectedNodeTextPx": 8,
-              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedNonEdgeTextPx": 8.6,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "/image_raw",
+              "minimumProjectedNodeText": "camera/image_raw",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "image-stream",
+                "id": "img",
                 "from": "camera",
                 "to": "perception"
               },
@@ -472,8 +472,8 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1615,
-              "diagramWidth": 1565,
+              "readerWidth": 1601,
+              "diagramWidth": 1551,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 94,
@@ -482,15 +482,15 @@
                 "cardsPx": 0,
                 "viewBoxHeight": 722
               },
-              "viewBoxWidth": 1070,
+              "viewBoxWidth": 1060,
               "minimumProjectedNodeTextPx": 8,
-              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedNonEdgeTextPx": 8.6,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "/image_raw",
+              "minimumProjectedNodeText": "camera/image_raw",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "image-stream",
+                "id": "img",
                 "from": "camera",
                 "to": "perception"
               },
@@ -577,25 +577,25 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1097,
-              "diagramWidth": 1067,
+              "readerWidth": 1032,
+              "diagramWidth": 1002,
               "pageComposition": {
                 "bodyPaddingPx": 12,
-                "headerPx": 78,
+                "headerPx": 115,
                 "diagramChromePx": 78,
-                "svgPx": 720,
+                "svgPx": 682,
                 "cardsPx": 0,
                 "viewBoxHeight": 722
               },
-              "viewBoxWidth": 1070,
-              "minimumProjectedNodeTextPx": 7.977570093457944,
-              "minimumProjectedNonEdgeTextPx": 8.974766355140186,
-              "minimumProjectedEdgeTextPx": 7.977570093457944,
-              "minimumProjectedNodeText": "/image_raw",
+              "viewBoxWidth": 1060,
+              "minimumProjectedNodeTextPx": 7.562264150943396,
+              "minimumProjectedNonEdgeTextPx": 8.12943396226415,
+              "minimumProjectedEdgeTextPx": 7.562264150943396,
+              "minimumProjectedNodeText": "camera/image_raw",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "image-stream",
+                "id": "img",
                 "from": "camera",
                 "to": "perception"
               },
@@ -629,25 +629,25 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1148,
-              "diagramWidth": 1118,
+              "readerWidth": 1082,
+              "diagramWidth": 1052,
               "pageComposition": {
                 "bodyPaddingPx": 64,
-                "headerPx": 86,
+                "headerPx": 123,
                 "diagramChromePx": 84,
-                "svgPx": 754,
+                "svgPx": 717,
                 "cardsPx": 0,
                 "viewBoxHeight": 722
               },
-              "viewBoxWidth": 1070,
-              "minimumProjectedNodeTextPx": 8,
-              "minimumProjectedNonEdgeTextPx": 9,
-              "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "/image_raw",
+              "viewBoxWidth": 1060,
+              "minimumProjectedNodeTextPx": 7.939622641509434,
+              "minimumProjectedNonEdgeTextPx": 8.535094339622642,
+              "minimumProjectedEdgeTextPx": 7.939622641509434,
+              "minimumProjectedNodeText": "camera/image_raw",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "image-stream",
+                "id": "img",
                 "from": "camera",
                 "to": "perception"
               },
@@ -681,8 +681,8 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1266,
-              "diagramWidth": 1236,
+              "readerWidth": 1255,
+              "diagramWidth": 1225,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 86,
@@ -691,15 +691,15 @@
                 "cardsPx": 0,
                 "viewBoxHeight": 722
               },
-              "viewBoxWidth": 1070,
+              "viewBoxWidth": 1060,
               "minimumProjectedNodeTextPx": 8,
-              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedNonEdgeTextPx": 8.6,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "/image_raw",
+              "minimumProjectedNodeText": "camera/image_raw",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "image-stream",
+                "id": "img",
                 "from": "camera",
                 "to": "perception"
               },
@@ -733,8 +733,8 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1615,
-              "diagramWidth": 1565,
+              "readerWidth": 1601,
+              "diagramWidth": 1551,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 94,
@@ -743,15 +743,15 @@
                 "cardsPx": 0,
                 "viewBoxHeight": 722
               },
-              "viewBoxWidth": 1070,
+              "viewBoxWidth": 1060,
               "minimumProjectedNodeTextPx": 8,
-              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedNonEdgeTextPx": 8.6,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "/image_raw",
+              "minimumProjectedNodeText": "camera/image_raw",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "image-stream",
+                "id": "img",
                 "from": "camera",
                 "to": "perception"
               },
@@ -790,25 +790,25 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1097,
-              "diagramWidth": 1067,
+              "readerWidth": 1032,
+              "diagramWidth": 1002,
               "pageComposition": {
                 "bodyPaddingPx": 12,
-                "headerPx": 78,
+                "headerPx": 115,
                 "diagramChromePx": 78,
-                "svgPx": 720,
+                "svgPx": 682,
                 "cardsPx": 0,
                 "viewBoxHeight": 722
               },
-              "viewBoxWidth": 1070,
-              "minimumProjectedNodeTextPx": 7.977570093457944,
-              "minimumProjectedNonEdgeTextPx": 8.974766355140186,
-              "minimumProjectedEdgeTextPx": 7.977570093457944,
-              "minimumProjectedNodeText": "/image_raw",
+              "viewBoxWidth": 1060,
+              "minimumProjectedNodeTextPx": 7.562264150943396,
+              "minimumProjectedNonEdgeTextPx": 8.12943396226415,
+              "minimumProjectedEdgeTextPx": 7.562264150943396,
+              "minimumProjectedNodeText": "camera/image_raw",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "image-stream",
+                "id": "img",
                 "from": "camera",
                 "to": "perception"
               },
@@ -842,25 +842,25 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1148,
-              "diagramWidth": 1118,
+              "readerWidth": 1082,
+              "diagramWidth": 1052,
               "pageComposition": {
                 "bodyPaddingPx": 64,
-                "headerPx": 86,
+                "headerPx": 123,
                 "diagramChromePx": 84,
-                "svgPx": 754,
+                "svgPx": 717,
                 "cardsPx": 0,
                 "viewBoxHeight": 722
               },
-              "viewBoxWidth": 1070,
-              "minimumProjectedNodeTextPx": 8,
-              "minimumProjectedNonEdgeTextPx": 9,
-              "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "/image_raw",
+              "viewBoxWidth": 1060,
+              "minimumProjectedNodeTextPx": 7.939622641509434,
+              "minimumProjectedNonEdgeTextPx": 8.535094339622642,
+              "minimumProjectedEdgeTextPx": 7.939622641509434,
+              "minimumProjectedNodeText": "camera/image_raw",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "image-stream",
+                "id": "img",
                 "from": "camera",
                 "to": "perception"
               },
@@ -894,8 +894,8 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1266,
-              "diagramWidth": 1236,
+              "readerWidth": 1255,
+              "diagramWidth": 1225,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 86,
@@ -904,15 +904,15 @@
                 "cardsPx": 0,
                 "viewBoxHeight": 722
               },
-              "viewBoxWidth": 1070,
+              "viewBoxWidth": 1060,
               "minimumProjectedNodeTextPx": 8,
-              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedNonEdgeTextPx": 8.6,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "/image_raw",
+              "minimumProjectedNodeText": "camera/image_raw",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "image-stream",
+                "id": "img",
                 "from": "camera",
                 "to": "perception"
               },
@@ -946,8 +946,8 @@
               "readerOverflow": null,
               "readerFit": "intrinsic-height",
               "ok": true,
-              "readerWidth": 1615,
-              "diagramWidth": 1565,
+              "readerWidth": 1601,
+              "diagramWidth": 1551,
               "pageComposition": {
                 "bodyPaddingPx": 64,
                 "headerPx": 94,
@@ -956,15 +956,15 @@
                 "cardsPx": 0,
                 "viewBoxHeight": 722
               },
-              "viewBoxWidth": 1070,
+              "viewBoxWidth": 1060,
               "minimumProjectedNodeTextPx": 8,
-              "minimumProjectedNonEdgeTextPx": 9,
+              "minimumProjectedNonEdgeTextPx": 8.6,
               "minimumProjectedEdgeTextPx": 8,
-              "minimumProjectedNodeText": "/image_raw",
+              "minimumProjectedNodeText": "camera/image_raw",
               "minimumProjectedNodeTextDetail": "edge",
               "minimumProjectedNodeTextOwner": {
                 "kind": "edge",
-                "id": "image-stream",
+                "id": "img",
                 "from": "camera",
                 "to": "perception"
               },
@@ -1002,19 +1002,19 @@
   },
   "diagnostics": [],
   "evidence": {
-    "receipt": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.finalize.json",
-    "summaryReceipt": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.finalize-summary.json",
-    "browserCheckReceipt": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.browser-check.json"
+    "receipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.finalize.json",
+    "summaryReceipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.finalize-summary.json",
+    "browserCheckReceipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.browser-check.json"
   },
   "visualReview": "not-requested",
-  "finishedAt": "2026-10-30T20:22:19.717Z",
-  "durationMs": 3659,
+  "finishedAt": "2026-11-10T11:08:52.483Z",
+  "durationMs": 10167,
   "update": {
     "status": "current",
     "installedVersion": "3.2.0",
     "availableVersion": "3.2.0",
     "releaseNotes": null,
-    "checkedAt": "2026-10-30T20:21:24.461Z",
+    "checkedAt": "2026-11-10T11:08:34.413Z",
     "source": "cache",
     "noticeRequired": false,
     "noticeText": null

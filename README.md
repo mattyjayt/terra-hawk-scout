@@ -45,6 +45,9 @@ Scout is the mobile part of **TerraHawk**, a home-farm robotics project. The end
 
 ## Hardware
 
+<p align="center"><img src="docs/media/scout-hero.jpg" alt="TerraHawk Scout: Elegoo chassis with a Raspberry Pi 5, Arduino UNO R4 and motor shield, and a Pi Camera Module 3 on a pan servo" width="720"></p>
+
+
 | Part | Role |
 |---|---|
 | Elegoo Smart Robot Car V4.0 chassis | plates, wheels, 4 TT motors **without encoders** (skid steer, left and right pairs) |
@@ -74,6 +77,7 @@ flowchart LR
 
 - Every topic, type, unit, frame and QoS is fixed in the ROS 2 contract: [IF-ROS-TOPICS](docs/specs/interfaces/ros-topics.md).
 - Interactive version of this graph: [docs/diagrams/scout-p1-graph/scout-p1-graph.html](docs/diagrams/scout-p1-graph/scout-p1-graph.html) (download and open in a browser).
+- Where it is going: [the target graph](docs/diagrams/scout-ros2-graph/scout-ros2-graph.html) with LiDAR odometry, the EKF, SLAM, Nav2 and the mission node.
 - Base bridge design (threading, link state machine, safety layers, tests): [DD-SCOUT-BRIDGE](docs/design/DD-SCOUT-BRIDGE.md).
 
 ## Repository layout

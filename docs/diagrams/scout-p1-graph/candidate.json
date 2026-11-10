@@ -2,7 +2,7 @@
   "schema_version": 1,
   "diagram_type": "architecture",
   "meta": {
-    "title": "TerraHawk Scout \u2014 ROS 2 node graph, P1 base + P2 perception",
+    "title": "TerraHawk Scout — ROS 2 node graph, P1 base + P2 perception",
     "output": "scout-p1-graph/scout-p1-graph.html",
     "locale": "en",
     "quality_profile": "showcase"
@@ -85,7 +85,7 @@
       "id": "pan",
       "type": "backend",
       "label": "pan_tracker",
-      "sublabel": "detections \u2192 pan angle",
+      "sublabel": "detections → pan angle",
       "pos": [
         430,
         460
@@ -115,7 +115,7 @@
       "id": "cam",
       "type": "frontend",
       "label": "camera_ros",
-      "sublabel": "640 \u00d7 480 \u00b7 15\u201330 Hz",
+      "sublabel": "640 × 480 · 30 FPS",
       "pos": [
         30,
         680
@@ -130,7 +130,7 @@
       "id": "det",
       "type": "backend",
       "label": "person_detector",
-      "sublabel": "person only \u00b7 score \u2265 0.5",
+      "sublabel": "YOLO26n · NCNN 320 · ~19 FPS",
       "pos": [
         430,
         680
@@ -145,7 +145,7 @@
   "boundaries": [
     {
       "kind": "region",
-      "label": "Raspberry Pi 5 \u00b7 ROS 2 Jazzy",
+      "label": "Raspberry Pi 5 · ROS 2 Jazzy",
       "wraps": [
         "teleop",
         "bridge",
@@ -158,7 +158,7 @@
     },
     {
       "kind": "security-group",
-      "label": "Arduino UNO R4 \u00b7 USB serial",
+      "label": "Arduino UNO R4 · USB serial",
       "wraps": [
         "r4"
       ]
@@ -176,27 +176,27 @@
       "id": "cmdvel",
       "from": "teleop",
       "to": "bridge",
-      "label": "cmd_vel \u00b7 geometry_msgs/Twist",
+      "label": "cmd_vel · geometry_msgs/Twist",
       "variant": "emphasis"
     },
     {
       "id": "serdown",
       "from": "bridge",
       "to": "r4",
-      "label": "M l r \u00b7 S \u00b7 V  (serial-r4-v1)",
+      "label": "M l r · S · V  (serial-r4-v1)",
       "variant": "emphasis"
     },
     {
       "id": "serup",
       "from": "r4",
       "to": "bridge",
-      "label": "I 20 Hz \u00b7 A ack \u00b7 W stop"
+      "label": "I 20 Hz · A ack · W stop"
     },
     {
       "id": "status",
       "from": "bridge",
       "to": "fox",
-      "label": "battery \u00b7 diagnostics"
+      "label": "battery · diagnostics"
     },
     {
       "id": "foxcmd",
@@ -216,38 +216,38 @@
       "id": "imu",
       "from": "bridge",
       "to": "pan",
-      "label": "imu/data_raw \u00b7 sensor_msgs/Imu 20 Hz + joint_states"
+      "label": "imu/data_raw · sensor_msgs/Imu 20 Hz + joint_states"
     },
     {
       "id": "pancmd",
       "from": "pan",
       "to": "bridge",
-      "label": "pan/cmd \u00b7 std_msgs/Float64",
+      "label": "pan/cmd · std_msgs/Float64",
       "variant": "emphasis"
     },
     {
       "id": "js",
       "from": "bridge",
       "to": "rsp",
-      "label": "joint_states \u00b7 sensor_msgs/JointState 20 Hz"
+      "label": "joint_states · sensor_msgs/JointState 20 Hz"
     },
     {
       "id": "tf",
       "from": "rsp",
       "to": "fox",
-      "label": "tf \u00b7 tf_static \u00b7 robot_description"
+      "label": "tf · tf_static · robot_description"
     },
     {
       "id": "img",
       "from": "cam",
       "to": "det",
-      "label": "camera/image_raw \u00b7 sensor_msgs/Image"
+      "label": "camera/image_raw · sensor_msgs/Image"
     },
     {
       "id": "det",
       "from": "det",
       "to": "pan",
-      "label": "detections \u00b7 vision_msgs/Detection2DArray"
+      "label": "detections · vision_msgs/Detection2DArray"
     }
   ],
   "cards": [
@@ -255,28 +255,28 @@
       "dot": "cyan",
       "title": "Topics from base_bridge (P1)",
       "items": [
-        "imu/data_raw \u00b7 sensor_msgs/Imu \u00b7 20 Hz (v1) \u00b7 SENSOR QoS",
-        "battery \u00b7 sensor_msgs/BatteryState \u00b7 1 Hz",
-        "diagnostics \u00b7 diagnostic_msgs/DiagnosticArray \u00b7 1 Hz",
-        "joint_states \u00b7 sensor_msgs/JointState \u00b7 20 Hz (pan_joint)",
-        "base/debug/yaw \u00b7 std_msgs/Float64 \u00b7 20 Hz (removed in serial v2)"
+        "imu/data_raw · sensor_msgs/Imu · 20 Hz (v1) · SENSOR QoS",
+        "battery · sensor_msgs/BatteryState · 1 Hz",
+        "diagnostics · diagnostic_msgs/DiagnosticArray · 1 Hz",
+        "joint_states · sensor_msgs/JointState · 20 Hz (pan_joint)",
+        "base/debug/yaw · std_msgs/Float64 · 20 Hz (removed in serial v2)"
       ]
     },
     {
       "dot": "violet",
       "title": "P2 perception loop",
       "items": [
-        "camera_ros \u2192 person_detector \u2192 pan_tracker \u2192 pan/cmd \u2192 base_bridge \u2192 servo (V)",
+        "camera_ros → person_detector → pan_tracker → pan/cmd → base_bridge → servo (V)",
         "detections also go to Foxglove; empty array = nobody there",
-        "pan/cmd: rad, clamped \u00b1\u03c0/2, servo command only on \u2265 1\u00b0 change, \u2264 20 Hz"
+        "pan/cmd: rad, clamped ±π/2, servo command only on ≥ 1° change, ≤ 20 Hz"
       ]
     },
     {
       "dot": "rose",
       "title": "Safety layers",
       "items": [
-        "bridge: no cmd_vel for cmd_timeout 0.25 s \u2192 S once",
-        "R4 watchdog: no M line for 300 ms \u2192 motors off, W stop",
+        "bridge: no cmd_vel for cmd_timeout 0.25 s → S once",
+        "R4 watchdog: no M line for 300 ms → motors off, W stop",
         "shutdown: S, then close the port"
       ]
     },

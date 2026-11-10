@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="generator" content="archify 3.2.0">
   <meta name="archify-reader-contract" content="declared-wide-v1">
-  <title>TerraHawk Scout — ROS 2 graph and Pi 5 / ESP32 split Diagram</title>
+  <title>TerraHawk Scout — target ROS 2 graph (Pi 5 + Arduino UNO R4) Diagram</title>
   <script>
     // Resolve the theme before first paint so light-preference users don't
     // see a dark flash. The toolbar script below re-applies with UI state.
@@ -5194,9 +5194,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
            data-preset-badge-blueprint="BLUEPRINT / REV 01"
            data-preset-badge-editorial="EDITORIAL / FIELD NOTE">
         <div class="pulse-dot"></div>
-        <h1>TerraHawk Scout — ROS 2 graph and Pi 5 / ESP32 split</h1>
+        <h1>TerraHawk Scout — target ROS 2 graph (Pi 5 + Arduino UNO R4)</h1>
       </div>
-      <p class="subtitle">Target design: 2D LiDAR and encoder motors not yet bought</p>
+      <p class="subtitle">Working now: camera, person tracking, base bridge, R4. Next: LiDAR odometry, EKF, SLAM, Nav2, delivery mission</p>
     </div>
 
 
@@ -5204,9 +5204,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     <!-- Main Diagram -->
     <div class="diagram-container" data-detail-level="read"
          data-preset-badge-editorial-plate="ARCHIFY / PLATE 04">
-      <svg viewBox="0 0 1070 722" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase" data-node-ui="" data-reader-fit="intrinsic-height" data-reader-min-text="7.5" data-reader-primary-text="14">
-        <title id="archify-diagram-title">TerraHawk Scout — ROS 2 graph and Pi 5 / ESP32 split</title>
-        <desc id="archify-diagram-description">Target design: 2D LiDAR and encoder motors not yet bought</desc>
+      <svg viewBox="0 0 1060 722" role="img" lang="en" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase" data-node-ui="" data-reader-fit="intrinsic-height" data-reader-min-text="7.5" data-reader-primary-text="14">
+        <title id="archify-diagram-title">TerraHawk Scout — target ROS 2 graph (Pi 5 + Arduino UNO R4)</title>
+        <desc id="archify-diagram-description">Working now: camera, person tracking, base bridge, R4. Next: LiDAR odometry, EKF, SLAM, Nav2, delivery mission</desc>
         <!-- Definitions -->
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -5251,263 +5251,270 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <rect width="100%" height="100%" fill="url(#grid)" />
 
         <!-- Boundaries (behind everything) -->
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="0" data-composition-frame-label="Raspberry Pi 5 (8 GB) · ROS 2 Jazzy" x="10" y="30" width="740" height="454" rx="12" class="c-region" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="0" data-composition-frame-label="Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy" x="10" y="30" width="1010" height="454" rx="12" class="c-region" stroke-width="1"/>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="security-group" data-composition-frame-id="1" data-composition-frame-label="ESP32 MCU · real-time I/O" x="10" y="540" width="485" height="114" rx="8" class="c-security-group" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="security-group" data-composition-frame-id="1" data-composition-frame-label="Microcontroller · USB serial" x="270" y="540" width="250" height="114" rx="8" class="c-security-group" stroke-width="1"/>
 
         <!-- Connection paths (before components for correct z-order) -->
         <g data-graph-role="automatic-crossover" style="--step:0">
-          <path data-graph-role="automatic-crossover-underlay" d="M 120 124 L 120 230" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="camera" data-edge-to="perception" data-edge-label="/image_raw" data-edge-key="0" data-edge-id="image-stream" data-composition-points="120,124;120,230" data-composition-crossover="halo" data-composition-independent="true" d="M 120 124 L 120 230" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 125 124 L 125 230" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="camera" data-edge-to="perception" data-edge-label="camera/image_raw" data-edge-key="0" data-edge-id="img" data-composition-points="125,124;125,230" data-composition-crossover="halo" data-composition-independent="true" d="M 125 124 L 125 230" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:1">
-          <path data-graph-role="automatic-crossover-underlay" d="M 200 262 L 300 262" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="perception" data-edge-to="nav2" data-edge-label="/detections" data-edge-key="1" data-edge-id="detections" data-composition-points="200,262;300,262" data-composition-crossover="halo" data-composition-independent="true" d="M 200 262 L 300 262" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 224 294 L 224 408 Q 224 416 232 416 L 300 416" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="perception" data-edge-to="bridge" data-edge-label="pan/cmd" data-edge-key="1" data-edge-id="pan" data-composition-points="224,294;224,416;300,416" data-composition-crossover="halo" data-composition-independent="true" d="M 224 294 L 224 408 Q 224 416 232 416 L 300 416" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:2">
-          <path data-graph-role="automatic-crossover-underlay" d="M 380 124 L 380 230" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="mission" data-edge-to="nav2" data-edge-label="nav goals" data-edge-key="2" data-edge-id="mission-goals" data-composition-points="380,124;380,230" data-composition-crossover="halo" data-composition-independent="true" d="M 380 124 L 380 230" class="a-default" data-animate="edge" style="--step:2" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 385 124 L 385 230" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="mission" data-edge-to="nav2" data-edge-label="nav goals" data-edge-key="2" data-edge-id="goals" data-composition-points="385,124;385,230" data-composition-crossover="halo" data-composition-independent="true" d="M 385 124 L 385 230" class="a-default" data-animate="edge" style="--step:2" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:3">
-          <path data-graph-role="automatic-crossover-underlay" d="M 640 124 L 640 230" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="lidar" data-edge-to="slam" data-edge-label="/scan" data-edge-key="3" data-edge-id="scan" data-composition-points="640,124;640,230" data-composition-crossover="halo" data-composition-independent="true" d="M 640 124 L 640 230" class="a-emphasis" data-animate="edge" style="--step:3" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 905 124 L 905 400" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="lidar" data-edge-to="rf2o" data-edge-label="/scan" data-edge-key="3" data-edge-id="scan-odom" data-composition-points="905,124;905,400" data-composition-crossover="halo" data-composition-independent="true" d="M 905 124 L 905 400" class="a-emphasis" data-animate="edge" style="--step:3" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:4">
-          <path data-graph-role="automatic-crossover-underlay" d="M 560 262 L 460 262" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="slam" data-edge-to="nav2" data-edge-label="/map" data-edge-key="4" data-edge-id="map" data-composition-points="560,262;460,262" data-composition-crossover="halo" data-composition-independent="true" d="M 560 262 L 460 262" class="a-emphasis" data-animate="edge" style="--step:4" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 836 124 L 836 238 Q 836 246 828 246 L 730 246" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="lidar" data-edge-to="slam" data-edge-label="/scan" data-edge-key="4" data-edge-id="scan-slam" data-composition-points="836,124;836,246;730,246" data-composition-crossover="halo" data-composition-independent="true" d="M 836 124 L 836 238 Q 836 246 828 246 L 730 246" class="a-emphasis" data-animate="edge" style="--step:4" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:5">
-          <path data-graph-role="automatic-crossover-underlay" d="M 380 294 L 380 400" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="nav2" data-edge-to="rc" data-edge-label="/cmd_vel" data-edge-key="5" data-edge-id="cmd-vel" data-composition-points="380,294;380,400" data-composition-crossover="halo" data-composition-independent="true" d="M 380 294 L 380 400" class="a-emphasis" data-animate="edge" style="--step:5" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 889.95 400 L 889.95 384 Q 889.95 376 881.95 376 L 668.05 376 Q 660.05 376 660.05 384 L 660.05 400" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="rf2o" data-edge-to="ekf" data-edge-label="odom (scan matching)" data-edge-key="5" data-edge-id="lidar-odom" data-composition-points="889.95,400;889.95,376;660.05,376;660.05,400" data-composition-crossover="halo" data-composition-independent="true" d="M 889.95 400 L 889.95 384 Q 889.95 376 881.95 376 L 668.05 376 Q 660.05 376 660.05 384 L 660.05 400" class="a-default" data-animate="edge" style="--step:5" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:6">
-          <path data-graph-role="automatic-crossover-underlay" d="M 460 432 L 560 432" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="rc" data-edge-to="ekf" data-edge-label="/odom" data-edge-key="6" data-edge-id="wheel-odom" data-composition-points="460,432;560,432" data-composition-crossover="halo" data-composition-independent="true" d="M 460 432 L 560 432" class="a-default" data-animate="edge" style="--step:6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 400.05 400 L 400.05 384 Q 400.05 376 408.05 376 L 621.95 376 Q 629.95 376 629.95 384 L 629.95 400" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="bridge" data-edge-to="ekf" data-edge-label="imu/data_raw (gyro)" data-edge-key="6" data-edge-id="imu" data-composition-points="400.05,400;400.05,376;629.95,376;629.95,400" data-composition-crossover="halo" data-composition-independent="true" d="M 400.05 400 L 400.05 384 Q 400.05 376 408.05 376 L 621.95 376 Q 629.95 376 629.95 384 L 629.95 400" class="a-default" data-animate="edge" style="--step:6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:7">
-          <path data-graph-role="automatic-crossover-underlay" d="M 640 400 L 640 294" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="ekf" data-edge-to="slam" data-edge-label="/odometry/filtered" data-edge-key="7" data-edge-id="filtered-odom" data-composition-points="640,400;640,294" data-composition-crossover="halo" data-composition-independent="true" d="M 640 400 L 640 294" class="a-emphasis" data-animate="edge" style="--step:7" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 645 400 L 645 294" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="ekf" data-edge-to="slam" data-edge-label="odometry/filtered · tf" data-edge-key="7" data-edge-id="filtered" data-composition-points="645,400;645,294" data-composition-crossover="halo" data-composition-independent="true" d="M 645 400 L 645 294" class="a-emphasis" data-animate="edge" style="--step:7" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:8">
-          <path data-graph-role="automatic-crossover-underlay" d="M 387 570 L 387 464" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="esp32" data-edge-to="rc" data-edge-label="wheel ticks" data-edge-key="8" data-edge-id="ticks-up" data-composition-points="387,570;387,464" data-composition-crossover="halo" data-composition-independent="true" d="M 387 570 L 387 464" class="a-default" data-animate="edge" style="--step:8" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 560 262 L 470 262" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="slam" data-edge-to="nav2" data-edge-label="/map" data-edge-key="8" data-edge-id="map" data-composition-points="560,262;470,262" data-composition-crossover="halo" data-composition-independent="true" d="M 560 262 L 470 262" class="a-emphasis" data-animate="edge" style="--step:8" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:9">
-          <path data-graph-role="automatic-crossover-underlay" d="M 373 464 L 373 570" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="rc" data-edge-to="esp32" data-edge-label="wheel cmd → PWM" data-edge-key="9" data-edge-id="pwm-down" data-composition-points="373,464;373,570" data-composition-crossover="halo" data-composition-independent="true" d="M 373 464 L 373 570" class="a-default" data-animate="edge" style="--step:9" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 385 294 L 385 400" fill="none" stroke="var(--mask)" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="nav2" data-edge-to="bridge" data-edge-label="cmd_vel" data-edge-key="9" data-edge-id="cmdvel" data-composition-points="385,294;385,400" data-composition-crossover="halo" data-composition-independent="true" d="M 385 294 L 385 400" class="a-emphasis" data-animate="edge" style="--step:9" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:10">
-          <path data-graph-role="automatic-crossover-underlay" d="M 465 602 L 632 602 Q 640 602 640 594 L 640 464" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="esp32" data-edge-to="ekf" data-edge-label="/imu (USB serial)" data-edge-key="10" data-edge-id="imu" data-composition-points="465,602;640,602;640,464" data-composition-crossover="halo" data-composition-independent="true" d="M 465 602 L 632 602 Q 640 602 640 594 L 640 464" class="a-default" data-animate="edge" style="--step:10" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 378 464 L 378 480 Q 378 488 370 488 L 370 488 Q 362 488 362 496 L 362 538 Q 362 546 370 546 L 380 546 Q 388 546 388 554 L 388 570" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="bridge" data-edge-to="r4" data-edge-label="M l r · V · S (serial-r4-v1)" data-edge-key="10" data-edge-id="serial-down" data-composition-points="378,464;378,488;362,488;362,546;388,546;388,570" data-composition-crossover="halo" data-composition-independent="true" d="M 378 464 L 378 480 Q 378 488 370 488 L 370 488 Q 362 488 362 496 L 362 538 Q 362 546 370 546 L 380 546 Q 388 546 388 554 L 388 570" class="a-default" data-animate="edge" style="--step:10" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:11">
-          <path data-graph-role="automatic-crossover-underlay" d="M 200 602 L 295 602" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="hcsr04" data-edge-to="esp32" data-edge-label="echo pulse" data-edge-key="11" data-edge-id="range" data-composition-points="200,602;295,602" data-composition-crossover="halo" data-composition-independent="true" d="M 200 602 L 295 602" class="a-default" data-animate="edge" style="--step:11" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 490 602 L 506 602 Q 514 602 514 594 L 514 454 Q 514 446 506 446 L 470 446" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="r4" data-edge-to="bridge" data-edge-label="I 20 Hz · acks · watchdog" data-edge-key="11" data-edge-id="serial-up" data-composition-points="490,602;514,602;514,446;470,446" data-composition-crossover="halo" data-composition-independent="true" d="M 490 602 L 506 602 Q 514 602 514 594 L 514 454 Q 514 446 506 446 L 470 446" class="a-default" data-animate="edge" style="--step:11" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         </g>
         <g data-graph-role="automatic-crossover" style="--step:12">
-          <path data-graph-role="automatic-crossover-underlay" d="M 720 262 L 880 262" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
-          <path data-edge-from="slam" data-edge-to="devmac" data-edge-label="DDS over Wi-Fi" data-edge-key="12" data-edge-id="dds-viz" data-composition-points="720,262;880,262" data-composition-crossover="halo" data-composition-independent="true" d="M 720 262 L 880 262" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
+          <path data-graph-role="automatic-crossover-underlay" d="M 300 448 L 202 448 Q 194 448 194 456 L 194 570" fill="none" stroke="var(--mask)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" pointer-events="none"/>
+          <path data-edge-from="bridge" data-edge-to="devmac" data-edge-label="all topics over Wi-Fi" data-edge-key="12" data-edge-id="fox" data-composition-points="300,448;194,448;194,570" data-composition-crossover="halo" data-composition-independent="true" d="M 300 448 L 202 448 Q 194 448 194 456 L 194 570" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
         </g>
 
         <!-- Components -->
-        <g id="node-camera" data-node-id="camera" data-node-label="camera_ros" tabindex="0" role="button" aria-label="Focus camera_ros, Pi Camera Module 3, Raspberry Pi 5 (8 GB) · ROS 2 Jazzy" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Pi Camera Module 3" data-node-context="Raspberry Pi 5 (8 GB) · ROS 2 Jazzy">
-          <title>camera_ros · Pi Camera Module 3 · Raspberry Pi 5 (8 GB) · ROS 2 Jazzy</title>
-          <rect x="40" y="60" width="160" height="64" rx="8" class="c-mask"/>
-          <rect x="40" y="60" width="160" height="64" rx="8" class="c-frontend" data-animate="node" style="--step:0" stroke-width="1.5"/>
+        <g id="node-camera" data-node-id="camera" data-node-label="camera_ros" tabindex="0" role="button" aria-label="Focus camera_ros, Pi Camera Module 3 · 30 FPS, Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="Pi Camera Module 3 · 30 FPS" data-node-tag="working" data-node-context="Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy">
+          <title>camera_ros · Pi Camera Module 3 · 30 FPS · Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy · working</title>
+          <rect x="40" y="60" width="170" height="64" rx="8" class="c-mask"/>
+          <rect x="40" y="60" width="170" height="64" rx="8" class="c-frontend" data-animate="node" style="--step:0" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(46 66) scale(0.6875)">
             <rect x="2" y="3" width="12" height="10" rx="2"/>
             <path d="M2 6.5h12"/>
             <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="120" y="90" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">camera_ros</text>
-        <text data-detail="context" x="120" y="106" class="t-muted" font-size="9" text-anchor="middle">Pi Camera Module 3</text>
+          <text data-node-label="" data-detail-anchor="" x="125" y="90" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">camera_ros</text>
+        <text data-detail="context" x="125" y="106" class="t-muted" font-size="9" text-anchor="middle">Pi Camera Module 3 · 30 FPS</text>
+        <text data-detail="fine" x="125" y="116" class="t-frontend" font-size="7" text-anchor="middle">working</text>
         </g>
 
-        <g id="node-mission" data-node-id="mission" data-node-label="mission node" tabindex="0" role="button" aria-label="Focus mission node, patrol · deliver · dock, Raspberry Pi 5 (8 GB) · ROS 2 Jazzy" aria-pressed="false" data-node-kind="backend" data-node-sublabel="patrol · deliver · dock" data-node-context="Raspberry Pi 5 (8 GB) · ROS 2 Jazzy">
-          <title>mission node · patrol · deliver · dock · Raspberry Pi 5 (8 GB) · ROS 2 Jazzy</title>
-          <rect x="300" y="60" width="160" height="64" rx="8" class="c-mask"/>
-          <rect x="300" y="60" width="160" height="64" rx="8" class="c-backend" data-animate="node" style="--step:2" stroke-width="1.5"/>
+        <g id="node-mission" data-node-id="mission" data-node-label="mission node" tabindex="0" role="button" aria-label="Focus mission node, home → pickup → wait → tower, Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy" aria-pressed="false" data-node-kind="backend" data-node-sublabel="home → pickup → wait → tower" data-node-tag="planned" data-node-context="Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy">
+          <title>mission node · home → pickup → wait → tower · Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy · planned</title>
+          <rect x="300" y="60" width="170" height="64" rx="8" class="c-mask"/>
+          <rect x="300" y="60" width="170" height="64" rx="8" class="c-backend" data-animate="node" style="--step:2" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(306 66) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="380" y="90" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">mission node</text>
-        <text data-detail="context" x="380" y="106" class="t-muted" font-size="9" text-anchor="middle">patrol · deliver · dock</text>
+          <text data-node-label="" data-detail-anchor="" x="385" y="90" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">mission node</text>
+        <text data-detail="context" x="385" y="106" class="t-muted" font-size="9" text-anchor="middle">home → pickup → wait → tower</text>
+        <text data-detail="fine" x="385" y="116" class="t-backend" font-size="7" text-anchor="middle">planned</text>
         </g>
 
-        <g id="node-lidar" data-node-id="lidar" data-node-label="LiDAR driver" tabindex="0" role="button" aria-label="Focus LiDAR driver, 2D LiDAR · /scan, Raspberry Pi 5 (8 GB) · ROS 2 Jazzy" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="2D LiDAR · /scan" data-node-tag="not bought" data-node-context="Raspberry Pi 5 (8 GB) · ROS 2 Jazzy">
-          <title>LiDAR driver · 2D LiDAR · /scan · Raspberry Pi 5 (8 GB) · ROS 2 Jazzy · not bought</title>
-          <rect x="560" y="60" width="160" height="64" rx="8" class="c-mask"/>
-          <rect x="560" y="60" width="160" height="64" rx="8" class="c-frontend" data-animate="node" style="--step:3" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(566 66) scale(0.6875)">
+        <g id="node-lidar" data-node-id="lidar" data-node-label="sllidar_ros2" tabindex="0" role="button" aria-label="Focus sllidar_ros2, RPLIDAR C1 · /scan, Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="RPLIDAR C1 · /scan" data-node-tag="arriving" data-node-context="Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy">
+          <title>sllidar_ros2 · RPLIDAR C1 · /scan · Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy · arriving</title>
+          <rect x="820" y="60" width="170" height="64" rx="8" class="c-mask"/>
+          <rect x="820" y="60" width="170" height="64" rx="8" class="c-frontend" data-animate="node" style="--step:3" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(826 66) scale(0.6875)">
             <rect x="2" y="3" width="12" height="10" rx="2"/>
             <path d="M2 6.5h12"/>
             <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
             <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="640" y="90" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">LiDAR driver</text>
-        <text data-detail="context" x="640" y="106" class="t-muted" font-size="9" text-anchor="middle">2D LiDAR · /scan</text>
-        <text data-detail="fine" x="640" y="116" class="t-frontend" font-size="7" text-anchor="middle">not bought</text>
+          <text data-node-label="" data-detail-anchor="" x="905" y="90" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">sllidar_ros2</text>
+        <text data-detail="context" x="905" y="106" class="t-muted" font-size="9" text-anchor="middle">RPLIDAR C1 · /scan</text>
+        <text data-detail="fine" x="905" y="116" class="t-frontend" font-size="7" text-anchor="middle">arriving</text>
         </g>
 
-        <g id="node-perception" data-node-id="perception" data-node-label="perception node" tabindex="0" role="button" aria-label="Focus perception node, C++ · YOLO, Raspberry Pi 5 (8 GB) · ROS 2 Jazzy" aria-pressed="false" data-node-kind="backend" data-node-sublabel="C++ · YOLO" data-node-context="Raspberry Pi 5 (8 GB) · ROS 2 Jazzy">
-          <title>perception node · C++ · YOLO · Raspberry Pi 5 (8 GB) · ROS 2 Jazzy</title>
-          <rect x="40" y="230" width="160" height="64" rx="8" class="c-mask"/>
-          <rect x="40" y="230" width="160" height="64" rx="8" class="c-backend" data-animate="node" style="--step:1" stroke-width="1.5"/>
+        <g id="node-perception" data-node-id="perception" data-node-label="person_detector + pan_tracker" tabindex="0" role="button" aria-label="Focus person_detector + pan_tracker, YOLO26n · NCNN · ~19 FPS, Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy" aria-pressed="false" data-node-kind="backend" data-node-sublabel="YOLO26n · NCNN · ~19 FPS" data-node-tag="working" data-node-context="Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy">
+          <title>person_detector + pan_tracker · YOLO26n · NCNN · ~19 FPS · Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy · working</title>
+          <rect x="40" y="230" width="200" height="64" rx="8" class="c-mask"/>
+          <rect x="40" y="230" width="200" height="64" rx="8" class="c-backend" data-animate="node" style="--step:1" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(46 236) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="120" y="260" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">perception node</text>
-        <text data-detail="context" x="120" y="276" class="t-muted" font-size="9" text-anchor="middle">C++ · YOLO</text>
+          <text data-node-label="" data-detail-anchor="" x="140" y="260" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">person_detector + pan_tracker</text>
+        <text data-detail="context" x="140" y="276" class="t-muted" font-size="9" text-anchor="middle">YOLO26n · NCNN · ~19 FPS</text>
+        <text data-detail="fine" x="140" y="286" class="t-backend" font-size="7" text-anchor="middle">working</text>
         </g>
 
-        <g id="node-nav2" data-node-id="nav2" data-node-label="Nav2" tabindex="0" role="button" aria-label="Focus Nav2, planner · controller · BT, Raspberry Pi 5 (8 GB) · ROS 2 Jazzy" aria-pressed="false" data-node-kind="backend" data-node-sublabel="planner · controller · BT" data-node-context="Raspberry Pi 5 (8 GB) · ROS 2 Jazzy">
-          <title>Nav2 · planner · controller · BT · Raspberry Pi 5 (8 GB) · ROS 2 Jazzy</title>
-          <rect x="300" y="230" width="160" height="64" rx="8" class="c-mask"/>
-          <rect x="300" y="230" width="160" height="64" rx="8" class="c-backend" data-animate="node" style="--step:2" stroke-width="1.5"/>
+        <g id="node-nav2" data-node-id="nav2" data-node-label="Nav2" tabindex="0" role="button" aria-label="Focus Nav2, planner · controller · BT, Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy" aria-pressed="false" data-node-kind="backend" data-node-sublabel="planner · controller · BT" data-node-tag="planned" data-node-context="Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy">
+          <title>Nav2 · planner · controller · BT · Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy · planned</title>
+          <rect x="300" y="230" width="170" height="64" rx="8" class="c-mask"/>
+          <rect x="300" y="230" width="170" height="64" rx="8" class="c-backend" data-animate="node" style="--step:3" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(306 236) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="380" y="260" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Nav2</text>
-        <text data-detail="context" x="380" y="276" class="t-muted" font-size="9" text-anchor="middle">planner · controller · BT</text>
+          <text data-node-label="" data-detail-anchor="" x="385" y="260" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Nav2</text>
+        <text data-detail="context" x="385" y="276" class="t-muted" font-size="9" text-anchor="middle">planner · controller · BT</text>
+        <text data-detail="fine" x="385" y="286" class="t-backend" font-size="7" text-anchor="middle">planned</text>
         </g>
 
-        <g id="node-slam" data-node-id="slam" data-node-label="slam_toolbox" tabindex="0" role="button" aria-label="Focus slam_toolbox, builds /map, Raspberry Pi 5 (8 GB) · ROS 2 Jazzy" aria-pressed="false" data-node-kind="database" data-node-sublabel="builds /map" data-node-context="Raspberry Pi 5 (8 GB) · ROS 2 Jazzy">
-          <title>slam_toolbox · builds /map · Raspberry Pi 5 (8 GB) · ROS 2 Jazzy</title>
-          <rect x="560" y="230" width="160" height="64" rx="8" class="c-mask"/>
-          <rect x="560" y="230" width="160" height="64" rx="8" class="c-database" data-animate="node" style="--step:4" stroke-width="1.5"/>
+        <g id="node-slam" data-node-id="slam" data-node-label="slam_toolbox" tabindex="0" role="button" aria-label="Focus slam_toolbox, builds /map, Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy" aria-pressed="false" data-node-kind="database" data-node-sublabel="builds /map" data-node-tag="planned" data-node-context="Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy">
+          <title>slam_toolbox · builds /map · Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy · planned</title>
+          <rect x="560" y="230" width="170" height="64" rx="8" class="c-mask"/>
+          <rect x="560" y="230" width="170" height="64" rx="8" class="c-database" data-animate="node" style="--step:5" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(566 236) scale(0.6875)">
             <ellipse cx="8" cy="4" rx="5" ry="2"/>
             <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="640" y="260" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">slam_toolbox</text>
-        <text data-detail="context" x="640" y="276" class="t-muted" font-size="9" text-anchor="middle">builds /map</text>
+          <text data-node-label="" data-detail-anchor="" x="645" y="260" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">slam_toolbox</text>
+        <text data-detail="context" x="645" y="276" class="t-muted" font-size="9" text-anchor="middle">builds /map</text>
+        <text data-detail="fine" x="645" y="286" class="t-database" font-size="7" text-anchor="middle">planned</text>
         </g>
 
-        <g id="node-devmac" data-node-id="devmac" data-node-label="Dev Mac" tabindex="0" role="button" aria-label="Focus Dev Mac, RViz · Foxglove, Architecture component" aria-pressed="false" data-node-kind="external" data-node-sublabel="RViz · Foxglove" data-node-context="Architecture component">
-          <title>Dev Mac · RViz · Foxglove · Architecture component</title>
-          <rect x="880" y="230" width="150" height="64" rx="8" class="c-mask"/>
-          <rect x="880" y="230" width="150" height="64" rx="8" class="c-external" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(886 236) scale(0.6875)">
-            <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
-            <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
-          </g>
-          <text data-node-label="" data-detail-anchor="" x="955" y="260" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Dev Mac</text>
-        <text data-detail="context" x="955" y="276" class="t-muted" font-size="9" text-anchor="middle">RViz · Foxglove</text>
-        </g>
-
-        <g id="node-rc" data-node-id="rc" data-node-label="ros2_control" tabindex="0" role="button" aria-label="Focus ros2_control, diff_drive_controller, Raspberry Pi 5 (8 GB) · ROS 2 Jazzy" aria-pressed="false" data-node-kind="backend" data-node-sublabel="diff_drive_controller" data-node-context="Raspberry Pi 5 (8 GB) · ROS 2 Jazzy">
-          <title>ros2_control · diff_drive_controller · Raspberry Pi 5 (8 GB) · ROS 2 Jazzy</title>
-          <rect x="300" y="400" width="160" height="64" rx="8" class="c-mask"/>
-          <rect x="300" y="400" width="160" height="64" rx="8" class="c-backend" data-animate="node" style="--step:6" stroke-width="1.5"/>
+        <g id="node-bridge" data-node-id="bridge" data-node-label="base_bridge" tabindex="0" role="button" aria-label="Focus base_bridge, Python now · C++ in progress, Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy" aria-pressed="false" data-node-kind="backend" data-node-sublabel="Python now · C++ in progress" data-node-tag="working" data-node-context="Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy">
+          <title>base_bridge · Python now · C++ in progress · Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy · working</title>
+          <rect x="300" y="400" width="170" height="64" rx="8" class="c-mask"/>
+          <rect x="300" y="400" width="170" height="64" rx="8" class="c-backend" data-animate="node" style="--step:2" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(306 406) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="380" y="430" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">ros2_control</text>
-        <text data-detail="context" x="380" y="446" class="t-muted" font-size="9" text-anchor="middle">diff_drive_controller</text>
+          <text data-node-label="" data-detail-anchor="" x="385" y="430" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">base_bridge</text>
+        <text data-detail="context" x="385" y="446" class="t-muted" font-size="9" text-anchor="middle">Python now · C++ in progress</text>
+        <text data-detail="fine" x="385" y="456" class="t-backend" font-size="7" text-anchor="middle">working</text>
         </g>
 
-        <g id="node-ekf" data-node-id="ekf" data-node-label="robot_localization" tabindex="0" role="button" aria-label="Focus robot_localization, EKF · wheel odom + IMU, Raspberry Pi 5 (8 GB) · ROS 2 Jazzy" aria-pressed="false" data-node-kind="backend" data-node-sublabel="EKF · wheel odom + IMU" data-node-context="Raspberry Pi 5 (8 GB) · ROS 2 Jazzy">
-          <title>robot_localization · EKF · wheel odom + IMU · Raspberry Pi 5 (8 GB) · ROS 2 Jazzy</title>
-          <rect x="560" y="400" width="160" height="64" rx="8" class="c-mask"/>
-          <rect x="560" y="400" width="160" height="64" rx="8" class="c-backend" data-animate="node" style="--step:7" stroke-width="1.5"/>
+        <g id="node-ekf" data-node-id="ekf" data-node-label="robot_localization" tabindex="0" role="button" aria-label="Focus robot_localization, EKF · LiDAR odom + gyro, Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy" aria-pressed="false" data-node-kind="backend" data-node-sublabel="EKF · LiDAR odom + gyro" data-node-tag="planned" data-node-context="Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy">
+          <title>robot_localization · EKF · LiDAR odom + gyro · Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy · planned</title>
+          <rect x="560" y="400" width="170" height="64" rx="8" class="c-mask"/>
+          <rect x="560" y="400" width="170" height="64" rx="8" class="c-backend" data-animate="node" style="--step:6" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(566 406) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="640" y="430" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">robot_localization</text>
-        <text data-detail="context" x="640" y="446" class="t-muted" font-size="9" text-anchor="middle">EKF · wheel odom + IMU</text>
+          <text data-node-label="" data-detail-anchor="" x="645" y="430" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">robot_localization</text>
+        <text data-detail="context" x="645" y="446" class="t-muted" font-size="9" text-anchor="middle">EKF · LiDAR odom + gyro</text>
+        <text data-detail="fine" x="645" y="456" class="t-backend" font-size="7" text-anchor="middle">planned</text>
         </g>
 
-        <g id="node-hcsr04" data-node-id="hcsr04" data-node-label="HC-SR04" tabindex="0" role="button" aria-label="Focus HC-SR04, ultrasonic backup, ESP32 MCU · real-time I/O" aria-pressed="false" data-node-kind="external" data-node-sublabel="ultrasonic backup" data-node-context="ESP32 MCU · real-time I/O">
-          <title>HC-SR04 · ultrasonic backup · ESP32 MCU · real-time I/O</title>
-          <rect x="40" y="570" width="160" height="64" rx="8" class="c-mask"/>
-          <rect x="40" y="570" width="160" height="64" rx="8" class="c-external" data-animate="node" style="--step:11" stroke-width="1.5"/>
+        <g id="node-rf2o" data-node-id="rf2o" data-node-label="rf2o_laser_odometry" tabindex="0" role="button" aria-label="Focus rf2o_laser_odometry, scan matching → odom, Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy" aria-pressed="false" data-node-kind="backend" data-node-sublabel="scan matching → odom" data-node-tag="planned" data-node-context="Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy">
+          <title>rf2o_laser_odometry · scan matching → odom · Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy · planned</title>
+          <rect x="820" y="400" width="170" height="64" rx="8" class="c-mask"/>
+          <rect x="820" y="400" width="170" height="64" rx="8" class="c-backend" data-animate="node" style="--step:4" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(826 406) scale(0.6875)">
+            <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="905" y="430" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">rf2o_laser_odometry</text>
+        <text data-detail="context" x="905" y="446" class="t-muted" font-size="9" text-anchor="middle">scan matching → odom</text>
+        <text data-detail="fine" x="905" y="456" class="t-backend" font-size="7" text-anchor="middle">planned</text>
+        </g>
+
+        <g id="node-devmac" data-node-id="devmac" data-node-label="Foxglove on the Mac" tabindex="0" role="button" aria-label="Focus Foxglove on the Mac, WebSocket · layouts, Architecture component" aria-pressed="false" data-node-kind="external" data-node-sublabel="WebSocket · layouts" data-node-context="Architecture component">
+          <title>Foxglove on the Mac · WebSocket · layouts · Architecture component</title>
+          <rect x="40" y="570" width="170" height="64" rx="8" class="c-mask"/>
+          <rect x="40" y="570" width="170" height="64" rx="8" class="c-external" data-animate="node" style="--step:12" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="external" class="semantic-sigil s-external" transform="translate(46 576) scale(0.6875)">
             <rect x="2.5" y="5" width="8.5" height="8" rx="1.5"/>
             <path d="M8 2.5h5.5V8M13.5 2.5 7.5 8.5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="120" y="600" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">HC-SR04</text>
-        <text data-detail="context" x="120" y="616" class="t-muted" font-size="9" text-anchor="middle">ultrasonic backup</text>
+          <text data-node-label="" data-detail-anchor="" x="125" y="600" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Foxglove on the Mac</text>
+        <text data-detail="context" x="125" y="616" class="t-muted" font-size="9" text-anchor="middle">WebSocket · layouts</text>
         </g>
 
-        <g id="node-esp32" data-node-id="esp32" data-node-label="ESP32 WROOM-32" tabindex="0" role="button" aria-label="Focus ESP32 WROOM-32, micro-ROS · TB6612 · MPU-6050, ESP32 MCU · real-time I/O" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="micro-ROS · TB6612 · MPU-6050" data-node-tag="encoder motors not bought" data-node-context="ESP32 MCU · real-time I/O">
-          <title>ESP32 WROOM-32 · micro-ROS · TB6612 · MPU-6050 · ESP32 MCU · real-time I/O · encoder motors not bought</title>
-          <rect x="295" y="570" width="170" height="64" rx="8" class="c-mask"/>
-          <rect x="295" y="570" width="170" height="64" rx="8" class="c-messagebus" data-animate="node" style="--step:8" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(301 576) scale(0.6875)">
+        <g id="node-r4" data-node-id="r4" data-node-label="Arduino UNO R4 WiFi" tabindex="0" role="button" aria-label="Focus Arduino UNO R4 WiFi, r4_base · TB6612 · MPU-6050 · servo, Microcontroller · USB serial" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="r4_base · TB6612 · MPU-6050 · servo" data-node-tag="working" data-node-context="Microcontroller · USB serial">
+          <title>Arduino UNO R4 WiFi · r4_base · TB6612 · MPU-6050 · servo · Microcontroller · USB serial · working</title>
+          <rect x="300" y="570" width="190" height="64" rx="8" class="c-mask"/>
+          <rect x="300" y="570" width="190" height="64" rx="8" class="c-messagebus" data-animate="node" style="--step:11" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="messagebus" class="semantic-sigil s-messagebus" transform="translate(306 576) scale(0.6875)">
             <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11"/>
             <circle cx="5" cy="4.5" r="1" class="sigil-fill"/>
             <circle cx="10.5" cy="8" r="1" class="sigil-fill"/>
             <circle cx="7" cy="11.5" r="1" class="sigil-fill"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="380" y="600" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">ESP32 WROOM-32</text>
-        <text data-detail="context" x="380" y="616" class="t-muted" font-size="9" text-anchor="middle">micro-ROS · TB6612 · MPU-6050</text>
-        <text data-detail="fine" x="380" y="626" class="t-messagebus" font-size="7" text-anchor="middle">encoder motors not bought</text>
+          <text data-node-label="" data-detail-anchor="" x="395" y="600" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Arduino UNO R4 WiFi</text>
+        <text data-detail="context" x="395" y="616" class="t-muted" font-size="8.6" text-anchor="middle">r4_base · TB6612 · MPU-6050 · servo</text>
+        <text data-detail="fine" x="395" y="626" class="t-messagebus" font-size="7" text-anchor="middle">working</text>
         </g>
 
         <!-- Connection labels -->
-        <g data-detail="context" data-edge-from="camera" data-edge-to="perception" data-edge-label="/image_raw" data-edge-key="0" data-edge-id="image-stream">
-          <rect x="56" y="170" width="58" height="14" rx="3" class="c-mask"/>
-          <text x="85" y="180" class="t-edge-default" font-size="8" text-anchor="middle">/image_raw</text>
+        <g data-detail="context" data-edge-from="camera" data-edge-to="perception" data-edge-label="camera/image_raw" data-edge-key="0" data-edge-id="img">
+          <rect x="32.199999999999996" y="170" width="86.8" height="14" rx="3" class="c-mask"/>
+          <text x="75.6" y="180" class="t-edge-default" font-size="8" text-anchor="middle">camera/image_raw</text>
         </g>
-        <g data-detail="context" data-edge-from="perception" data-edge-to="nav2" data-edge-label="/detections" data-edge-key="1" data-edge-id="detections">
-          <rect x="218.6" y="242" width="62.8" height="14" rx="3" class="c-mask"/>
-          <text x="250" y="252" class="t-edge-default" font-size="8" text-anchor="middle">/detections</text>
+        <g data-detail="context" data-edge-from="perception" data-edge-to="bridge" data-edge-label="pan/cmd" data-edge-key="1" data-edge-id="pan">
+          <rect x="240.2" y="396" width="43.6" height="14" rx="3" class="c-mask"/>
+          <text x="262" y="406" class="t-edge-default" font-size="8" text-anchor="middle">pan/cmd</text>
         </g>
-        <g data-detail="context" data-edge-from="mission" data-edge-to="nav2" data-edge-label="nav goals" data-edge-key="2" data-edge-id="mission-goals">
-          <rect x="320.79999999999995" y="170" width="53.199999999999996" height="14" rx="3" class="c-mask"/>
-          <text x="347.4" y="180" class="t-edge-default" font-size="8" text-anchor="middle">nav goals</text>
+        <g data-detail="context" data-edge-from="mission" data-edge-to="nav2" data-edge-label="nav goals" data-edge-key="2" data-edge-id="goals">
+          <rect x="325.79999999999995" y="170" width="53.199999999999996" height="14" rx="3" class="c-mask"/>
+          <text x="352.4" y="180" class="t-edge-default" font-size="8" text-anchor="middle">nav goals</text>
         </g>
-        <g data-detail="context" data-edge-from="lidar" data-edge-to="slam" data-edge-label="/scan" data-edge-key="3" data-edge-id="scan">
-          <rect x="600" y="170" width="34" height="14" rx="3" class="c-mask"/>
-          <text x="617" y="180" class="t-edge-emphasis" font-size="8" text-anchor="middle">/scan</text>
+        <g data-detail="context" data-edge-from="lidar" data-edge-to="rf2o" data-edge-label="/scan" data-edge-key="3" data-edge-id="scan-odom">
+          <rect x="865" y="255" width="34" height="14" rx="3" class="c-mask"/>
+          <text x="882" y="265" class="t-edge-emphasis" font-size="8" text-anchor="middle">/scan</text>
         </g>
-        <g data-detail="context" data-edge-from="slam" data-edge-to="nav2" data-edge-label="/map" data-edge-key="4" data-edge-id="map">
-          <rect x="495" y="242" width="30" height="14" rx="3" class="c-mask"/>
-          <text x="510" y="252" class="t-edge-emphasis" font-size="8" text-anchor="middle">/map</text>
+        <g data-detail="context" data-edge-from="lidar" data-edge-to="slam" data-edge-label="/scan" data-edge-key="4" data-edge-id="scan-slam">
+          <rect x="766" y="226" width="34" height="14" rx="3" class="c-mask"/>
+          <text x="783" y="236" class="t-edge-emphasis" font-size="8" text-anchor="middle">/scan</text>
         </g>
-        <g data-detail="context" data-edge-from="nav2" data-edge-to="rc" data-edge-label="/cmd_vel" data-edge-key="5" data-edge-id="cmd-vel">
-          <rect x="325.6" y="340" width="48.4" height="14" rx="3" class="c-mask"/>
-          <text x="349.8" y="350" class="t-edge-emphasis" font-size="8" text-anchor="middle">/cmd_vel</text>
+        <g data-detail="context" data-edge-from="rf2o" data-edge-to="ekf" data-edge-label="odom (scan matching)" data-edge-key="5" data-edge-id="lidar-odom">
+          <rect x="722" y="356" width="106" height="14" rx="3" class="c-mask"/>
+          <text x="775" y="366" class="t-edge-default" font-size="8" text-anchor="middle">odom (scan matching)</text>
         </g>
-        <g data-detail="context" data-edge-from="rc" data-edge-to="ekf" data-edge-label="/odom" data-edge-key="6" data-edge-id="wheel-odom">
-          <rect x="493" y="412" width="34" height="14" rx="3" class="c-mask"/>
-          <text x="510" y="422" class="t-edge-default" font-size="8" text-anchor="middle">/odom</text>
+        <g data-detail="context" data-edge-from="bridge" data-edge-to="ekf" data-edge-label="imu/data_raw (gyro)" data-edge-key="6" data-edge-id="imu">
+          <rect x="464.4" y="356" width="101.2" height="14" rx="3" class="c-mask"/>
+          <text x="515" y="366" class="t-edge-default" font-size="8" text-anchor="middle">imu/data_raw (gyro)</text>
         </g>
-        <g data-detail="context" data-edge-from="ekf" data-edge-to="slam" data-edge-label="/odometry/filtered" data-edge-key="7" data-edge-id="filtered-odom">
-          <rect x="591.8" y="380" width="96.39999999999999" height="14" rx="3" class="c-mask"/>
-          <text x="640" y="390" class="t-edge-emphasis" font-size="8" text-anchor="middle">/odometry/filtered</text>
+        <g data-detail="context" data-edge-from="ekf" data-edge-to="slam" data-edge-label="odometry/filtered · tf" data-edge-key="7" data-edge-id="filtered">
+          <rect x="523.4000000000001" y="340" width="115.6" height="14" rx="3" class="c-mask"/>
+          <text x="581.2" y="350" class="t-edge-emphasis" font-size="8" text-anchor="middle">odometry/filtered · tf</text>
         </g>
-        <g data-detail="context" data-edge-from="esp32" data-edge-to="rc" data-edge-label="wheel ticks" data-edge-key="8" data-edge-id="ticks-up">
-          <rect x="393" y="510" width="62.8" height="14" rx="3" class="c-mask"/>
-          <text x="424.4" y="520" class="t-edge-default" font-size="8" text-anchor="middle">wheel ticks</text>
+        <g data-detail="context" data-edge-from="slam" data-edge-to="nav2" data-edge-label="/map" data-edge-key="8" data-edge-id="map">
+          <rect x="500" y="242" width="30" height="14" rx="3" class="c-mask"/>
+          <text x="515" y="252" class="t-edge-emphasis" font-size="8" text-anchor="middle">/map</text>
         </g>
-        <g data-detail="context" data-edge-from="rc" data-edge-to="esp32" data-edge-label="wheel cmd → PWM" data-edge-key="9" data-edge-id="pwm-down">
-          <rect x="285" y="510" width="82" height="14" rx="3" class="c-mask"/>
-          <text x="326" y="520" class="t-edge-default" font-size="8" text-anchor="middle">wheel cmd → PWM</text>
+        <g data-detail="context" data-edge-from="nav2" data-edge-to="bridge" data-edge-label="cmd_vel" data-edge-key="9" data-edge-id="cmdvel">
+          <rect x="335.4" y="340" width="43.6" height="14" rx="3" class="c-mask"/>
+          <text x="357.2" y="350" class="t-edge-emphasis" font-size="8" text-anchor="middle">cmd_vel</text>
         </g>
-        <g data-detail="context" data-edge-from="esp32" data-edge-to="ekf" data-edge-label="/imu (USB serial)" data-edge-key="10" data-edge-id="imu">
-          <rect x="594.2" y="513" width="91.6" height="14" rx="3" class="c-mask"/>
-          <text x="640" y="523" class="t-edge-default" font-size="8" text-anchor="middle">/imu (USB serial)</text>
+        <g data-detail="context" data-edge-from="bridge" data-edge-to="r4" data-edge-label="M l r · V · S (serial-r4-v1)" data-edge-key="10" data-edge-id="serial-down">
+          <rect x="297.8" y="468" width="144.4" height="14" rx="3" class="c-mask"/>
+          <text x="370" y="478" class="t-edge-default" font-size="8" text-anchor="middle">M l r · V · S (serial-r4-v1)</text>
         </g>
-        <g data-detail="context" data-edge-from="hcsr04" data-edge-to="esp32" data-edge-label="echo pulse" data-edge-key="11" data-edge-id="range">
-          <rect x="218.5" y="582" width="58" height="14" rx="3" class="c-mask"/>
-          <text x="247.5" y="592" class="t-edge-default" font-size="8" text-anchor="middle">echo pulse</text>
+        <g data-detail="context" data-edge-from="r4" data-edge-to="bridge" data-edge-label="I 20 Hz · acks · watchdog" data-edge-key="11" data-edge-id="serial-up">
+          <rect x="449" y="504" width="130" height="14" rx="3" class="c-mask"/>
+          <text x="514" y="514" class="t-edge-default" font-size="8" text-anchor="middle">I 20 Hz · acks · watchdog</text>
         </g>
-        <g data-detail="context" data-edge-from="slam" data-edge-to="devmac" data-edge-label="DDS over Wi-Fi" data-edge-key="12" data-edge-id="dds-viz">
-          <rect x="761.4" y="242" width="77.2" height="14" rx="3" class="c-mask"/>
-          <text x="800" y="252" class="t-edge-dashed" font-size="8" text-anchor="middle">DDS over Wi-Fi</text>
+        <g data-detail="context" data-edge-from="bridge" data-edge-to="devmac" data-edge-label="all topics over Wi-Fi" data-edge-key="12" data-edge-id="fox">
+          <rect x="138.6" y="489" width="110.8" height="14" rx="3" class="c-mask"/>
+          <text x="194" y="499" class="t-edge-dashed" font-size="8" text-anchor="middle">all topics over Wi-Fi</text>
         </g>
 
         <!-- Boundary labels (foreground masks keep routes out of titles) -->
-        <g data-graph-role="structural-frame-label" data-composition-frame-id="0" data-composition-frame-kind="region" data-composition-frame-label="Raspberry Pi 5 (8 GB) · ROS 2 Jazzy">
-          <rect data-graph-role="structural-frame-label-mask" x="14" y="40" width="199" height="16" rx="3" class="c-mask"/>
-          <text data-boundary-label="" x="18" y="53" class="t-cloud" font-size="9" font-weight="600">Raspberry Pi 5 (8 GB) · ROS 2 Jazzy</text>
+        <g data-graph-role="structural-frame-label" data-composition-frame-id="0" data-composition-frame-kind="region" data-composition-frame-label="Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy">
+          <rect data-graph-role="structural-frame-label-mask" x="14" y="40" width="280" height="16" rx="3" class="c-mask"/>
+          <text data-boundary-label="" x="18" y="53" class="t-cloud" font-size="9" font-weight="600">Raspberry Pi 5 (8 GB) · Ubuntu 24.04 · ROS 2 Jazzy</text>
         </g>
 
-        <g data-graph-role="structural-frame-label" data-composition-frame-id="1" data-composition-frame-kind="security-group" data-composition-frame-label="ESP32 MCU · real-time I/O">
-          <rect data-graph-role="structural-frame-label-mask" x="14" y="550" width="145" height="16" rx="3" class="c-mask"/>
-          <text data-boundary-label="" x="18" y="563" class="t-security" font-size="9" font-weight="600">ESP32 MCU · real-time I/O</text>
+        <g data-graph-role="structural-frame-label" data-composition-frame-id="1" data-composition-frame-kind="security-group" data-composition-frame-label="Microcontroller · USB serial">
+          <rect data-graph-role="structural-frame-label-mask" x="274" y="550" width="161.2" height="16" rx="3" class="c-mask"/>
+          <text data-boundary-label="" x="278" y="563" class="t-security" font-size="9" font-weight="600">Microcontroller · USB serial</text>
         </g>
 
         <!-- Legend -->
@@ -5713,46 +5720,49 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     <div class="cards">
       <div class="card">
         <div class="card-header">
-          <div class="card-dot amber"></div>
-          <h3>Status: target design</h3>
+          <div class="card-dot emerald"></div>
+          <h3>Working now (Nov 2026)</h3>
         </div>
         <ul>
-          <li>2D LiDAR and encoder motors are not yet bought</li>
-          <li>Graph follows System Architecture §3; nothing here is measured</li>
+          <li>Teleop over cmd_vel with a 0.25 s timeout in the bridge and a 300 ms watchdog on the R4</li>
+          <li>IMU 20 Hz, battery, pan servo, diagnostics; URDF + TF; Foxglove layout</li>
+          <li>Camera 30 FPS; YOLO26n person detection ~19 FPS on the CPU; pan tracking</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot violet"></div>
-          <h3>Pi 5 / ESP32 boundary</h3>
+          <h3>Two compute parts (ADR-0006)</h3>
         </div>
         <ul>
-          <li>ESP32 runs micro-ROS over USB serial; a micro-ROS agent on the Pi bridges it to DDS</li>
-          <li>ESP32 owns encoder ticks, MPU-6050 /imu and TB6612 motor PWM</li>
-          <li>HC-SR04 is a near-field backup read by the ESP32</li>
+          <li>Every ROS node runs on the Pi 5; the UNO R4 holds no robot logic</li>
+          <li>The R4 speaks the plain-text serial-r4-v1 protocol: motor PWM, servo, MPU-6050, battery, watchdog</li>
+          <li>No ESP32, no micro-ROS (superseded ADR-0002)</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
-          <div class="card-dot emerald"></div>
-          <h3>Localization and navigation</h3>
+          <div class="card-dot amber"></div>
+          <h3>Odometry without wheel encoders</h3>
         </div>
         <ul>
-          <li>EKF fuses wheel /odom with /imu into /odometry/filtered for slam_toolbox</li>
-          <li>Nav2 plans on /map and /detections and publishes /cmd_vel</li>
-          <li>mission node sends patrol, deliver and dock goals to Nav2</li>
+          <li>The TT motors have no encoders and skid-steer wheels slide when turning</li>
+          <li>rf2o matches consecutive LiDAR scans; the EKF fuses that with the R4 gyro</li>
+          <li>slam_toolbox maps on the fused odometry; Nav2 plans on the map</li>
         </ul>
       </div>
 
       <div class="card">
         <div class="card-header">
           <div class="card-dot slate"></div>
-          <h3>Dev Mac</h3>
+          <h3>Status tags</h3>
         </div>
         <ul>
-          <li>RViz / Foxglove subscribe to /map, /scan, /tf and other topics over Wi-Fi DDS</li>
+          <li>working = running on the robot today</li>
+          <li>arriving = hardware ordered, not mounted</li>
+          <li>planned = designed, not built yet</li>
         </ul>
       </div>
     </div>

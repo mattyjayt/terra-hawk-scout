@@ -6,11 +6,11 @@
   "status": "pass",
   "visualReview": "not-requested",
   "provenance": "current",
-  "deliveryReceiptId": "21796216-b46d-4893-b10c-7e2006a5a062",
+  "deliveryReceiptId": "183d2d96-b238-4a95-baf8-ee45733f3b2b",
   "artifact": {
-    "path": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-p1-graph/scout-p1-graph.html",
-    "sha256": "d21313d71988bd94cbcca65a53c051c67990fa918ae10a65725fb6baa17a3fab",
-    "bytes": 853029
+    "path": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-p1-graph/scout-p1-graph.html",
+    "sha256": "5b62a6effc697d8f74ae3b9ed49e781d86d71505cf94978127753c7488a18881",
+    "bytes": 853021
   },
   "state": {
     "detail": "read",

@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "receiptId": "331f5134-ca6a-4acb-9e09-d2b54382fd8d",
+  "receiptId": "2cf52568-79f6-4563-9293-c93874c6847c",
   "status": "current",
   "command": "deliver",
   "type": "architecture",
-  "input": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/candidate.json",
-  "output": "/Users/jaimetellie/Documents/Obsidian/Hermes/Projects/TerraHawk Ecosystem/Artifacts/diagrams/scout-ros2-graph/scout-ros2-graph.html",
+  "input": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/candidate.json",
+  "output": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.html",
   "specification": {
-    "sha256": "82e1e359bbf81e5b34d22ba2fe97033e733b8bf2424f2e3a4d5b41d7e5e46dcf",
-    "bytes": 6082
+    "sha256": "8bda510ff85d2d9f4a67ce0e6d703f380fde0febe5cf39a71a520ca66cbbdf93",
+    "bytes": 6692
   },
   "artifact": {
-    "sha256": "14cd3fcbb293834b4432913c786a3404a30f5adb43781d25f34ef8ac4e67aab5",
-    "bytes": 854397
+    "sha256": "a24e6f98e1350a71abcc943c956ef5392e0626efdbcaf9957f3be12d843b13bd",
+    "bytes": 857883
   }
 }
