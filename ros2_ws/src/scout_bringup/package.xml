@@ -17,6 +17,7 @@
 
   <exec_depend>launch_ros</exec_depend>
   <exec_depend>scout_description</exec_depend>
+  <exec_depend>scout_perception</exec_depend>
   <exec_depend>foxglove_bridge</exec_depend>
 
   <export>

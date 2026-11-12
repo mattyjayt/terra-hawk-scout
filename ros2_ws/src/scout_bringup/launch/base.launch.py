@@ -8,19 +8,19 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
 
 from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    """Start base_bridge, robot_state_publisher and optionally.
+    """Start base_bridge (impl:=py|cpp).
 
-    foxglove_bridge.
+    robot_state_publisher, and optionally foxglove_bridge and perception.
     """
     bringup = get_package_share_directory('scout_bringup')
     description = get_package_share_directory('scout_description')
-    perception = get_package_share_directory('scout_perception')
     params = os.path.join(bringup, 'config', 'base.yaml')
 
     impl = LaunchConfiguration('impl')
@@ -34,8 +34,11 @@ def generate_launch_description():
     urdf = IncludeLaunchDescription(PythonLaunchDescriptionSource(
         os.path.join(description, 'launch', 'description.launch.py')))
 
-    vision = IncludeLaunchDescription(PythonLaunchDescriptionSource(
-            os.path.join(perception, 'launch', 'perception.launch.py')))
+    vision = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(PathJoinSubstitution(
+            [FindPackageShare('scout_perception'), 'launch',
+             'perception.launch.py'])), condition=IfCondition(
+                 LaunchConfiguration('perception')))
 
     fox = Node(package='foxglove_bridge',
                executable='foxglove_bridge',
@@ -50,5 +53,9 @@ def generate_launch_description():
         DeclareLaunchArgument('foxglove', default_value='true',
                               description='start foxglove_bridge'),
         DeclareLaunchArgument('foxglove_port', default_value='8765'),
+        DeclareLaunchArgument(
+            'perception',
+            default_value='true',
+            description='start person_detector + pan_tracker'),
         bridge, urdf, fox, vision
     ])
