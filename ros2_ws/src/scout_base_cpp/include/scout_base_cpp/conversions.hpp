@@ -16,7 +16,7 @@ namespace scout_base_cpp
     class StaleDetector
     {
         public:
-            StaleDetector(int limit=10);
+            explicit StaleDetector(int limit=10);
             bool update(const std::array<double, 6> & values);
 
         private:
@@ -28,7 +28,7 @@ namespace scout_base_cpp
     class RateMeter
     {
         public:
-            RateMeter(double window_s=1.0);
+            explicit RateMeter(double window_s=1.0);
             void tick(double now);
             double rate(double now);
 
