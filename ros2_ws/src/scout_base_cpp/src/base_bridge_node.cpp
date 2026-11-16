@@ -63,7 +63,7 @@ namespace scout_base_cpp
     public:
         using Trigger = std_srvs::srv::Trigger;
 
-        BaseBridge(): Node("base_bridge")
+        BaseBridge() : Node("base_bridge")
         {
             // 7.4b: start the reader thread (LAST line of the constructor)
 
@@ -75,7 +75,7 @@ namespace scout_base_cpp
             this->drive_.max_wheel_speed = declare_parameter<double>("max_wheel_speed", 0.0);
             this->max_linear_ = declare_parameter<double>("max_linear", 0.3);
             this->max_angular_ = declare_parameter<double>("max_angular", 1.5);
-            this->cmd_timeout_ = declare_parameter<double>("cmd_timout", 0.25);
+            this->cmd_timeout_ = declare_parameter<double>("cmd_timeout", 0.25);
             this->send_rate_ = declare_parameter<double>("send_rate", 20.0);
             this->gyro_var_ = declare_parameter<double>("gyro_var", 1.0e-5);
             this->accel_var_ = declare_parameter<double>("accel_var", 2.0e-3);
@@ -89,10 +89,19 @@ namespace scout_base_cpp
             this->frame_id_base_ = declare_parameter<std::string>("frame_id_base", "");
 
             // Refuse to start
-            if (this->drive_.track_width <= 0.0) { throw std::invalid_argument("Parameter track_width must be set (> 0)"); }
-            if (this->drive_.max_wheel_speed = 0.0) { throw std::invalid_argument("Parameter max_wheel_speed must be set (> 0)"); }
-            if (this->drive_.pwm_min <= 0.0) { throw std::invalid_argument("Parameter pwm_min must be set (> 0)"); }
-            
+            if (this->drive_.track_width <= 0.0)
+            {
+                throw std::invalid_argument("Parameter track_width must be set (> 0)");
+            }
+            if (this->drive_.max_wheel_speed <= 0.0)
+            {
+                throw std::invalid_argument("Parameter max_wheel_speed must be set (> 0)");
+            }
+            if (this->drive_.pwm_min <= 0.0)
+            {
+                throw std::invalid_argument("Parameter pwm_min must be set (> 0)");
+            }
+
             this->stale_ = StaleDetector(this->imu_stale_count_);
 
             // Publishers
@@ -105,30 +114,44 @@ namespace scout_base_cpp
             // Subscribers
             this->cmd_vel_sub_ = create_subscription<geometry_msgs::msg::Twist>("cmd_vel", rclcpp::QoS(10), std::bind(&BaseBridge::cmd_vel_callback, this, std::placeholders::_1));
             this->pan_sub_ = create_subscription<std_msgs::msg::Float64>("pan/cmd", rclcpp::QoS(10), std::bind(&BaseBridge::pan_cmd_callback, this, std::placeholders::_1));
-            
+
             // Services
-            this->stop_srv_ = create_service<Trigger>("base/stop", std::bind(&BaseBridge::srv_stop, this, std::placeholders::_1));
-            this->calibrate_srv_ = create_service<Trigger>("imu/calibrate", std::bind(&BaseBridge::srv_calibrate, this, std::placeholders::_1));
-            this->zero_yaw_srv_ = create_service<Trigger>("imu/zero_yaw", std::bind(&BaseBridge::srv_zero_yaw, this, std::placeholders::_1));
+            this->stop_srv_ = create_service<Trigger>("base/stop", std::bind(&BaseBridge::srv_stop, this, std::placeholders::_1, std::placeholders::_2));
+            this->calibrate_srv_ = create_service<Trigger>("imu/calibrate", std::bind(&BaseBridge::srv_calibrate, this, std::placeholders::_1, std::placeholders::_2));
+            this->zero_yaw_srv_ = create_service<Trigger>("imu/zero_yaw", std::bind(&BaseBridge::srv_zero_yaw, this, std::placeholders::_1, std::placeholders::_2));
 
             // Timers
             this->send_timer_ = create_wall_timer(std::chrono::duration<double>(1.0 / this->send_rate_), std::bind(&BaseBridge::send_tick, this));
-            this->battery_timer_ = create_wall_timer(std::chrono::duration<double>(1.0 / this->send_rate_), std::bind(&BaseBridge::send_tick, this));
-            this->diag_timer_ = create_wall_timer(std::chrono::duration<double>(1.0 / this->send_rate_), std::bind(&BaseBridge::send_tick, this));
+            this->battery_timer_ = create_wall_timer(std::chrono::duration<double>(1.0 / this->send_rate_), std::bind(&BaseBridge::publish_battery, this));
+            this->diag_timer_ = create_wall_timer(std::chrono::duration<double>(1.0 / this->send_rate_), std::bind(&BaseBridge::publish_diagnostics, this));
+
+            this->running_ = true;
+            this->reader_ = std::thread(&BaseBridge::reader_loop, this);
 
             RCLCPP_INFO(get_logger(), "base_bridge (C++) started, port %s", this->port_name_.c_str());
-        }                  
+        }
 
         ~BaseBridge() override
         {
             // 7.4b: stop and join the reader thread
             // 7.4f: send S, close the port
+            this->running_ = false;
+            if (this->reader_.joinable())
+            {
+                this->reader_.join();
+            }
         }
 
     private:
+        std::unique_ptr<LibSerial::SerialPort> serial_; // nullptr = no port object
+        std::mutex write_mutex_;                        // guards serial_ open/close/write
+        std::atomic<bool> connected_{false};
+        std::atomic<bool> running_{false};
+        std::thread reader_;
+
         std::string port_name_;
         int baud_{115200};
-        DriveParams drive_;            // track_width, max_wheel_speed, pwm_min
+        DriveParams drive_; // track_width, max_wheel_speed, pwm_min
         double max_linear_{0.3};
         double max_angular_{1.5};
         double cmd_timeout_{0.25};
@@ -161,14 +184,131 @@ namespace scout_base_cpp
         StaleDetector stale_{10};
 
         // ---- 7.4b serial link ----
-        bool open_port() { return false; }
-        void close_port() {}
+        bool open_port()
+        {
+            {                                                  
+                std::lock_guard<std::mutex> lock(write_mutex_);
+                auto port = std::make_unique<LibSerial::SerialPort>();
+                try {
+                port->Open(port_name_);
+                port->SetBaudRate(LibSerial::BaudRate::BAUD_115200);
+                port->FlushInputBuffer();
+                } catch (const std::exception &) {
+                    return false;
+                }
+                serial_ = std::move(port);
+                connected_ = true;
+            }                                                   
+            RCLCPP_INFO(get_logger(), "Opened port %s", port_name_.c_str());
+            write_line("S\n");
+            return true;
+        }
+
+        void close_port()
+        {
+            std::lock_guard<std::mutex> lock(this->write_mutex_);
+            this->connected_ = false;
+            if (!this->serial_)
+            {
+                return;
+            }
+
+            try
+            {
+                ::ioctl(this->serial_->GetFileDescriptor(), TIOCNXCL);
+                this->serial_->Close();
+                this->serial_.reset();
+            }
+            catch (const std::exception &e)
+            {
+                ::close(this->serial_->GetFileDescriptor());
+                static_cast<void>(this->serial_.release());
+            }
+        }
+
         bool write_line(const std::string &text)
         {
-            (void)text;
+            std::lock_guard<std::mutex> lock(this->write_mutex_);
+            if (!this->connected_ || !this->serial_)
+            {
+                return false;
+            }
+
+            try
+            {
+                this->serial_->Write(text);
+                return true;
+            }
+            catch (const std::exception &e)
+            {
+                RCLCPP_WARN(get_logger(), "write failed: %s", e.what());
+                this->connected_ = false;
+            }
+
             return false;
         }
-        void reader_loop() {}
+        void reader_loop()
+        {
+            bool waiting_logged = false;
+            std::string raw;
+
+            while (this->running_)
+            {
+                if (!this->connected_)
+                {
+                    this->close_port();
+                    if (!this->open_port())
+                    {
+                        if (!waiting_logged) {
+                            RCLCPP_INFO(get_logger(), "Waiting for port %s", port_name_.c_str());
+                            waiting_logged = true;
+                        }
+                        if (this->running_)
+                        {
+                            for (int i = 0; i < 10 && this->running_; ++i)
+                            {
+                                std::this_thread::sleep_for(100ms);
+                            }
+                            continue;
+                        }
+                        
+                    }
+                    else
+                    {
+                        waiting_logged = false;
+                    }
+                }
+
+                pollfd pfd{serial_->GetFileDescriptor(), POLLIN, 0};
+                const int n = ::poll(&pfd, 1, 100);
+                if (n <= 0)
+                {
+                    continue; // 100 ms without data (or EINTR): check running_ again
+                }
+                if (pfd.revents & (POLLHUP | POLLERR | POLLNVAL))
+                {
+                    RCLCPP_WARN(get_logger(), "R4 link lost (hang-up)");
+                    connected_ = false;
+                    continue;
+                }
+
+                try
+                {
+                    this->serial_->ReadLine(raw, '\n', 100);
+                }
+                catch(const LibSerial::ReadTimeout &){
+                    continue;
+                }
+                catch(const std::exception& e)
+                {
+                    RCLCPP_WARN(get_logger(), "R4 link lost: %s", e.what());
+                    this->connected_ = false;
+                    continue;
+                }
+
+                RCLCPP_INFO_THROTTLE(get_logger(), *get_clock(), 1000, "rx: %s", raw.c_str());
+            }
+        }
 
         // ---- 7.4c drive ----
         void cmd_vel_callback(const geometry_msgs::msg::Twist &msg) { (void)msg; }
