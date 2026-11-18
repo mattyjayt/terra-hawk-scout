@@ -1,0 +1,1 @@
+SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", ATTRS{serial}=="46c9ad49b631f111a628875f30d20014", SYMLINK+="scout_lidar", GROUP="dialout", MODE="0660", ENV{ID_MM_DEVICE_IGNORE}="1"
