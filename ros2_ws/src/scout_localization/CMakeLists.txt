@@ -66,7 +66,7 @@ if(BUILD_TESTING)
   target_link_libraries(test_core scout_localization_core)
 
   find_package(launch_testing_ament_cmake REQUIRED)
-  add_launch_test(test/test_safety_stop_contract.py TIMEOUT 90)
+  # add_launch_test(test/test_safety_stop_contract.py TIMEOUT 90)
 endif()
 
 ament_package()

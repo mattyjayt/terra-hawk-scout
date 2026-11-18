@@ -25,7 +25,7 @@ public:
     this->period_s_ = declare_parameter<double>("period_s", 0.5);
     const double hw_deg = declare_parameter<double>("sector_half_width_deg", 10.0);
 
-    if (this->period_s_ <= 0.0){
+    if (this->period_s_ <= 0.0) {
       throw std::invalid_argument("scan_probe: period must be > 0");
     }
 
@@ -33,10 +33,13 @@ public:
       throw std::invalid_argument("scan_probe: sector_half_width_deg must be (0:90]");
     }
 
-    this->sub_ = create_subscription<sensor_msgs::msg::LaserScan>("scan", rclcpp::SensorDataQoS(), std::bind(&ScanProbe::on_scan, this, std::placeholders::_1));
-    this->timer_ = create_wall_timer(std::chrono::duration<double>(this->period_s_), std::bind(&ScanProbe::report, this));
+    this->sub_ = create_subscription<sensor_msgs::msg::LaserScan>("scan", rclcpp::SensorDataQoS(),
+        std::bind(&ScanProbe::on_scan, this, std::placeholders::_1));
+    this->timer_ = create_wall_timer(std::chrono::duration<double>(this->period_s_),
+        std::bind(&ScanProbe::report, this));
 
-    RCLCPP_INFO(get_logger(), "scan_probe: every %.2f s, sectors +-%0.f deg", this->period_s_, hw_deg);
+    RCLCPP_INFO(get_logger(), "scan_probe: every %.2f s, sectors +-%0.f deg", this->period_s_,
+        hw_deg);
   }
 
 private:
@@ -52,11 +55,11 @@ private:
       return;
     }
 
-    const auto &s = *last_;
+    const auto & s = *last_;
     const ScanGeometry g{s.angle_min, s.angle_increment, s.range_min, s.range_max};
     const std::size_t n = s.ranges.size();
-    if (n == 0) { RCLCPP_WARN(get_logger(), "empty scan"); return; }
-    double valid_pct = 100.0 * count_valid(s.ranges, g)/n;
+    if (n == 0) {RCLCPP_WARN(get_logger(), "empty scan"); return;}
+    double valid_pct = 100.0 * count_valid(s.ranges, g) / n;
     double front = sector_min(s.ranges, g, 0.0, this->half_width_);
     double left = sector_min(s.ranges, g, kPi / 2, this->half_width_);
     double back = sector_min(s.ranges, g, kPi, this->half_width_);
@@ -65,11 +68,14 @@ private:
     std::size_t i0 = angle_to_index(g, n, 0.0);
 
     if (!i.has_value()) {
-      RCLCPP_INFO(get_logger(), "%s: n=%zu valid=%.0f%% front=%.2f left=%.2f back=%.2f right=%.2f \nnearest=none m '@' 45 deg (i0=%zu)",
+      RCLCPP_INFO(get_logger(),
+          "%s: n=%zu valid=%.0f%% front=%.2f left=%.2f back=%.2f right=%.2f \nnearest=none m '@' 45 deg (i0=%zu)",
       s.header.frame_id.c_str(), n, valid_pct, front, left, back, right, i0);
     } else {
-      RCLCPP_INFO(get_logger(), "%s: n=%zu valid=%.0f%% front=%.2f left=%.2f back=%.2f right=%.2f \nnearest=%.2f m '@' 45 deg (i0=%zu)",
-      s.header.frame_id.c_str(), n, valid_pct, front, left, back, right, wrap_angle(beam_angle(g, *i)) * 180.0 /kPi, i0);
+      RCLCPP_INFO(get_logger(),
+          "%s: n=%zu valid=%.0f%% front=%.2f left=%.2f back=%.2f right=%.2f \nnearest=%.2f m '@' 45 deg (i0=%zu)",
+      s.header.frame_id.c_str(), n, valid_pct, front, left, back, right,
+          wrap_angle(beam_angle(g, *i)) * 180.0 / kPi, i0);
     }
   }
 
