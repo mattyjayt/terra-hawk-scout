@@ -24,6 +24,11 @@
     <!-- Camera: MEASURE from the servo axis to the lens -->
     <xacro:property name="cam_x" value="0.015" />
     <xacro:property name="cam_z" value="0.020" />
+    <!-- LiDAR:  -->
+    <xacro:property name="laser_x" value=""/>
+    <xacro:property name="laser_y" value=""/>
+    <xacro:property name="laser_z" value=""/>
+    <xacro:property name="laser_yaw" value=""/>
 
     <!-- ===== Materials ===== -->
     <material name="dark">
@@ -127,4 +132,17 @@
         <origin rpy="${-pi/2} 0 ${-pi/2}" />
     </joint>
 
+    <link name="base_laser">
+        <visual>
+            <geometry>
+                <box size="0.0556 0.0556 0.0413"/>
+            </geometry>
+            <material name="dark" />
+            <origin xyz="0.0 0.0 -0.0092"/>
+        </visual>
+    </link>
+    <joint name="base_laser_joint" type="fixed">
+        <parent link="base_link"/>
+        <origin xyz="${laser_x} ${laser_y} ${laser_z}" rpy="0.0 0.0 ${laser_yaw}"/>
+    </joint>
 </robot>
