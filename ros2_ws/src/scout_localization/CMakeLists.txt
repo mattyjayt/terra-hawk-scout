@@ -21,8 +21,8 @@ find_package(geometry_msgs REQUIRED)
 # ---- core: pure C++, no ROS (unit-tested) ----
 add_library(scout_localization_core STATIC
   src/scan_math.cpp
-  # src/odom_math.cpp
-  # src/safety.cpp
+  src/odom_math.cpp
+  src/safety.cpp
 )
 
 target_include_directories(scout_localization_core PUBLIC
@@ -36,10 +36,10 @@ target_link_libraries(scan_probe scout_localization_core)
 ament_target_dependencies(scan_probe rclcpp sensor_msgs)
 install(TARGETS scan_probe DESTINATION lib/${PROJECT_NAME})
 
-# add_executable(covariance_relay src/covariance_relay_node.cpp)
-# target_link_libraries(covariance_relay scout_localization_core)
-# ament_target_dependencies(covariance_relay rclcpp nav_msgs)
-# install(TARGETS covariance_relay DESTINATION lib/${PROJECT_NAME})
+add_executable(covariance_relay src/covariance_relay_node.cpp)
+target_link_libraries(covariance_relay scout_localization_core)
+ament_target_dependencies(covariance_relay rclcpp nav_msgs)
+install(TARGETS covariance_relay DESTINATION lib/${PROJECT_NAME})
 
 # add_executable(safety_stop src/safety_stop_node.cpp)
 # target_link_libraries(safety_stop scout_localization_core)
