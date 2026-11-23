@@ -55,7 +55,7 @@ def generate_launch_description():
                               description='image size'),
         DeclareLaunchArgument('debug_image', default_value='true',
                               description='display compressed image'),
-        DeclareLaunchArgument('use_tracking', default_value='true',
+        DeclareLaunchArgument('use_tracking', default_value='false',
                               description='enable tracking'),
         camera, tracker, detector
     ])

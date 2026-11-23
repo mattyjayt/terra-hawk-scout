@@ -68,14 +68,19 @@ private:
     std::size_t i0 = angle_to_index(g, n, 0.0);
 
     if (!i.has_value()) {
-      RCLCPP_INFO(get_logger(),
-          "%s: n=%zu valid=%.0f%% front=%.2f left=%.2f back=%.2f right=%.2f \nnearest=none m '@' 45 deg (i0=%zu)",
-      s.header.frame_id.c_str(), n, valid_pct, front, left, back, right, i0);
+      RCLCPP_INFO(
+        get_logger(),
+        "%s: n=%zu valid=%.0f%% front=%.2f left=%.2f back=%.2f right=%.2f "
+        "nearest=none (i0=%zu)",
+        s.header.frame_id.c_str(), n, valid_pct, front, left, back, right, i0);
     } else {
-      RCLCPP_INFO(get_logger(),
-          "%s: n=%zu valid=%.0f%% front=%.2f left=%.2f back=%.2f right=%.2f \nnearest=%.2f m '@' 45 deg (i0=%zu)",
-      s.header.frame_id.c_str(), n, valid_pct, front, left, back, right,
-          wrap_angle(beam_angle(g, *i)) * 180.0 / kPi, i0);
+      RCLCPP_INFO(
+        get_logger(),
+        "%s: n=%zu valid=%.0f%% front=%.2f left=%.2f back=%.2f right=%.2f "
+        "nearest=%.2f m @ %.0f deg (i0=%zu)",
+        s.header.frame_id.c_str(), n, valid_pct, front, left, back, right,
+        static_cast<double>(s.ranges[*i]),
+        wrap_angle(beam_angle(g, *i)) * 180.0 / kPi, i0);
     }
   }
 
