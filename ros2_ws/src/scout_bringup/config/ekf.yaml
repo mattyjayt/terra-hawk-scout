@@ -1,0 +1,61 @@
+# robot_localization EKF for the Scout (Lab 9.7, DD-SCOUT-LOC).
+# Fuses rf2o laser odometry (via covariance_relay, /odom) with the R4 gyro (/imu/data_raw).
+# Publishes /odometry/filtered and the TF odom -> base_link.
+#
+# State order used by every *_config list and the process noise (15 values):
+#   index  0  1  2  3     4      5    6   7   8   9      10      11    12  13  14
+#   state  x  y  z  roll  pitch  yaw  vx  vy  vz  vroll  vpitch  vyaw  ax  ay  az
+ekf_filter_node:
+  ros__parameters:
+    frequency: 30.0          # Hz: predict + publish rate (IF-ROS-TOPICS section 9: 30-50 Hz)
+    sensor_timeout: 0.2      # s without any input -> only predict
+    two_d_mode: true         # flat floor: z, roll, pitch and their rates forced to 0
+    publish_tf: true         # the EKF owns odom -> base_link (rf2o has publish_tf: False)
+    print_diagnostics: true
+
+    map_frame: map
+    odom_frame: odom
+    base_link_frame: base_link
+    world_frame: odom        # = odom_frame -> this EKF publishes odom -> base_link (REP-105)
+
+    # rf2o through the covariance relay: fuse the velocities, never rf2o's drifting pose.
+    odom0: /odom
+    odom0_config: [false, false, false,   # x, y, z
+                   false, false, false,   # roll, pitch, yaw
+                   true,  true,  false,   # vx, vy (= 0: no sideways sliding), vz
+                   false, false, true,    # vroll, vpitch, vyaw
+                   false, false, false]   # ax, ay, az
+    odom0_differential: false
+    odom0_relative: false
+    odom0_queue_size: 10
+
+    # R4 gyro (MPU-6050, 20 Hz): only the yaw rate. No magnetometer = no absolute yaw,
+    # and accelerations integrated twice drift metres per minute.
+    imu0: /imu/data_raw      # the launch file overrides this with imu_topic (SIL: /imu/fake)
+    imu0_config: [false, false, false,    # x, y, z
+                  false, false, false,    # roll, pitch, yaw
+                  false, false, false,    # vx, vy, vz
+                  false, false, true,     # vroll, vpitch, vyaw
+                  false, false, false]    # ax, ay, az
+    imu0_differential: false
+    imu0_relative: false
+    imu0_queue_size: 10
+    imu0_remove_gravitational_acceleration: true   # harmless: accelerations aren't fused
+
+    # How much each state may change by itself per second (package default, diagonal).
+    # Bigger = trusts new measurements more and smooths less. Index 11 (vyaw) = 0.02.
+    process_noise_covariance: [0.05, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,   0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.05, 0.0,  0.0,  0.0,  0.0,  0.0,   0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.06, 0.0,  0.0,  0.0,  0.0,   0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.03, 0.0,  0.0,  0.0,   0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.03, 0.0,  0.0,   0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.06, 0.0,   0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.025, 0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,   0.025, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,   0.0,   0.04, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,   0.0,   0.0,  0.01, 0.0,  0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,   0.0,   0.0,  0.0,  0.01, 0.0,  0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,   0.0,   0.0,  0.0,  0.0,  0.02, 0.0,  0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,   0.0,   0.0,  0.0,  0.0,  0.0,  0.01, 0.0,  0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,   0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.01, 0.0,
+                               0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,   0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.015]
