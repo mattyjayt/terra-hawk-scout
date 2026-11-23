@@ -1,0 +1,6 @@
+safety_stop:
+  ros__parameters:
+    stop_distance: 0.15          # m, REQ-SCOUT-009, from the robot's front edge
+    laser_to_front: 0.18         # m, MEASURE (Task 9.1): C1 spin axis -> frontmost point of the robot
+    sector_half_width_deg: 30.0  # +-30 deg covers the 13.3 cm wide chassis at 0.25 m (Background 9.J)
+    scan_timeout: 0.3            # s; scans come every 0.1 s, so 3 missed scans = blind

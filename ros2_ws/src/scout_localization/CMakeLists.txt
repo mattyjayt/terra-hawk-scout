@@ -41,10 +41,10 @@ target_link_libraries(covariance_relay scout_localization_core)
 ament_target_dependencies(covariance_relay rclcpp nav_msgs)
 install(TARGETS covariance_relay DESTINATION lib/${PROJECT_NAME})
 
-# add_executable(safety_stop src/safety_stop_node.cpp)
-# target_link_libraries(safety_stop scout_localization_core)
-# ament_target_dependencies(safety_stop rclcpp sensor_msgs geometry_msgs)
-# install(TARGETS safety_stop DESTINATION lib/${PROJECT_NAME})
+add_executable(safety_stop src/safety_stop_node.cpp)
+target_link_libraries(safety_stop scout_localization_core)
+ament_target_dependencies(safety_stop rclcpp sensor_msgs geometry_msgs)
+install(TARGETS safety_stop DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY include/ DESTINATION include)
 
@@ -60,13 +60,13 @@ if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(test_core
     test/test_scan_math.cpp
-    # test/test_odom_math.cpp
-    # test/test_safety.cpp
+    test/test_odom_math.cpp
+    test/test_safety.cpp
   )
   target_link_libraries(test_core scout_localization_core)
 
   find_package(launch_testing_ament_cmake REQUIRED)
-  # add_launch_test(test/test_safety_stop_contract.py TIMEOUT 90)
+  add_launch_test(test/test_safety_stop_contract.py TIMEOUT 90)
 endif()
 
 ament_package()
