@@ -4,20 +4,25 @@
 #include "scout_localization/odom_math.hpp"
 
 #include <array>
+#include <cmath>
 
 namespace scout_localization
 {
 
-// STUBS (RED). Task 9.6 replaces them.
 std::array<double, 36> planar_covariance(double var_x, double var_y, double var_yaw)
 {
-  (void)var_x; (void)var_y; (void)var_yaw;
-  return {};
+  std::array<double, 36> c{};
+  const std::array<double, 6> diag{var_x, var_y, kUnused, kUnused, kUnused, var_yaw};
+
+  for (std::size_t i = 0; i < 6; ++i) {
+    c[i * 7] = diag[i];
+  }
+  return c;
 }
+
 bool is_plausible(double vx, double vyaw, double max_vx, double max_vyaw)
 {
-  (void)vx; (void)vyaw; (void)max_vx; (void)max_vyaw;
-  return true;
+  return  (std::abs(vx) <= std::abs(max_vx)) && (std::abs(vyaw) <= std::abs(max_vyaw));
 }
 
 }  // namespace scout_localization

@@ -28,17 +28,20 @@ public:
     this->max_vyaw_ = declare_parameter<double>("max_vyaw", 3.0);
 
     // Refuse to start condition
-    if (var_vx <= 0.0 || var_vyaw <= 0.0 || this->max_vx_ <= 0.0 || this->max_vyaw_ <= 0.0){
-        throw std::invalid_argument("covariance_relay: var_vx, var_vyaw, max_vx, max_vyaw must be > 0");
+    if (var_vx <= 0.0 || var_vyaw <= 0.0 || this->max_vx_ <= 0.0 || this->max_vyaw_ <= 0.0) {
+      throw std::invalid_argument(
+          "covariance_relay: var_vx, var_vyaw, max_vx, max_vyaw must be > 0");
     }
 
     this->twist_cov_ = planar_covariance(var_vx, var_vx, var_vyaw);
     this->pose_cov_ = planar_covariance(kUnused, kUnused, kUnused);
 
     this->pub_ = create_publisher<nav_msgs::msg::Odometry>("odom", rclcpp::QoS(10));
-    this->sub_ = create_subscription<nav_msgs::msg::Odometry>("odom/rf2o", rclcpp::QoS(10), std::bind(&CovarianceRelay::on_odom, this, std::placeholders::_1));
+    this->sub_ = create_subscription<nav_msgs::msg::Odometry>("odom/rf2o", rclcpp::QoS(10),
+        std::bind(&CovarianceRelay::on_odom, this, std::placeholders::_1));
 
-    RCLCPP_INFO(get_logger(), "covariance_relay: odom/rf2o -> odom, var_vx %.4g, var_vyaw %.4g", var_vx, var_vyaw);
+    RCLCPP_INFO(get_logger(), "covariance_relay: odom/rf2o -> odom, var_vx %.4g, var_vyaw %.4g",
+        var_vx, var_vyaw);
   }
 
 private:
@@ -47,9 +50,12 @@ private:
     const double vx = msg.twist.twist.linear.x;
     const double vyaw = msg.twist.twist.angular.z;
 
-    if (!is_plausible(vx, vyaw, this->max_vx_, this->max_vyaw_)){
-        RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 1000, "dropped implausible rf2o odometry vx=%.2f vyaw=%.2f (%s dropped so far)", vx, vyaw, std::to_string(dropped_).c_str());
-        return;
+    if (!is_plausible(vx, vyaw, this->max_vx_, this->max_vyaw_)) {
+      ++dropped_;
+      RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 1000,
+          "dropped implausible rf2o odometry vx=%.2f vyaw=%.2f (%s dropped so far)", vx, vyaw,
+          std::to_string(dropped_).c_str());
+      return;
     }
     nav_msgs::msg::Odometry out = msg;
     out.twist.covariance = this->twist_cov_;
