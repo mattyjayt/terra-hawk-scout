@@ -1,4 +1,4 @@
-"""Bring up the Scout base: bridge + robot model (+ Foxglove)."""
+"""Bring up the Scout perception: camera, tracker and detector."""
 
 import os
 
@@ -13,9 +13,9 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     """
-    Start base_bridge, robot_state_publisher and optionally.
+    Start perception, camera, detector and.
 
-    foxglove_bridge.
+    tracker.
     """
     perception = get_package_share_directory('scout_perception')
     params = os.path.join(perception, 'config', 'perception.yaml')
@@ -24,6 +24,16 @@ def generate_launch_description():
     imgsz = LaunchConfiguration('imgsz')
     debug_image = LaunchConfiguration('debug_image')
     use_tracking = LaunchConfiguration('use_tracking')
+
+    camera = Node(package='camera_ros',
+                  executable='camera_node',
+                  parameters=[{
+                      'camera': 0,
+                      'width': 640,
+                      'height': 480,
+                      'format': 'RGB888',
+                      'frame_id': 'camera_optical_frame'
+                  }])
 
     tracker = Node(package='scout_perception',
                    executable='pan_tracker')
@@ -45,7 +55,7 @@ def generate_launch_description():
                               description='image size'),
         DeclareLaunchArgument('debug_image', default_value='true',
                               description='display compressed image'),
-        DeclareLaunchArgument('use_tracking', default_value='true',
+        DeclareLaunchArgument('use_tracking', default_value='false',
                               description='enable tracking'),
-        tracker, detector
+        camera, tracker, detector
     ])

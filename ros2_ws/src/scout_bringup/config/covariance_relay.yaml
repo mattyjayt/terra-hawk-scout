@@ -1,0 +1,6 @@
+covariance_relay:
+  ros__parameters:
+    var_vx: 0.0025        # (0.05 m/s)^2
+    var_vyaw: 0.01        # (0.1 rad/s)^2
+    max_vx: 0.6           # m/s, 2 x max_linear: faster = a scan-matching glitch
+    max_vyaw: 3.0         # rad/s, 2 x max_angular

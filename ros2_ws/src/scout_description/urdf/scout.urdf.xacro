@@ -24,6 +24,14 @@
     <!-- Camera: MEASURE from the servo axis to the lens -->
     <xacro:property name="cam_x" value="0.015" />
     <xacro:property name="cam_z" value="0.020" />
+    <!-- LiDAR (RPLIDAR C1 on top of the Pi case, rear). Frame base_laser = scan-plane centre on the spin axis.
+         ESTIMATES from the photo IMG_6873 + deck heights (18 Nov): MEASURE in Lab 9.1 and replace. -->
+    <xacro:property name="laser_x" value="-0.065" />   <!-- MEASURE: chassis centre to the C1 spin axis, forward + -->
+    <xacro:property name="laser_y" value="0.000" />    <!-- MEASURE: sideways, left + -->
+    <xacro:property name="laser_z" value="0.160" />    <!-- MEASURE: floor to the C1 base + 0.0298 (scan plane, datasheet) -->
+    <xacro:property name="laser_yaw" value="0.0" />    <!-- Lab 9.5 step 4: 0 if the C1 0 deg points forward, pi if backwards -->
+    <!-- laser_to_front (C1 spin axis to the front edge of the robot) is not a frame: it lives in
+         scout_bringup/config/safety_stop.yaml. Re-measure it whenever laser_x changes. -->
 
     <!-- ===== Materials ===== -->
     <material name="dark">
@@ -127,4 +135,18 @@
         <origin rpy="${-pi/2} 0 ${-pi/2}" />
     </joint>
 
+    <link name="base_laser">
+        <visual>
+            <geometry>
+                <box size="0.0556 0.0556 0.0413"/>
+            </geometry>
+            <material name="dark" />
+            <origin xyz="0.0 0.0 -0.0092"/>
+        </visual>
+    </link>
+    <joint name="base_laser_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="base_laser"/>
+        <origin xyz="${laser_x} ${laser_y} ${laser_z}" rpy="0.0 0.0 ${laser_yaw}"/>
+    </joint>
 </robot>

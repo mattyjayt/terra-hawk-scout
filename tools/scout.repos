@@ -4,3 +4,11 @@ repositories:
     type: git
     url: https://github.com/christianrauch/camera_ros.git
     version: 3760b11   # + tools/patches/camera_ros_controlinfomap.patch
+  sllidar_ros2:
+    type: git
+    url: https://github.com/Slamtec/sllidar_ros2.git
+    version: 3430009   # RPLIDAR C1 driver (SDK 2.x); not in apt for Jazzy
+  rf2o_laser_odometry:
+    type: git
+    url: https://github.com/MAPIRlab/rf2o_laser_odometry.git
+    version: b38c68e   # branch ros2; not released for Jazzy
