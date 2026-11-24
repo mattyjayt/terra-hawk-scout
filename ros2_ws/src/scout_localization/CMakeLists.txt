@@ -47,6 +47,11 @@ target_link_libraries(safety_stop scout_localization_core)
 ament_target_dependencies(safety_stop rclcpp sensor_msgs geometry_msgs)
 install(TARGETS safety_stop DESTINATION lib/${PROJECT_NAME})
 
+add_executable(map_stats src/map_stats_node.cpp)
+target_link_libraries(map_stats scout_localization_core)
+ament_target_dependencies(map_stats rclcpp nav_msgs)
+install(TARGETS map_stats DESTINATION lib/${PROJECT_NAME})
+
 install(DIRECTORY include/ DESTINATION include)
 
 if(BUILD_TESTING)
