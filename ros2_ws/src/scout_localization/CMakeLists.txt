@@ -23,6 +23,7 @@ add_library(scout_localization_core STATIC
   src/scan_math.cpp
   src/odom_math.cpp
   src/safety.cpp
+  src/map_stats.cpp
 )
 
 target_include_directories(scout_localization_core PUBLIC
@@ -45,11 +46,6 @@ add_executable(safety_stop src/safety_stop_node.cpp)
 target_link_libraries(safety_stop scout_localization_core)
 ament_target_dependencies(safety_stop rclcpp sensor_msgs geometry_msgs)
 install(TARGETS safety_stop DESTINATION lib/${PROJECT_NAME})
-
-add_executable(map_stats src/map_stats.cpp)
-target_link_libraries(map_stats scout_localization_core)
-ament_target_dependencies(map_stats rclcpp nav_msgs)
-install(TARGETS covariance_relay DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY include/ DESTINATION include)
 
