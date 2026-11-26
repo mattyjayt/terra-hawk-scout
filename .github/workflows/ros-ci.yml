@@ -25,9 +25,16 @@ jobs:
 
       - name: Install dependencies (rosdep reads every package.xml)
         run: |
-          apt-get update -qq
+          # Ubuntu's mirrors sometimes 404 a package that was just superseded; refresh and retry.
+          echo 'Acquire::Retries "3";' > /etc/apt/apt.conf.d/80-retries
           rosdep update --rosdistro jazzy
-          rosdep install --from-paths src --ignore-src -y --rosdistro jazzy
+          for attempt in 1 2 3; do
+            apt-get update -qq
+            if rosdep install --from-paths src --ignore-src -y --rosdistro jazzy; then exit 0; fi
+            echo "rosdep install failed (attempt $attempt), retrying in 30 s"
+            sleep 30
+          done
+          exit 1
 
       - name: colcon build
         run: |
