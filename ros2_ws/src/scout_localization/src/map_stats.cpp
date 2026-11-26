@@ -14,7 +14,7 @@ namespace scout_localization
 CellCounts count_cells(const std::vector<int8_t> & data)
 {
   CellCounts cc;
-  for (const int8_t v: data) {
+  for (const int8_t v : data) {
     if (v < 0) {++cc.unknown;} else if (v <= kFreeThreshold) {
       ++cc.free;
     } else if (v >= kOccupiedThreshold) {++cc.occupied;} else {++cc.uncertain;}
