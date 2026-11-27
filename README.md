@@ -98,7 +98,7 @@ terra-hawk-scout/
 │   ├── scout_description/   URDF/xacro and description.launch.py
 │   ├── scout_localization/  safety_stop, covariance_relay, map_stats, scan_probe (C++)
 │   ├── scout_perception/    person_detector, pan_tracker, perception.launch.py
-│   └── external/            third-party sources (camera_ros, sllidar_ros2) from tools/scout.repos, not committed
+│   └── external/            third-party sources (camera_ros, sllidar_ros2, rf2o) from tools/scout.repos, not committed
 ├── firmware/
 │   ├── r4_base/             UNO R4 firmware (serial-r4-v1)
 │   └── r4_bench/            bench sketches: wheel test, IMU test, 90° turn
