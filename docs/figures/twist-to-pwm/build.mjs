@@ -287,7 +287,7 @@ const panel = `
   <div class="tw-step"><b>3 · Deadband → PWM</b><span class="f">|v| &lt; 0.005 → 0, else sign·round(pwm_min<br>+ (255−pwm_min)·|v|/v_max), ≤ 255</span><br><span data-v="p">L 177 · R 177</span></div>
 </div>
 <div class="tw-out"><span>USB serial → UNO R4 → TB6612 (left pair / right pair) · re-sent at 20 Hz</span><strong data-v="m">M 177 177</strong></div>
-<div class="tw-out"><span>Example values, not measured: W = ${EXAMPLE.W} m · v_max = ${EXAMPLE.vmax} m/s · pwm_min = ${EXAMPLE.pwmMin}</span></div>`;
+<div class="tw-out"><span>Scout's base.yaml: W = ${EXAMPLE.W} m · v_max = ${EXAMPLE.vmax} m/s (estimate) · pwm_min = ${EXAMPLE.pwmMin}</span></div>`;
 
 const model = readFileSync(join(HERE, "model.mjs"), "utf8").replace(/^export /gm, "").replace(/^\/\/.*$/gm, "");
 
@@ -420,7 +420,7 @@ const body = k.plateHtml({
     { mark: "raised", label: "Side-speed sliders, left (+y) and right (−y), ± v_max stops" },
   ],
   caption:
-    "The Scout bridge (DD-SCOUT-BRIDGE §5) turns cmd_vel into one serial line. Kinematics splits (v, ω) into side speeds v_L = v − ω·W/2 and v_R = v + ω·W/2, so the ICR sits at v/ω on the axle line and a left turn (ω > 0) makes the right side faster. If a side exceeds v_max, both are divided by the same s, so the arc keeps its curvature (a faint tick shows the raw value). Each side then maps to PWM with a deadband and goes out as M <left> <right>, PWM −255…255, to the UNO R4 and the shield's TB6612. Safety: the line is re-sent at 20 Hz; no cmd_vel for 0.25 s → S; the R4 stops the motors if no M arrives for 300 ms. W, v_max and pwm_min are example values until Lab 1 measures them.",
+    "The Scout bridge (DD-SCOUT-BRIDGE §5) turns cmd_vel into one serial line. Kinematics splits (v, ω) into side speeds v_L = v − ω·W/2 and v_R = v + ω·W/2, so the ICR sits at v/ω on the axle line and a left turn (ω > 0) makes the right side faster. If a side exceeds v_max, both are divided by the same s, so the arc keeps its curvature (a faint tick shows the raw value). Each side then maps to PWM with a deadband and goes out as M <left> <right>, PWM −255…255, to the UNO R4 and the shield's TB6612. Safety: the line is re-sent at 20 Hz; no cmd_vel for 0.25 s → S; the R4 stops the motors if no M arrives for 300 ms. W, v_max and pwm_min are the Scout's configured values (base.yaml); v_max is an estimate, since the TT motors have no encoders.",
   body: `<div class="iso-stage" tabindex="0" role="application" aria-label="Twist to PWM: arrow keys change v and ω">${svg}</div>${panel}`,
 });
 
