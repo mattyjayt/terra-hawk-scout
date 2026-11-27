@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "TerraHawk Scout — power path as built from 1 Dec 2026 (two batteries)",
+    "output": "scout-power/scout-power.html",
+    "locale": "en",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    {
+      "id": "adapter",
+      "type": "external",
+      "label": "USB-C adapter",
+      "sublabel": "5 V / 5 A · charging only",
+      "pos": [
+        320,
+        40
+      ],
+      "size": [
+        200,
+        64
+      ]
+    },
+    {
+      "id": "x1200",
+      "type": "security",
+      "label": "Geekworm X1200 UPS",
+      "sublabel": "2 × NCR18650B · 5.1 V / 5 A",
+      "pos": [
+        320,
+        240
+      ],
+      "size": [
+        200,
+        64
+      ]
+    },
+    {
+      "id": "pi",
+      "type": "backend",
+      "label": "Raspberry Pi 5",
+      "sublabel": "2.0 W idle · 5.7 W peak (measured)",
+      "pos": [
+        320,
+        440
+      ],
+      "size": [
+        200,
+        64
+      ]
+    },
+    {
+      "id": "lidar",
+      "type": "frontend",
+      "label": "RPLIDAR C1",
+      "sublabel": "USB · 800 mA spin-up",
+      "pos": [
+        40,
+        640
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "r4",
+      "type": "messagebus",
+      "label": "UNO R4 + shield logic",
+      "sublabel": "MPU-6050 · SG90 servo",
+      "pos": [
+        320,
+        640
+      ],
+      "size": [
+        200,
+        64
+      ]
+    },
+    {
+      "id": "cam",
+      "type": "frontend",
+      "label": "Camera Module 3",
+      "sublabel": "CSI ribbon",
+      "pos": [
+        40,
+        440
+      ],
+      "size": [
+        180,
+        64
+      ]
+    },
+    {
+      "id": "batt",
+      "type": "database",
+      "label": "Elegoo 2S box",
+      "sublabel": "7.4 V Li-ion",
+      "pos": [
+        900,
+        440
+      ],
+      "size": [
+        190,
+        64
+      ]
+    },
+    {
+      "id": "tb",
+      "type": "security",
+      "label": "TB6612 (shield VM)",
+      "sublabel": "PWM from the R4",
+      "pos": [
+        900,
+        640
+      ],
+      "size": [
+        190,
+        64
+      ]
+    },
+    {
+      "id": "motors",
+      "type": "external",
+      "label": "4 × TT motors",
+      "sublabel": "no encoders",
+      "pos": [
+        900,
+        840
+      ],
+      "size": [
+        190,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "5 V side · one battery for compute",
+      "wraps": [
+        "x1200",
+        "pi",
+        "lidar",
+        "r4",
+        "cam"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Motor side · its own battery",
+      "wraps": [
+        "batt",
+        "tb",
+        "motors"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "charge",
+      "from": "adapter",
+      "to": "x1200",
+      "label": "X1200 USB-C",
+      "variant": "dashed"
+    },
+    {
+      "id": "pogo",
+      "from": "x1200",
+      "to": "pi",
+      "label": "5.1 V pogo pins",
+      "variant": "emphasis"
+    },
+    {
+      "id": "usbl",
+      "from": "pi",
+      "to": "lidar",
+      "label": "USB 5 V"
+    },
+    {
+      "id": "usbr",
+      "from": "pi",
+      "to": "r4",
+      "label": "USB 5 V + serial"
+    },
+    {
+      "id": "csi",
+      "from": "pi",
+      "to": "cam",
+      "label": "CSI"
+    },
+    {
+      "id": "vm",
+      "from": "batt",
+      "to": "tb",
+      "label": "7.4 V VM",
+      "variant": "emphasis"
+    },
+    {
+      "id": "drive",
+      "from": "tb",
+      "to": "motors",
+      "label": "PWM 4 motors"
+    },
+    {
+      "id": "pwm",
+      "from": "r4",
+      "to": "tb",
+      "label": "PWM · DIR · STBY",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Why two batteries",
+      "items": [
+        "One shared pack risks Pi brown-outs and reboots on motor inrush near empty",
+        "Design: DD-SCOUT-HW §4.1"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Budget (measured on the 5 V side)",
+      "items": [
+        "whole 5 V side worst case ≈ 9.5 W ≈ 1.9 A, ≈ 1.4 A per cell",
+        "expected runtime ≈ 2–2.5 h (estimate, to be measured)"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Rules",
+      "items": [
+        "charge only through the X1200's USB-C, never the Pi's",
+        "cells in before USB-C; both 3.5–3.7 V and ≤ 0.1 V apart",
+        "PSU_MAX_CURRENT=5000 and usb_max_current_enable=1 in the Pi config",
+        "the stack must stay ≥ 10 mm under the C1 scan plane"
+      ]
+    }
+  ]
+}

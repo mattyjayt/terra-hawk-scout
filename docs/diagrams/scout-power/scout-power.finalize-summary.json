@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-power/candidate.json",
+    "sha256": "e8b7a09c9d435061d17930a846e43618dea94892d93d3ef30b4640245d3b7b2e",
+    "bytes": 4554
+  },
+  "artifact": {
+    "path": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-power/scout-power.html",
+    "sha256": "5c81634ecec93fe817e953ee984bea9b11c992dae2ac78b5ef89d46f56590ac7",
+    "bytes": 846861
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-power/review-2/scout-power.finalize.json",
+    "summaryReceipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-power/review-2/scout-power.finalize-summary.json",
+    "browserCheckReceipt": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-power/review-2/scout-power.browser-check.json"
+  },
+  "update": {
+    "status": "update_available",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.3.2",
+    "releaseNotes": "https://github.com/tt-a1i/archify/releases/tag/v3.3.2",
+    "severity": "normal",
+    "summary": "Includes archify-pr in default installs, adds offline in-page update notices with Agent prompts, speeds slow update checks, and polishes PR diagrams.",
+    "checkedAt": "2026-11-27T14:34:27.111Z",
+    "source": "cache",
+    "noticeRequired": true,
+    "noticeText": "Archify update: 3.2.0 → 3.3.2. A previous check at 2026-11-27T14:34:27.111Z found a newer release. Release notes: https://github.com/tt-a1i/archify/releases/tag/v3.3.2. Would you like me to update Archify?",
+    "eventKey": "archify@sha256:932d915f83fdbf44796cc6b20b085455a763491306e1b8dee92047e11dddc0ea"
+  },
+  "visualReview": "not-requested",
+  "durationMs": 4325,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

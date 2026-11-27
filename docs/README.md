@@ -32,4 +32,5 @@ Interactive HTML pages: download and open them in a browser.
 | [Sensor-fusion figure](figures/sensor-fusion/sensor-fusion.html) | concept: why fusing a gyro with odometry fixes heading drift (drawn with wheel encoders; on the Scout, LiDAR odometry takes that role) |
 | [Layout fit check (CAD)](../cad/scout-layout/README.md) | v1 fit check on the Elegoo plates |
 | [ROS 2 graph as built (M2)](diagrams/scout-m2-graph/scout-m2-graph.html) | every node running today: C1 LiDAR, rf2o + covariance relay + gyro EKF, safety_stop, slam_toolbox, map_stats, base_bridge (C++/Python), R4 |
+| [Power path as built](diagrams/scout-power/scout-power.html) | two batteries from 1 Dec: Elegoo 2S box for the motors, Geekworm X1200 UPS for the Pi 5 and everything on USB ([DD-SCOUT-HW §4.1](design/DD-SCOUT-HW.md)) |
 | [Target ROS 2 graph](diagrams/scout-ros2-graph/scout-ros2-graph.html) | where the Scout is going: Pi 5 + UNO R4, LiDAR odometry (rf2o) + gyro EKF, slam_toolbox, Nav2, mission node; status per node |

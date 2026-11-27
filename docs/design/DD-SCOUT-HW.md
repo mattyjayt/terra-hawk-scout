@@ -26,6 +26,7 @@ Estimated mass ~794 g (empty). Centre of mass on the centre of rotation; a full 
 ## 4. Power design
 
 ### 4.1 As built from 1 Dec 2026: two batteries (decided 26 Nov)
+Diagram: [scout-power](../diagrams/scout-power/scout-power.html).
 ```
 Elegoo 2S box (7.4 V) ── shield TB6612 VM ── 4 × TT motors
 Geekworm X1200 UPS (2 × Panasonic NCR18650B, parallel) ── 5.1 V / 5 A, pogo pins ── Pi 5
