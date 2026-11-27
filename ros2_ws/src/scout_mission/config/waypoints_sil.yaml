@@ -1,0 +1,6 @@
+# SIL waypoints for fake_lidar's default world (4.0 x 3.0 m room, centre = map origin)
+frame_id: map
+waypoints:
+  home: {x: 0.0, y: 0.0, yaw: 0.0}
+  pickup: {x: 1.4, y: 0.0, yaw: 0.0}
+  tower: {x: -1.2, y: 0.2, yaw: 3.14}

@@ -37,6 +37,7 @@ class GtToTf(Node):
         self.tf = TransformBroadcaster(self)
         self.pub = self.create_publisher(Odometry, 'odometry/filtered', 10)
         self.create_subscription(Odometry, 'ground_truth/odom', self.on_odom, 10)
+        self.get_logger().info('Started GtToTf Node')
 
     def on_odom(self, m):
         """Republish one ground-truth message in the odom frame."""
