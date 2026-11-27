@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "receiptId": "2cf52568-79f6-4563-9293-c93874c6847c",
+  "receiptId": "a8363387-a4a6-4924-9ec2-4f642f60b5d7",
   "status": "current",
   "command": "deliver",
   "type": "architecture",
   "input": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/candidate.json",
   "output": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-ros2-graph/scout-ros2-graph.html",
   "specification": {
-    "sha256": "8bda510ff85d2d9f4a67ce0e6d703f380fde0febe5cf39a71a520ca66cbbdf93",
-    "bytes": 6692
+    "sha256": "f0e0e12528a4916224c040ad5d3fc85dc5c18567217ca70689a5ffacdd4ffdd9",
+    "bytes": 6789
   },
   "artifact": {
-    "sha256": "a24e6f98e1350a71abcc943c956ef5392e0626efdbcaf9957f3be12d843b13bd",
-    "bytes": 857883
+    "sha256": "3c442dc661b2b25c4db00a12af0829799aca63117743e7ddb2c7323bb1db8b84",
+    "bytes": 857986
   }
 }

@@ -1,0 +1,443 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "TerraHawk Scout — ROS 2 graph as built (M2: LiDAR odometry, EKF, safety stop, SLAM)",
+    "output": "scout-m2-graph/scout-m2-graph.html",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/mattyjayt/terra-hawk-scout.git",
+      "provider": "github",
+      "link_mode": "web",
+      "revision": "80d71ddb79ee0199af306a3cf117450317adf29e"
+    }
+  },
+  "components": [
+    {
+      "id": "teleop",
+      "type": "external",
+      "label": "teleop / Foxglove",
+      "sublabel": "driver commands",
+      "pos": [
+        40,
+        240
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "safety",
+      "type": "security",
+      "label": "safety_stop",
+      "sublabel": "C++ · stop < 0.15 m ahead",
+      "pos": [
+        320,
+        240
+      ],
+      "size": [
+        180,
+        64
+      ],
+      "sources": [
+        {
+          "path": "ros2_ws/src/scout_bringup/launch/lidar.launch.py",
+          "line": 40,
+          "end_line": 45,
+          "label": "launch"
+        },
+        {
+          "path": "ros2_ws/src/scout_localization/src/safety_stop_node.cpp",
+          "line": 50,
+          "end_line": 53,
+          "label": "topics"
+        },
+        {
+          "path": "ros2_ws/src/scout_bringup/config/safety_stop.yaml",
+          "label": "stop_distance"
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "type": "backend",
+      "label": "base_bridge",
+      "sublabel": "C++ or Python (impl:=cpp|py)",
+      "pos": [
+        600,
+        240
+      ],
+      "size": [
+        190,
+        64
+      ],
+      "sources": [
+        {
+          "path": "ros2_ws/src/scout_bringup/launch/base.launch.py",
+          "line": 26,
+          "end_line": 33,
+          "label": "impl switch"
+        }
+      ]
+    },
+    {
+      "id": "r4",
+      "type": "messagebus",
+      "label": "UNO R4 + shield",
+      "sublabel": "motors · servo · MPU-6050 · battery",
+      "pos": [
+        600,
+        40
+      ],
+      "size": [
+        190,
+        64
+      ],
+      "sources": [
+        {
+          "path": "docs/specs/interfaces/serial-r4-v1.md",
+          "line": 22,
+          "end_line": 22,
+          "label": "I line 20 Hz"
+        }
+      ]
+    },
+    {
+      "id": "fox",
+      "type": "messagebus",
+      "label": "foxglove_bridge",
+      "sublabel": "ws :8765",
+      "pos": [
+        900,
+        240
+      ],
+      "size": [
+        170,
+        64
+      ],
+      "sources": [
+        {
+          "path": "ros2_ws/src/scout_bringup/launch/base.launch.py",
+          "line": 43,
+          "end_line": 46,
+          "label": "launch"
+        }
+      ]
+    },
+    {
+      "id": "mac",
+      "type": "external",
+      "label": "Foxglove app",
+      "sublabel": "on the Mac",
+      "pos": [
+        900,
+        40
+      ],
+      "size": [
+        170,
+        64
+      ]
+    },
+    {
+      "id": "lidar",
+      "type": "frontend",
+      "label": "sllidar_node",
+      "sublabel": "RPLIDAR C1 · /scan 10 Hz",
+      "pos": [
+        40,
+        460
+      ],
+      "size": [
+        180,
+        64
+      ],
+      "sources": [
+        {
+          "path": "ros2_ws/src/scout_bringup/launch/lidar.launch.py",
+          "line": 29,
+          "end_line": 38,
+          "label": "launch"
+        }
+      ]
+    },
+    {
+      "id": "rf2o",
+      "type": "backend",
+      "label": "rf2o_laser_odometry",
+      "sublabel": "scan matching → velocity",
+      "pos": [
+        320,
+        460
+      ],
+      "size": [
+        180,
+        64
+      ],
+      "sources": [
+        {
+          "path": "ros2_ws/src/scout_bringup/launch/localization.launch.py",
+          "line": 20,
+          "end_line": 33,
+          "label": "launch"
+        }
+      ]
+    },
+    {
+      "id": "relay",
+      "type": "backend",
+      "label": "covariance_relay",
+      "sublabel": "C++ · adds covariance, drops glitches",
+      "pos": [
+        600,
+        460
+      ],
+      "size": [
+        190,
+        64
+      ],
+      "sources": [
+        {
+          "path": "ros2_ws/src/scout_localization/src/covariance_relay_node.cpp",
+          "line": 39,
+          "end_line": 40,
+          "label": "topics"
+        },
+        {
+          "path": "ros2_ws/src/scout_bringup/config/covariance_relay.yaml",
+          "label": "limits"
+        }
+      ]
+    },
+    {
+      "id": "ekf",
+      "type": "backend",
+      "label": "ekf_filter_node",
+      "sublabel": "robot_localization · 2D · 30 Hz",
+      "pos": [
+        900,
+        460
+      ],
+      "size": [
+        190,
+        64
+      ],
+      "sources": [
+        {
+          "path": "ros2_ws/src/scout_bringup/launch/localization.launch.py",
+          "line": 40,
+          "end_line": 46,
+          "label": "launch"
+        },
+        {
+          "path": "ros2_ws/src/scout_bringup/config/ekf.yaml",
+          "line": 10,
+          "end_line": 39,
+          "label": "odom0 + imu0"
+        }
+      ]
+    },
+    {
+      "id": "slam",
+      "type": "database",
+      "label": "slam_toolbox",
+      "sublabel": "online async mapping",
+      "pos": [
+        900,
+        680
+      ],
+      "size": [
+        190,
+        64
+      ],
+      "sources": [
+        {
+          "path": "ros2_ws/src/scout_bringup/launch/mapping.launch.py",
+          "line": 22,
+          "end_line": 26,
+          "label": "launch"
+        },
+        {
+          "path": "ros2_ws/src/scout_bringup/config/slam.yaml",
+          "label": "config"
+        }
+      ]
+    },
+    {
+      "id": "mapstats",
+      "type": "backend",
+      "label": "map_stats",
+      "sublabel": "C++ · known area, bounds",
+      "pos": [
+        600,
+        680
+      ],
+      "size": [
+        190,
+        64
+      ],
+      "sources": [
+        {
+          "path": "ros2_ws/src/scout_localization/src/map_stats_node.cpp",
+          "line": 31,
+          "end_line": 33,
+          "label": "map sub"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Raspberry Pi 5 · ROS 2 Jazzy",
+      "wraps": [
+        "teleop",
+        "safety",
+        "bridge",
+        "fox",
+        "lidar",
+        "rf2o",
+        "relay",
+        "ekf",
+        "slam",
+        "mapstats"
+      ]
+    },
+    {
+      "kind": "security-group",
+      "label": "Arduino UNO R4 · USB serial",
+      "wraps": [
+        "r4"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Mac",
+      "wraps": [
+        "mac"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "cmdin",
+      "from": "teleop",
+      "to": "safety",
+      "label": "cmd_vel_in · Twist",
+      "variant": "emphasis"
+    },
+    {
+      "id": "cmd",
+      "from": "safety",
+      "to": "bridge",
+      "label": "cmd_vel",
+      "variant": "emphasis"
+    },
+    {
+      "id": "serdown",
+      "from": "bridge",
+      "to": "r4",
+      "label": "M l r · S (serial-r4-v1)",
+      "variant": "emphasis"
+    },
+    {
+      "id": "serup",
+      "from": "r4",
+      "to": "bridge",
+      "label": "I 20 Hz: gyro · battery"
+    },
+    {
+      "id": "scanstop",
+      "from": "lidar",
+      "to": "safety",
+      "label": "scan"
+    },
+    {
+      "id": "scanodom",
+      "from": "lidar",
+      "to": "rf2o",
+      "label": "scan"
+    },
+    {
+      "id": "rfodom",
+      "from": "rf2o",
+      "to": "relay",
+      "label": "odom/rf2o"
+    },
+    {
+      "id": "odom",
+      "from": "relay",
+      "to": "ekf",
+      "label": "odom (+ covariance)"
+    },
+    {
+      "id": "imu",
+      "from": "bridge",
+      "to": "ekf",
+      "label": "imu/data_raw · gyro z"
+    },
+    {
+      "id": "tf",
+      "from": "ekf",
+      "to": "slam",
+      "label": "tf odom → base_link"
+    },
+    {
+      "id": "map",
+      "from": "slam",
+      "to": "mapstats",
+      "label": "map · OccupancyGrid"
+    },
+    {
+      "id": "status",
+      "from": "bridge",
+      "to": "fox",
+      "label": "battery · diagnostics"
+    },
+    {
+      "id": "ws",
+      "from": "fox",
+      "to": "mac",
+      "label": "WebSocket",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Odometry without wheel encoders",
+      "items": [
+        "rf2o matches consecutive scans → forward speed and yaw rate",
+        "covariance_relay adds fixed covariance and drops jumps > 0.6 m/s or > 3 rad/s",
+        "the EKF fuses that velocity with the MPU-6050 gyro (vyaw only) and owns odom → base_link"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Safety layers",
+      "items": [
+        "safety_stop: obstacle < 0.15 m in a ±30° sector, or no scan for 0.3 s → cmd_vel zeroed",
+        "base_bridge: no cmd_vel for 0.25 s → S (stop)",
+        "R4 watchdog: no M line for 300 ms → motors off"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Also running (not drawn)",
+      "items": [
+        "perception: camera_ros → person_detector (YOLO26n · NCNN, ~19 FPS) → pan_tracker → pan/cmd",
+        "robot_state_publisher: URDF → tf; slam_toolbox reads /scan and publishes map → odom",
+        "foxglove_bridge streams every topic, incl. /scan, /map and /odometry/filtered"
+      ]
+    },
+    {
+      "dot": "slate",
+      "title": "Next (M3–M4, planned)",
+      "items": [
+        "Nav2 on the saved map: AMCL, Regulated Pure Pursuit, velocity smoother, collision monitor",
+        "mission node: home → pickup → tower → home"
+      ]
+    }
+  ]
+}
