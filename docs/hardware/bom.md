@@ -14,7 +14,9 @@
 | Elegoo 2S battery box | 1 | ✅ | powers the shield and motors today |
 | 3S Li-ion 12.6 V 3000 mAh | 1 | ✅ | 70 × 50 × 15 mm (measured) |
 | LM2596 buck | 2 | ✅ | for sensors/motor rail only (≤ 2–3 A) |
-| 2D LiDAR: SLAMTEC RPLIDAR C1 | 1 | 🚚 | arriving this week |
+| 2D LiDAR: SLAMTEC RPLIDAR C1 | 1 | ✅ | on the Pi case, rear |
+| Geekworm X1200 UPS HAT (Pi 5, 5.1 V / 5 A) | 1 | 🚚 | Pi supply on battery (DD-SCOUT-HW §4.1) |
+| Panasonic NCR18650B, unprotected, flat top | 2 | 🚚 | for the X1200, used as a pair |
 | TT encoder gear motors | 4 | ⏸ | deferred (ADR-0003) |
-| 5 V / 5 A regulator (Pololu D36V50F5) | 1 | 🛒 | Pi 5 supply on battery (v2 design) |
-| Fuse holder + 5 A fuse, switch, JST/XT30 connectors | — | 🛒 | |
+| 5 V / 5 A regulator (Pololu D36V50F5) | 1 | ⏸ | v2 design (3S pack); fallback if the X1200 fails |
+| Fuse holder + 5 A fuse, switch, JST/XT30 connectors | — | ⏸ | v2 design |
