@@ -1,7 +1,7 @@
 // Pure model of DD-SCOUT-BRIDGE §5: cmd_vel (v, ω) → `M <left> <right>`.
-// W, v_max and pwm_min are NOT measured yet (Lab 1). EXAMPLE holds example
-// values only, so the figure can move; every rule below is from the spec.
-export const EXAMPLE = { W: 0.16, vmax: 0.5, pwmMin: 60 }; // example values, not measured
+// W, v_max and pwm_min are the Scout's configured values (scout_bringup/config/base.yaml).
+// v_max is an estimate (no encoders to measure it); every rule below is from the spec.
+export const EXAMPLE = { W: 0.15, vmax: 0.5, pwmMin: 70 }; // base.yaml values; v_max estimated
 export const DEADBAND = 0.005; // m/s, §5.3
 
 export function twistToPwm(v, w, { W, vmax, pwmMin } = EXAMPLE) {

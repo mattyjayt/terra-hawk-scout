@@ -29,11 +29,13 @@ Scout is the mobile part of **TerraHawk**, a home-farm robotics project. The end
 | | Person detection on the Pi 5 CPU: YOLO26n exported to NCNN at 320 px, **about 19 FPS** measured on the robot (from 3 FPS after profiling: export size, runtime, and skipping ByteTrack, which cost about 75 ms per frame) |
 | | Pan tracking: each detection sets a goal angle from the measured servo angle at the image's timestamp, with a deadband; the servo steps toward it at a limited rate |
 | | CI on every PR: `colcon build` + `colcon test` in `ros:jazzy`, and an R4 firmware compile check |
-| 🟡 **In progress** | C++ base bridge (`rclcpp`) that passes the same contract tests as the Python one |
-| | RPLIDAR C1: arriving this week, not mounted yet |
-| ⏳ **Planned** | Odometry without wheel encoders: LiDAR scan matching (`rf2o_laser_odometry`) fused with the gyro in a `robot_localization` EKF |
-| | Map with `slam_toolbox`, then navigation with Nav2 |
-| | Delivery mission: drive to pickup, wait for cargo, drive to the grow tower |
+| | **C++ base bridge** (`rclcpp`) passing the same contract tests as the Python one; pick with `impl:=cpp\|py` |
+| | **RPLIDAR C1** at 10 Hz; **safety stop** (C++): zero forward speed when anything is within 15 cm of the front, or the scan goes quiet for 0.3 s |
+| | **Odometry without wheel encoders:** LiDAR scan matching (`rf2o_laser_odometry`) → a covariance relay that drops glitches → `robot_localization` EKF fused with the gyro. In simulation, heading drift fell from −14 … −21° (rf2o alone) to −0.7 … −2.5° fused |
+| | **Mapping** with `slam_toolbox` (5 cm grid) and an own `map_stats` node (C++): known area grew 7.1 → 14.1 m² in one tethered run on the robot |
+| 🟡 **In progress** | Navigation with Nav2 on the saved map (AMCL, Regulated Pure Pursuit, collision monitor), simulation first |
+| | Battery power for the Pi (Geekworm X1200 UPS), then mapping the whole flat |
+| ⏳ **Planned** | Delivery mission: drive to pickup, wait for cargo, drive to the grow tower |
 | | R4 firmware v2: modules and protocol v2 ([DD-SCOUT-FW](docs/design/DD-SCOUT-FW.md)) |
 
 ## Demos
@@ -55,7 +57,7 @@ Scout is the mobile part of **TerraHawk**, a home-farm robotics project. The end
 | Arduino UNO R4 WiFi + Elegoo shield (TB6612) | thin hardware layer over USB serial: motor PWM, pan servo, MPU-6050, battery, watchdog |
 | MPU-6050 | IMU (accelerometer + gyro) on the shield's I²C bus |
 | Pi Camera Module 3 (imx708) | on the pan servo |
-| RPLIDAR C1 | 2D LiDAR, arriving this week |
+| RPLIDAR C1 | 2D LiDAR (360°, 10 Hz, 12 m) on top of the Pi case, rear |
 
 The Scout has exactly two compute parts: the Pi 5 and the UNO R4 ([ADR-0006](docs/adr/0006-scout-pi-r4-only.md)). The R4 holds no robot logic. It speaks a plain text protocol, [serial-r4-v1](docs/specs/interfaces/serial-r4-v1.md). Parts list: [docs/hardware/bom.md](docs/hardware/bom.md).
 
@@ -64,20 +66,24 @@ The Scout has exactly two compute parts: the Pi 5 and the UNO R4 ([ADR-0006](doc
 ```mermaid
 flowchart LR
   subgraph Pi5["Raspberry Pi 5 · ROS 2 Jazzy"]
-    cam["camera_ros"] -- camera/image_raw --> det["person_detector<br/>YOLO26n · NCNN"]
+    tel["teleop / Foxglove"] -- cmd_vel_in --> stop["safety_stop<br/>stop < 0.15 m"]
+    stop -- cmd_vel --> br["base_bridge<br/>C++ or Python"]
+    lid["sllidar_node<br/>RPLIDAR C1 · 10 Hz"] -- scan --> stop
+    lid -- scan --> rf["rf2o_laser_odometry"]
+    rf -- odom/rf2o --> rel["covariance_relay"]
+    rel -- odom --> ekf["ekf_filter_node<br/>robot_localization"]
+    br -- "imu/data_raw (gyro)" --> ekf
+    ekf -- "tf odom → base_link" --> slam["slam_toolbox<br/>mapping"]
+    lid -- scan --> slam
+    cam["camera_ros"] -- image --> det["person_detector<br/>YOLO26n · NCNN"]
     det -- detections --> trk["pan_tracker"]
-    trk -- pan/cmd --> br["base_bridge"]
-    tel["teleop / Foxglove"] -- cmd_vel --> br
-    br -- "imu/data_raw, joint_states" --> trk
-    br -- joint_states --> rsp["robot_state_publisher<br/>URDF → tf"]
-    br -- "battery, diagnostics" --> fox["foxglove_bridge"]
+    trk -- pan/cmd --> br
   end
   br <-- "USB serial<br/>serial-r4-v1" --> r4["UNO R4 + shield<br/>motors · servo · IMU · battery"]
 ```
 
 - Every topic, type, unit, frame and QoS is fixed in the ROS 2 contract: [IF-ROS-TOPICS](docs/specs/interfaces/ros-topics.md).
-- Interactive version of this graph: [docs/diagrams/scout-p1-graph/scout-p1-graph.html](docs/diagrams/scout-p1-graph/scout-p1-graph.html) (download and open in a browser).
-- Where it is going: [the target graph](docs/diagrams/scout-ros2-graph/scout-ros2-graph.html) with LiDAR odometry, the EKF, SLAM, Nav2 and the mission node.
+- Interactive versions (download and open in a browser): [the graph as built, M2](docs/diagrams/scout-m2-graph/scout-m2-graph.html) · [the target graph](docs/diagrams/scout-ros2-graph/scout-ros2-graph.html) with Nav2 and the mission node, status per node · [the first teleop + perception graph](docs/diagrams/scout-p1-graph/scout-p1-graph.html).
 - Base bridge design (threading, link state machine, safety layers, tests): [DD-SCOUT-BRIDGE](docs/design/DD-SCOUT-BRIDGE.md).
 
 ## Repository layout
@@ -86,10 +92,13 @@ flowchart LR
 terra-hawk-scout/
 ├── ros2_ws/src/
 │   ├── scout_base_py/       base bridge node (Python): cmd_vel → R4, IMU, battery, pan, diagnostics
-│   ├── scout_bringup/       base.launch.py, config, Foxglove layout, launch_testing contract suite
+│   ├── scout_base_cpp/      the same bridge in C++ (rclcpp), same contract tests
+│   ├── scout_bringup/       base / lidar / localization / mapping launches, config, Foxglove layout,
+│   │                        launch_testing contract suite
 │   ├── scout_description/   URDF/xacro and description.launch.py
+│   ├── scout_localization/  safety_stop, covariance_relay, map_stats, scan_probe (C++)
 │   ├── scout_perception/    person_detector, pan_tracker, perception.launch.py
-│   └── external/            third-party sources (camera_ros) from tools/scout.repos, not committed
+│   └── external/            third-party sources (camera_ros, sllidar_ros2, rf2o) from tools/scout.repos, not committed
 ├── firmware/
 │   ├── r4_base/             UNO R4 firmware (serial-r4-v1)
 │   └── r4_bench/            bench sketches: wheel test, IMU test, 90° turn

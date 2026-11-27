@@ -21,7 +21,27 @@ Converts the Elegoo Smart Robot Car V4.0 into a ROS 2 robot. Requirements: REQ-S
 | Upper | Pi 5 centre-rear, LiDAR on a centre mast (scan plane 131 mm above the floor), Camera 3 front, payload bay rear | LiDAR clears all parts by 5.5 mm |
 Estimated mass ~794 g (empty). Centre of mass on the centre of rotation; a full bay moves it 20 mm rearward.
 
-## 4. Power design (estimates, to be measured)
+**As built (Nov 2026), differs from the v1 layout above:** the RPLIDAR C1 sits on top of the Pi case at the rear (scan plane ≈ 160 mm, estimate until measured; `laser_x` ≈ −0.065 m), not on a centre mast. The camera top (≈ 130 mm) sits just under the scan plane. The Pi rides on the 2S battery box at the rear; the lower deck is full. A refreshed CAD fit check with the X1200 under the Pi is pending.
+
+## 4. Power design
+
+### 4.1 As built from 1 Dec 2026: two batteries (decided 26 Nov)
+Diagram: [scout-power](../diagrams/scout-power/scout-power.html).
+```
+Elegoo 2S box (7.4 V) ── shield TB6612 VM ── 4 × TT motors
+Geekworm X1200 UPS (2 × Panasonic NCR18650B, parallel) ── 5.1 V / 5 A, pogo pins ── Pi 5
+    ├── USB ── UNO R4 (logic, MPU-6050, servo)
+    ├── USB ── RPLIDAR C1 (800 mA at spin-up; usb_max_current_enable=1)
+    └── CSI ── Camera Module 3
+5 V / 5 A USB-C adapter ── X1200's own USB-C (charging; never the Pi's USB-C)
+```
+- **Why two batteries:** one shared pack risks Pi brown-outs and reboots when the motors draw inrush current near empty.
+- **Measured 5 V budget:** Pi board 2.0 W idle / 5.7 W peak (all cores, PMIC); whole 5 V side worst case ≈ 9.5 W ≈ 1.9 A, ≈ 1.4 A per cell. Expected runtime ≈ 2–2.5 h (estimate).
+- **X1200:** I²C fuel gauge at 0x36 (battery % topic later), safe shutdown on low battery, UPS hand-over. Set `PSU_MAX_CURRENT=5000` in the Pi EEPROM.
+- **Bring-up checks:** both cells 3.5–3.7 V and ≤ 0.1 V apart before inserting; cells in before USB-C; 30-min bench run with no throttling flags (`vcgencmd get_throttled` bits 0/16).
+- **Open risk:** the X1200 raises the Pi stack by ~22–25 mm; the stack must stay ≥ 10 mm under the C1 scan plane, else raise the C1 mount (and `laser_z` in the URDF).
+
+### 4.2 Original estimate (single 3S pack, superseded by 4.1)
 | Load | Rail | Typical | Peak |
 |---|---|---|---|
 | Pi 5 + Camera 3 | 5 V | 6 W | 12 W |
@@ -58,7 +78,7 @@ Source: `firmware/r4_base` and [serial-r4-v1](../specs/interfaces/serial-r4-v1.m
 1. Battery dimensions: the 3S pack measures 70 × 50 × 15 mm, so it fits between the decks.
 2. Motor rail option (§4).
 3. LiDAR choice: decided, RPLIDAR C1 (v2 design).
-4. Pi supply: Pololu D36V50F5 (5 V / 5 A) in the v2 design.
+4. Pi supply: Geekworm X1200 UPS as built (§4.1); the Pololu D36V50F5 on the 3S pack stays the v2 design and the fallback.
 
 ## 8. Verification
 TC-SCOUT-012 (no undervoltage), TC-SCOUT-002 (watchdog), TC-SCOUT-003/005 (sensor rates).

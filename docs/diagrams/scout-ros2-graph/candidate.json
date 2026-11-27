@@ -52,7 +52,7 @@
         170,
         64
       ],
-      "tag": "arriving"
+      "tag": "working"
     },
     {
       "id": "perception",
@@ -97,7 +97,7 @@
         170,
         64
       ],
-      "tag": "planned"
+      "tag": "working"
     },
     {
       "id": "bridge",
@@ -127,7 +127,7 @@
         170,
         64
       ],
-      "tag": "planned"
+      "tag": "working"
     },
     {
       "id": "rf2o",
@@ -142,7 +142,7 @@
         170,
         64
       ],
-      "tag": "planned"
+      "tag": "working"
     },
     {
       "id": "devmac",
@@ -291,7 +291,8 @@
       "items": [
         "Teleop over cmd_vel with a 0.25 s timeout in the bridge and a 300 ms watchdog on the R4",
         "IMU 20 Hz, battery, pan servo, diagnostics; URDF + TF; Foxglove layout",
-        "Camera 30 FPS; YOLO26n person detection ~19 FPS on the CPU; pan tracking"
+        "Camera 30 FPS; YOLO26n person detection ~19 FPS on the CPU; pan tracking",
+        "M2: C1 LiDAR, rf2o + gyro EKF, safety stop at 0.15 m, slam_toolbox mapping (map_stats)"
       ]
     },
     {

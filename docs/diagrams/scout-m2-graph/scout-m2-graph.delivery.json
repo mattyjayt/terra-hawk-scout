@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "c7ba1443-6a8a-4531-90a8-c0a2ceb70211",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-m2-graph/candidate.json",
+  "output": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-m2-graph/scout-m2-graph.html",
+  "specification": {
+    "sha256": "0672fa60f2927c60e39281f0a425651acbdc772efce0582cfa613305eadc2d04",
+    "bytes": 9481
+  },
+  "artifact": {
+    "sha256": "483d03532a34bfdf944aa40dabed8b9a3e0396e0b0837da915ec697093bed396",
+    "bytes": 861530
+  }
+}

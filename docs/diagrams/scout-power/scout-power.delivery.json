@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "8175bf29-2727-49ed-9dec-907d77ce8d0a",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-power/candidate.json",
+  "output": "/Users/jaimetellie/Projects/TerraHawk/terra-hawk-scout/docs/diagrams/scout-power/scout-power.html",
+  "specification": {
+    "sha256": "e8b7a09c9d435061d17930a846e43618dea94892d93d3ef30b4640245d3b7b2e",
+    "bytes": 4554
+  },
+  "artifact": {
+    "sha256": "5c81634ecec93fe817e953ee984bea9b11c992dae2ac78b5ef89d46f56590ac7",
+    "bytes": 846861
+  }
+}

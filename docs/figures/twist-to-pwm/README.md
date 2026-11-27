@@ -19,12 +19,12 @@ Anatomy figure (Figure tier). It shows how the Scout base bridge turns a ROS `cm
 | TB6612 on the Elegoo V4 shield, left pair / right pair | panel text | spec: serial-r4-v1 (Hardware) |
 | plates 230.8 × 132.5 mm, 4 TT motors, wheel radius 32.5 mm | chassis geometry | task brief (Elegoo V4 / datasheet) |
 | UNO R4 board 68.6 × 53.4 mm | deck board size | datasheet (Arduino UNO footprint) |
-| **W = 0.16 m** | live numbers | **assumed: example value, not measured** |
-| **v_max = 0.5 m/s** | live numbers, ruler scale | **assumed: example value, not measured** |
-| **pwm_min = 60** | live numbers | **assumed: example value, not measured** |
+| **W = 0.15 m** | live numbers | Scout `base.yaml` |
+| **v_max = 0.5 m/s** | live numbers, ruler scale | Scout `base.yaml`; **estimate** (no encoders) |
+| **pwm_min = 70** | live numbers | Scout `base.yaml` (below it the TT motors don't turn) |
 | wheel positions (x ±62, y ±82 mm), motor boxes, servo / HC-SR04 placement, mat, terminal | drawing only | assumed (drawing layout, not used in the maths) |
 
-The figure labels W, v_max and pwm_min as example values. Lab 1 (§5.5) will measure them. Once it has, change `EXAMPLE` in `model.mjs` and rebuild.
+The figure uses the Scout's configured values. If `base.yaml` changes, update `EXAMPLE` in `model.mjs` and rebuild.
 
 ## Checks
 
